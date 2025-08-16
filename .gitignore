@@ -1,0 +1,32 @@
+# Dependencias
+node_modules/
+
+# Build output
+dist/
+build/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+*.log
+
+# Archivos de entorno
+.env
+.env.*.local
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db
+
+# Configuración de editor/IDE
+.vscode/
+.idea/
+
+# Cache
+.cache/
+*.tmp
+
+# Amplify local files
+amplify/.config/local-*
