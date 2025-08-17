@@ -1,0 +1,1 @@
+// Constantes de mensajes de la aplicación
