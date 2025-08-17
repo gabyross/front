@@ -1,25 +1,14 @@
-import React, { useState } from 'react'
+import React from 'react';
+import AppRoutes from './routes/AppRoutes';
+import './assets/styles/globals.css';
 
-function App() {
-  const [message, setMessage] = useState('')
-
-  const testApi = async () => {
-    try {
-      const res = await fetch(import.meta.env.VITE_API_URL || '/')
-      const text = await res.text()
-      setMessage(text)
-    } catch (err) {
-      setMessage('Error fetching API')
-    }
-  }
-
+/**
+ * Componente principal de la aplicación SmartStocker
+ */
+const App = () => {
   return (
-    <div style={{ padding: '2rem', fontFamily: 'Arial' }}>
-      <h1>React + Vite + Amplify</h1>
-      <button onClick={testApi}>Test API</button>
-      {message && <p>Response: {message}</p>}
-    </div>
-  )
-}
+    <AppRoutes />
+  );
+};
 
-export default App
+export default App;

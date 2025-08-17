@@ -1,0 +1,251 @@
+/* Estilos para el componente Header */
+
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background-color: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid transparent;
+  transition: all var(--transition-slow);
+}
+
+.header.scrolled {
+  background-color: var(--color-background);
+  border-bottom-color: var(--color-border-light);
+  box-shadow: var(--shadow-sm);
+}
+
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 4rem;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 var(--spacing-md);
+}
+
+@media (min-width: 768px) {
+  .container {
+    padding: 0 var(--spacing-lg);
+  }
+}
+
+@media (min-width: 1024px) {
+  .container {
+    padding: 0 var(--spacing-xl);
+  }
+}
+
+/* Logo */
+.logo {
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  text-decoration: none;
+  transition: color var(--transition-normal);
+}
+
+.logo:hover {
+  color: var(--color-primary-light);
+}
+
+/* Navegación desktop */
+.nav {
+  display: none;
+  align-items: center;
+  gap: var(--spacing-xl);
+}
+
+@media (min-width: 768px) {
+  .nav {
+    display: flex;
+  }
+}
+
+.navLinks {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-lg);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.navLink {
+  color: var(--color-text-secondary);
+  font-weight: 500;
+  text-decoration: none;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--radius-sm);
+  transition: all var(--transition-normal);
+  position: relative;
+}
+
+.navLink:hover {
+  color: var(--color-primary);
+  background-color: var(--color-background-accent);
+}
+
+.navLink:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.navLink.active {
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+.navLink.active::after {
+  content: '';
+  position: absolute;
+  bottom: -0.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0.5rem;
+  height: 0.125rem;
+  background-color: var(--color-primary);
+  border-radius: var(--radius-sm);
+}
+
+/* Botón de login */
+.loginButton {
+  margin-left: var(--spacing-md);
+}
+
+/* Menú móvil */
+.mobileMenuButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  background: none;
+  border: none;
+  color: var(--color-text-primary);
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  transition: all var(--transition-normal);
+}
+
+@media (min-width: 768px) {
+  .mobileMenuButton {
+    display: none;
+  }
+}
+
+.mobileMenuButton:hover {
+  background-color: var(--color-background-light);
+}
+
+.mobileMenuButton:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Icono hamburguesa */
+.hamburger {
+  width: 1.5rem;
+  height: 1.5rem;
+  position: relative;
+}
+
+.hamburger span {
+  display: block;
+  width: 100%;
+  height: 2px;
+  background-color: currentColor;
+  border-radius: 1px;
+  transition: all var(--transition-normal);
+  position: absolute;
+}
+
+.hamburger span:nth-child(1) {
+  top: 0.25rem;
+}
+
+.hamburger span:nth-child(2) {
+  top: 0.6875rem;
+}
+
+.hamburger span:nth-child(3) {
+  top: 1.125rem;
+}
+
+/* Animación del hamburger cuando está abierto */
+.hamburger.open span:nth-child(1) {
+  transform: rotate(45deg);
+  top: 0.6875rem;
+}
+
+.hamburger.open span:nth-child(2) {
+  opacity: 0;
+}
+
+.hamburger.open span:nth-child(3) {
+  transform: rotate(-45deg);
+  top: 0.6875rem;
+}
+
+/* Menú móvil desplegable */
+.mobileMenu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background-color: var(--color-background);
+  border-bottom: 1px solid var(--color-border-light);
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-100%);
+  opacity: 0;
+  visibility: hidden;
+  transition: all var(--transition-slow);
+}
+
+.mobileMenu.open {
+  transform: translateY(0);
+  opacity: 1;
+  visibility: visible;
+}
+
+.mobileMenuContent {
+  padding: var(--spacing-lg) var(--spacing-md);
+}
+
+.mobileNavLinks {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.mobileNavLink {
+  display: block;
+  color: var(--color-text-secondary);
+  font-weight: 500;
+  text-decoration: none;
+  padding: var(--spacing-md);
+  border-radius: var(--radius-sm);
+  transition: all var(--transition-normal);
+  margin-bottom: var(--spacing-sm);
+}
+
+.mobileNavLink:hover {
+  color: var(--color-primary);
+  background-color: var(--color-background-accent);
+}
+
+.mobileNavLink.active {
+  color: var(--color-primary);
+  background-color: var(--color-background-accent);
+  font-weight: 600;
+}
+
+.mobileLoginButton {
+  margin-top: var(--spacing-lg);
+  width: 100%;
+}

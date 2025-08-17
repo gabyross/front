@@ -1,0 +1,129 @@
+/* Estilos para el componente Footer */
+
+.footer {
+  background-color: var(--color-text-primary);
+  color: var(--color-background-light);
+  padding: var(--spacing-xl) 0 var(--spacing-lg);
+  margin-top: var(--spacing-4xl);
+}
+
+.container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 var(--spacing-md);
+}
+
+@media (min-width: 768px) {
+  .container {
+    padding: 0 var(--spacing-lg);
+  }
+}
+
+@media (min-width: 1024px) {
+  .container {
+    padding: 0 var(--spacing-xl);
+  }
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+  text-align: center;
+}
+
+@media (min-width: 768px) {
+  .content {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    text-align: left;
+  }
+}
+
+/* Logo y descripción */
+.brand {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.logo {
+  font-family: var(--font-heading);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--color-primary-light);
+  text-decoration: none;
+  transition: color var(--transition-normal);
+}
+
+.logo:hover {
+  color: var(--color-primary);
+}
+
+.description {
+  font-size: 0.875rem;
+  color: var(--color-text-light);
+  margin: 0;
+  max-width: 300px;
+}
+
+/* Enlaces del footer */
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--spacing-lg);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+@media (min-width: 768px) {
+  .links {
+    justify-content: flex-end;
+  }
+}
+
+.link {
+  color: var(--color-background-light);
+  font-size: 0.875rem;
+  text-decoration: none;
+  transition: color var(--transition-normal);
+  padding: var(--spacing-xs) 0;
+}
+
+.link:hover {
+  color: var(--color-primary-light);
+}
+
+.link:focus-visible {
+  outline: 2px solid var(--color-primary-light);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* Separador */
+.separator {
+  height: 1px;
+  background-color: rgba(255, 255, 255, 0.1);
+  margin: var(--spacing-lg) 0;
+}
+
+/* Copyright */
+.copyright {
+  text-align: center;
+  font-size: 0.75rem;
+  color: var(--color-text-light);
+  margin: 0;
+}
+
+.copyright a {
+  color: var(--color-primary-light);
+  text-decoration: none;
+  transition: color var(--transition-normal);
+}
+
+.copyright a:hover {
+  color: var(--color-primary);
+}
