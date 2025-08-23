@@ -1,20 +1,12 @@
 import React from 'react';
+import { BarChart3 } from 'lucide-react';
 
-const ChartIcon = ({ size = 24, color = 'currentColor', ...props }) => (
-  <svg
-    width={size}
-    height={size}
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke={color}
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    {...props}
-  >
-    <path d="M3 3v18h18" />
-    <path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3" />
-  </svg>
-);
+/**
+ * Componente de compatibilidad para ChartIcon
+ * Mantiene la API anterior mientras usa lucide-react internamente
+ */
+const ChartIcon = ({ size = 24, color = 'currentColor', ...props }) => {
+  return <BarChart3 size={size} color={color} strokeWidth={2} {...props} />;
+};
 
 export default ChartIcon;

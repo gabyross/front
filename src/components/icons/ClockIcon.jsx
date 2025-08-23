@@ -1,20 +1,12 @@
 import React from 'react';
+import { Clock } from 'lucide-react';
 
-const ClockIcon = ({ size = 24, color = 'currentColor', ...props }) => (
-  <svg
-    width={size}
-    height={size}
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke={color}
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    {...props}
-  >
-    <circle cx="12" cy="12" r="10" />
-    <polyline points="12,6 12,12 16,14" />
-  </svg>
-);
+/**
+ * Componente de compatibilidad para ClockIcon
+ * Mantiene la API anterior mientras usa lucide-react internamente
+ */
+const ClockIcon = ({ size = 24, color = 'currentColor', ...props }) => {
+  return <Clock size={size} color={color} strokeWidth={2} {...props} />;
+};
 
 export default ClockIcon;

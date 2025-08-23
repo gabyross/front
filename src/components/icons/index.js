@@ -1,4 +1,5 @@
 // Barrel exports para iconos
+export { default as Icon } from './Icon';
 export { default as ChartIcon } from './ChartIcon';
 export { default as InventoryIcon } from './InventoryIcon';
 export { default as BrainIcon } from './BrainIcon';
