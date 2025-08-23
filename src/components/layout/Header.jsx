@@ -5,99 +5,100 @@ import Button from '../common/Button';
 import styles from './Header.module.css';
 
 /**
- * Componente de encabezado con navegación responsive y efectos de scroll
- * Cambia de apariencia al hacer scroll y muestra estado de autenticación
+ * Componente Header con navegación responsive y efectos de scroll
  */
-const Encabezado = () => {
-  const [seHizoScroll, establecerSeHizoScroll] = useState(false);
-  const [menuMovilAbierto, establecerMenuMovilAbierto] = useState(false);
-  const { usuarioAutenticado, usuario, cerrarSesion } = useAuth();
-  const ubicacionActual = useLocation();
+const Header = () => {
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { isAuthenticated, user, logout } = useAuth();
+  const location = useLocation();
 
-  // Detectar scroll para cambiar el estilo del encabezado
+  // Detectar scroll para cambiar el estilo del header
   useEffect(() => {
-    const manejarScroll = () => {
-      const posicionScroll = window.scrollY;
-      establecerSeHizoScroll(posicionScroll > 10);
+    const handleScroll = () => {
+      const scrollTop = window.scrollY;
+      setIsScrolled(scrollTop > 10);
     };
 
-    window.addEventListener('scroll', manejarScroll);
-    return () => window.removeEventListener('scroll', manejarScroll);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Cerrar menú móvil automáticamente al cambiar de ruta
+  // Cerrar menú móvil al cambiar de ruta
   useEffect(() => {
-    establecerMenuMovilAbierto(false);
-  }, [ubicacionActual]);
+    setIsMobileMenuOpen(false);
+  }, [location]);
 
-  // Alternar visibilidad del menú móvil
-  const alternarMenuMovil = () => {
-    establecerMenuMovilAbierto(!menuMovilAbierto);
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
-  // Manejar el cierre de sesión del usuario
-  const manejarCierreDeSesion = async () => {
-    await cerrarSesion();
+  // Manejar cierre de sesión
+  const manejarCierreSesion = async () => {
+    await logout();
   };
 
-  // Elementos de navegación principal
-  const elementosNavegacion = [
+  const isActiveLink = (path) => {
+    return location.pathname === path;
+  };
+
+  const navItems = [
     { path: '/', label: 'Inicio' },
     { path: '#caracteristicas', label: 'Características' },
     { path: '#precios', label: 'Precios' },
   ];
 
   return (
-    <header className={`${styles.encabezado} ${seHizoScroll ? styles.conScroll : ''}`}>
-      <div className={styles.contenedor}>
-        {/* Logo de la aplicación */}
+    <header className={`${styles.header} ${isScrolled ? styles.scrolled : ''}`}>
+      <div className={styles.container}>
+        {/* Logo */}
         <Link to="/" className={styles.logo} aria-label="SmartStocker - Inicio">
           SmartStocker
         </Link>
 
-        {/* Navegación para escritorio */}
-        <nav className={styles.navegacion} role="navigation" aria-label="Navegación principal">
-          <ul className={styles.enlacesNavegacion}>
-            {elementosNavegacion.map((elemento) => (
-              <li key={elemento.path}>
-                {elemento.path.startsWith('#') ? (
+        {/* Navegación desktop */}
+        <nav className={styles.nav} role="navigation" aria-label="Navegación principal">
+          <ul className={styles.navLinks}>
+            {navItems.map((item) => (
+              <li key={item.path}>
+                {item.path.startsWith('#') ? (
                   <a
-                    href={elemento.path}
-                    className={styles.enlaceNavegacion}
+                    href={item.path}
+                    className={styles.navLink}
                     onClick={(e) => {
                       e.preventDefault();
-                      // Desplazamiento suave a la sección correspondiente
-                      const seccion = document.querySelector(elemento.path);
-                      if (seccion) {
-                        seccion.scrollIntoView({ behavior: 'smooth' });
+                      // Scroll suave a la sección correspondiente
+                      const element = document.querySelector(item.path);
+                      if (element) {
+                        element.scrollIntoView({ behavior: 'smooth' });
                       }
                     }}
                   >
-                    {elemento.label}
+                    {item.label}
                   </a>
                 ) : (
                   <NavLink
-                    to={elemento.path}
+                    to={item.path}
                     className={({ isActive }) => 
-                      `${styles.enlaceNavegacion} ${isActive ? styles.activo : ''}`
+                      `${styles.navLink} ${isActive ? styles.active : ''}`
                     }
                   >
-                    {elemento.label}
+                    {item.label}
                   </NavLink>
                 )}
               </li>
             ))}
           </ul>
           
-          {/* Sección de autenticación o información de usuario */}
-          <div className={styles.seccionAutenticacion}>
-            {usuarioAutenticado ? (
-              <div className={styles.informacionUsuario}>
-                <span className={styles.nombreUsuario}>Hola, {usuario?.nombre}</span>
+          {/* Botones de autenticación o información de usuario */}
+          <div className={styles.authSection}>
+            {isAuthenticated ? (
+              <div className={styles.userInfo}>
+                <span className={styles.userName}>Hola, {user?.nombre}</span>
                 <Button 
                   variant="secondary" 
                   size="medium"
-                  onClick={manejarCierreDeSesion}
+                  onClick={manejarCierreSesion}
                 >
                   Cerrar sesión
                 </Button>
@@ -110,14 +111,14 @@ const Encabezado = () => {
           </div>
         </nav>
 
-        {/* Botón para menú móvil */}
+        {/* Botón menú móvil */}
         <button
-          className={styles.botonMenuMovil}
-          onClick={alternarMenuMovil}
-          aria-label={menuMovilAbierto ? 'Cerrar menú' : 'Abrir menú'}
-          aria-expanded={menuMovilAbierto}
+          className={styles.mobileMenuButton}
+          onClick={toggleMobileMenu}
+          aria-label={isMobileMenuOpen ? 'Cerrar menú' : 'Abrir menú'}
+          aria-expanded={isMobileMenuOpen}
         >
-          <div className={`${styles.hamburguesa} ${menuMovilAbierto ? styles.abierto : ''}`}>
+          <div className={`${styles.hamburger} ${isMobileMenuOpen ? styles.open : ''}`}>
             <span></span>
             <span></span>
             <span></span>
@@ -125,38 +126,38 @@ const Encabezado = () => {
         </button>
       </div>
 
-      {/* Menú desplegable para móviles */}
-      <div className={`${styles.menuMovil} ${menuMovilAbierto ? styles.abierto : ''}`}>
-        <div className={styles.contenidoMenuMovil}>
+      {/* Menú móvil */}
+      <div className={`${styles.mobileMenu} ${isMobileMenuOpen ? styles.open : ''}`}>
+        <div className={styles.mobileMenuContent}>
           <nav aria-label="Navegación móvil">
-            <ul className={styles.enlacesNavegacionMovil}>
-              {elementosNavegacion.map((elemento) => (
-                <li key={elemento.path}>
-                  {elemento.path.startsWith('#') ? (
+            <ul className={styles.mobileNavLinks}>
+              {navItems.map((item) => (
+                <li key={item.path}>
+                  {item.path.startsWith('#') ? (
                     <a
-                      href={elemento.path}
-                      className={styles.enlaceNavegacionMovil}
+                      href={item.path}
+                      className={styles.mobileNavLink}
                       onClick={(e) => {
                         e.preventDefault();
-                        // Desplazamiento suave y cierre del menú móvil
-                        const seccion = document.querySelector(elemento.path);
-                        if (seccion) {
-                          seccion.scrollIntoView({ behavior: 'smooth' });
+                        // Scroll suave y cierre del menú móvil
+                        const element = document.querySelector(item.path);
+                        if (element) {
+                          element.scrollIntoView({ behavior: 'smooth' });
                         }
-                        establecerMenuMovilAbierto(false);
+                        setIsMobileMenuOpen(false);
                       }}
                     >
-                      {elemento.label}
+                      {item.label}
                     </a>
                   ) : (
                     <NavLink
-                      to={elemento.path}
+                      to={item.path}
                       className={({ isActive }) => 
-                        `${styles.enlaceNavegacionMovil} ${isActive ? styles.activo : ''}`
+                        `${styles.mobileNavLink} ${isActive ? styles.active : ''}`
                       }
-                      onClick={() => establecerMenuMovilAbierto(false)}
+                      onClick={() => setIsMobileMenuOpen(false)}
                     >
-                      {elemento.label}
+                      {item.label}
                     </NavLink>
                   )}
                 </li>
@@ -164,17 +165,17 @@ const Encabezado = () => {
             </ul>
             
             {/* Sección de autenticación en menú móvil */}
-            <div className={styles.seccionAutenticacionMovil}>
-              {usuarioAutenticado ? (
-                <div className={styles.informacionUsuarioMovil}>
-                  <span className={styles.nombreUsuarioMovil}>Hola, {usuario?.nombre}</span>
+            <div className={styles.mobileAuthSection}>
+              {isAuthenticated ? (
+                <div className={styles.mobileUserInfo}>
+                  <span className={styles.mobileUserName}>Hola, {user?.nombre}</span>
                   <Button 
                     variant="secondary" 
                     size="medium" 
                     fullWidth
                     onClick={() => {
-                      manejarCierreDeSesion();
-                      establecerMenuMovilAbierto(false);
+                      manejarCierreSesion();
+                      setIsMobileMenuOpen(false);
                     }}
                   >
                     Cerrar sesión
@@ -187,7 +188,7 @@ const Encabezado = () => {
                   variant="primary" 
                   size="medium" 
                   fullWidth
-                  onClick={() => establecerMenuMovilAbierto(false)}
+                  onClick={() => setIsMobileMenuOpen(false)}
                 >
                   Iniciar sesión
                 </Button>
@@ -200,4 +201,4 @@ const Encabezado = () => {
   );
 };
 
-export default Encabezado;
+export default Header;

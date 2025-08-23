@@ -1,18 +1,18 @@
-/* Estilos para la página de inicio */
+/* Estilos para la Landing Page */
 
-.paginaInicio {
+.landingPage {
   overflow-x: hidden;
 }
 
-/* Sección principal de presentación */
-.seccionPrincipal {
+/* Hero Section */
+.hero {
   background: linear-gradient(135deg, var(--color-background-accent) 0%, var(--color-background) 100%);
   padding: var(--spacing-4xl) 0 var(--spacing-3xl);
   text-align: center;
   position: relative;
 }
 
-.seccionPrincipal::before {
+.hero::before {
   content: '';
   position: absolute;
   top: 0;
@@ -24,7 +24,7 @@
   z-index: 0;
 }
 
-.contenidoPrincipal {
+.heroContent {
   position: relative;
   z-index: 1;
   max-width: 800px;
@@ -32,7 +32,7 @@
   padding: 0 var(--spacing-md);
 }
 
-.tituloPrincipal {
+.heroTitle {
   font-size: 2.5rem;
   font-weight: 700;
   color: var(--color-text-primary);
@@ -41,12 +41,12 @@
 }
 
 @media (min-width: 768px) {
-  .tituloPrincipal {
+  .heroTitle {
     font-size: 3.5rem;
   }
 }
 
-.subtituloPrincipal {
+.heroSubtitle {
   font-size: 1.25rem;
   color: var(--color-text-secondary);
   margin-bottom: var(--spacing-2xl);
@@ -57,12 +57,12 @@
 }
 
 @media (min-width: 768px) {
-  .subtituloPrincipal {
+  .heroSubtitle {
     font-size: 1.375rem;
   }
 }
 
-.botonesPrincipales {
+.heroButtons {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-md);
@@ -70,36 +70,36 @@
 }
 
 @media (min-width: 640px) {
-  .botonesPrincipales {
+  .heroButtons {
     flex-direction: row;
     justify-content: center;
   }
 }
 
-/* Estilos generales para secciones */
-.seccion {
+/* Secciones generales */
+.section {
   padding: var(--spacing-4xl) 0;
 }
 
-.contenedorSeccion {
+.sectionContainer {
   max-width: 1280px;
   margin: 0 auto;
   padding: 0 var(--spacing-md);
 }
 
 @media (min-width: 768px) {
-  .contenedorSeccion {
+  .sectionContainer {
     padding: 0 var(--spacing-lg);
   }
 }
 
 @media (min-width: 1024px) {
-  .contenedorSeccion {
+  .sectionContainer {
     padding: 0 var(--spacing-xl);
   }
 }
 
-.tituloSeccion {
+.sectionTitle {
   text-align: center;
   font-size: 2rem;
   font-weight: 700;
@@ -108,12 +108,12 @@
 }
 
 @media (min-width: 768px) {
-  .tituloSeccion {
+  .sectionTitle {
     font-size: 2.5rem;
   }
 }
 
-.subtituloSeccion {
+.sectionSubtitle {
   text-align: center;
   font-size: 1.125rem;
   color: var(--color-text-secondary);
@@ -123,39 +123,39 @@
   margin-right: auto;
 }
 
-/* Sección de beneficios */
+/* Beneficios */
 .beneficios {
   background-color: var(--color-background-light);
 }
 
-.grillaBeneficios {
+.beneficiosGrid {
   display: grid;
   grid-template-columns: 1fr;
   gap: var(--spacing-xl);
 }
 
 @media (min-width: 768px) {
-  .grillaBeneficios {
+  .beneficiosGrid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
 @media (min-width: 1024px) {
-  .grillaBeneficios {
+  .beneficiosGrid {
     grid-template-columns: repeat(3, 1fr);
   }
 }
 
-.tarjetaBeneficio {
+.beneficioCard {
   text-align: center;
   transition: transform var(--transition-normal);
 }
 
-.tarjetaBeneficio:hover {
+.beneficioCard:hover {
   transform: translateY(-4px);
 }
 
-.iconoBeneficio {
+.beneficioIcon {
   width: 4rem;
   height: 4rem;
   margin: 0 auto var(--spacing-lg);
@@ -167,32 +167,32 @@
   color: white;
 }
 
-.tituloBeneficio {
+.beneficioTitle {
   font-size: 1.25rem;
   font-weight: 600;
   color: var(--color-text-primary);
   margin-bottom: var(--spacing-sm);
 }
 
-.descripcionBeneficio {
+.beneficioDescription {
   color: var(--color-text-secondary);
   line-height: 1.6;
   margin: 0;
 }
 
-/* Sección de proceso */
+/* Cómo funciona */
 .comoFunciona {
   background-color: var(--color-background);
 }
 
-.grillaPasos {
+.pasosGrid {
   display: grid;
   grid-template-columns: 1fr;
   gap: var(--spacing-2xl);
 }
 
 @media (min-width: 768px) {
-  .grillaPasos {
+  .pasosGrid {
     grid-template-columns: repeat(3, 1fr);
   }
 }
@@ -202,7 +202,7 @@
   position: relative;
 }
 
-.numeroPaso {
+.pasoNumero {
   width: 3rem;
   height: 3rem;
   background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-light) 100%);
@@ -219,7 +219,7 @@
   z-index: 2;
 }
 
-.numeroPaso::after {
+.pasoNumero::after {
   content: '';
   position: absolute;
   top: 50%;
@@ -232,52 +232,52 @@
 }
 
 @media (max-width: 767px) {
-  .numeroPaso::after {
+  .pasoNumero::after {
     display: none;
   }
 }
 
-.paso:last-child .numeroPaso::after {
+.paso:last-child .pasoNumero::after {
   display: none;
 }
 
-.tituloPaso {
+.pasoTitle {
   font-size: 1.25rem;
   font-weight: 600;
   color: var(--color-text-primary);
   margin-bottom: var(--spacing-sm);
 }
 
-.descripcionPaso {
+.pasoDescription {
   color: var(--color-text-secondary);
   line-height: 1.6;
   margin: 0;
 }
 
-/* Sección de testimonios */
+/* Testimonios */
 .testimonios {
   background-color: var(--color-background-light);
 }
 
-.grillaTestimonios {
+.testimoniosGrid {
   display: grid;
   grid-template-columns: 1fr;
   gap: var(--spacing-xl);
 }
 
 @media (min-width: 768px) {
-  .grillaTestimonios {
+  .testimoniosGrid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
 @media (min-width: 1024px) {
-  .grillaTestimonios {
+  .testimoniosGrid {
     grid-template-columns: repeat(3, 1fr);
   }
 }
 
-.tarjetaTestimonio {
+.testimonioCard {
   background-color: var(--color-background);
   padding: var(--spacing-xl);
   border-radius: var(--radius-lg);
@@ -285,25 +285,25 @@
   transition: all var(--transition-normal);
 }
 
-.tarjetaTestimonio:hover {
+.testimonioCard:hover {
   box-shadow: var(--shadow-md);
   transform: translateY(-2px);
 }
 
-.textoTestimonio {
+.testimonioTexto {
   font-style: italic;
   color: var(--color-text-secondary);
   margin-bottom: var(--spacing-lg);
   line-height: 1.6;
 }
 
-.autorTestimonio {
+.testimonioAutor {
   display: flex;
   align-items: center;
   gap: var(--spacing-md);
 }
 
-.avatarTestimonio {
+.testimonioAvatar {
   width: 3rem;
   height: 3rem;
   background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-light) 100%);
@@ -316,33 +316,33 @@
   font-size: 1.125rem;
 }
 
-.informacionTestimonio h4 {
+.testimonioInfo h4 {
   font-size: 1rem;
   font-weight: 600;
   color: var(--color-text-primary);
   margin: 0 0 var(--spacing-xs);
 }
 
-.informacionTestimonio p {
+.testimonioInfo p {
   font-size: 0.875rem;
   color: var(--color-text-secondary);
   margin: 0;
 }
 
-/* Llamada a la acción final */
-.llamadaAccionFinal {
+/* CTA Final */
+.ctaFinal {
   background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-light) 100%);
   color: white;
   text-align: center;
 }
 
-.contenidoLlamadaAccion {
+.ctaContent {
   max-width: 600px;
   margin: 0 auto;
   padding: 0 var(--spacing-md);
 }
 
-.tituloLlamadaAccion {
+.ctaTitle {
   font-size: 2rem;
   font-weight: 700;
   margin-bottom: var(--spacing-md);
@@ -350,19 +350,19 @@
 }
 
 @media (min-width: 768px) {
-  .tituloLlamadaAccion {
+  .ctaTitle {
     font-size: 2.5rem;
   }
 }
 
-.subtituloLlamadaAccion {
+.ctaSubtitle {
   font-size: 1.125rem;
   margin-bottom: var(--spacing-2xl);
   opacity: 0.9;
   line-height: 1.6;
 }
 
-.botonLlamadaAccion {
+.ctaButton {
   background-color: white;
   color: var(--color-primary);
   font-weight: 600;
@@ -374,7 +374,7 @@
   box-shadow: var(--shadow-lg);
 }
 
-.botonLlamadaAccion:hover {
+.ctaButton:hover {
   transform: translateY(-2px);
   box-shadow: var(--shadow-xl);
   color: var(--color-primary-dark);
