@@ -194,13 +194,14 @@ const Register = () => {
                 <span>¿Ya tienes cuenta?</span>
               </div>
               
-              <Link 
-                to="/login" 
+              <button
+                type="button"
+                onClick={() => navigate('/login')}
                 className={styles.loginLink}
                 aria-label="Iniciar sesión con cuenta existente"
               >
                 Iniciar sesión
-              </Link>
+              </button>
             </footer>
           </div>
         </div>

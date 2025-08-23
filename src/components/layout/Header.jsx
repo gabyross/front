@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, NavLink, useLocation } from 'react-router-dom';
+import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import Button from '../common/Button';
 import styles from './Header.module.css';
@@ -12,6 +12,7 @@ const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { isAuthenticated, user, logout } = useAuth();
   const location = useLocation();
+  const navigate = useNavigate();
 
   // Detectar scroll para cambiar el estilo del header
   useEffect(() => {
@@ -36,6 +37,8 @@ const Header = () => {
   // Manejar cierre de sesión
   const manejarCierreSesion = async () => {
     await logout();
+    // Redirigir a la página principal después del logout
+    navigate('/', { replace: true });
   };
 
   const isActiveLink = (path) => {
@@ -104,7 +107,11 @@ const Header = () => {
                 </Button>
               </div>
             ) : (
-              <Button as={Link} to="/login" variant="primary" size="medium">
+              <Button 
+                variant="primary" 
+                size="medium"
+                onClick={() => navigate('/login')}
+              >
                 Iniciar sesión
               </Button>
             )}
@@ -182,13 +189,14 @@ const Header = () => {
                   </Button>
                 </div>
               ) : (
-                <Button 
-                  as={Link} 
-                  to="/login" 
+                <Button
                   variant="primary" 
                   size="medium" 
                   fullWidth
-                  onClick={() => setIsMobileMenuOpen(false)}
+                  onClick={() => {
+                    navigate('/login');
+                    setIsMobileMenuOpen(false);
+                  }}
                 >
                   Iniciar sesión
                 </Button>

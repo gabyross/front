@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Layout from '../components/layout/Layout';
 import Button from '../components/common/Button';
 import Card from '../components/common/Card';
@@ -15,6 +15,8 @@ import styles from './LandingPage.module.css';
  * Página principal de SmartStocker con información del producto y beneficios
  */
 const LandingPage = () => {
+  const navigate = useNavigate();
+
   const beneficios = [
     {
       icon: <BrainIcon size={32} />,
@@ -108,7 +110,11 @@ const LandingPage = () => {
               reducir desperdicios y maximizar ganancias a través de predicciones precisas.
             </p>
             <div className={styles.heroButtons}>
-              <Button as={Link} to="/login" variant="primary" size="large">
+              <Button 
+                variant="primary" 
+                size="large"
+                onClick={() => navigate('/login')}
+              >
                 Iniciar sesión
               </Button>
               <Button 
@@ -218,9 +224,13 @@ const LandingPage = () => {
             <p className={styles.ctaSubtitle}>
               Únete a los restaurantes que ya están maximizando sus ganancias con SmartStocker
             </p>
-            <Link to="/login" className={styles.ctaButton} aria-label="Empezar a usar SmartStocker ahora">
+            <button 
+              onClick={() => navigate('/login')}
+              className={styles.ctaButton} 
+              aria-label="Empezar a usar SmartStocker ahora"
+            >
               Empezar ahora
-            </Link>
+            </button>
           </div>
         </section>
       </div>

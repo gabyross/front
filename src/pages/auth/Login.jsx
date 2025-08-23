@@ -129,25 +129,27 @@ const Login = () => {
 
             {/* Enlaces adicionales */}
             <footer className={styles.footer}>
-              <Link 
-                to="/recuperar" 
+              <button
+                type="button"
+                onClick={() => navigate('/recuperar')}
                 className={styles.link}
                 aria-label="Recuperar contraseña olvidada"
               >
                 ¿Olvidaste tu contraseña?
-              </Link>
+              </button>
               
               <div className={styles.divider}>
                 <span>¿No tienes cuenta?</span>
               </div>
               
-              <Link 
-                to="/registro" 
+              <button
+                type="button"
+                onClick={() => navigate('/registro')}
                 className={styles.registerLink}
                 aria-label="Crear nueva cuenta"
               >
                 Crear cuenta
-              </Link>
+              </button>
             </footer>
           </div>
         </div>

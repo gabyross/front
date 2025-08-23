@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -129,14 +129,15 @@ const Recover = () => {
 
             {/* Enlaces adicionales */}
             <footer className={styles.footer}>
-              <Link 
-                to="/login" 
+              <button
+                type="button"
+                onClick={() => navigate('/login')}
                 className={styles.backLink}
                 aria-label="Volver a iniciar sesión"
               >
                 <ArrowLeft size={16} aria-hidden="true" />
                 Volver a iniciar sesión
-              </Link>
+              </button>
               
               {solicitudEnviada && (
                 <>
