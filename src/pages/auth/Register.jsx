@@ -11,7 +11,7 @@ import { ErrorMessage, SuccessMessage } from '../../components/feedback';
 import Button from '../../components/common/Button';
 import styles from './Register.module.css';
 
-// Schema de validación con Zod
+// Esquema de validación para el formulario de registro
 const registerSchema = z.object({
   nombre: z
     .string()
@@ -40,16 +40,16 @@ const registerSchema = z.object({
 const Register = () => {
   const navigate = useNavigate();
   const { register: registerUser, loading, error, clearError, isAuthenticated } = useAuth();
-  const [success, setSuccess] = useState(false);
+  const [registroExitoso, setRegistroExitoso] = useState(false);
 
-  // Redirigir si ya está autenticado
+  // Redirigir al dashboard si ya está autenticado
   useEffect(() => {
     if (isAuthenticated) {
-      navigate('/', { replace: true });
+      navigate('/dashboard', { replace: true });
     }
   }, [isAuthenticated, navigate]);
 
-  // Configurar formulario
+  // Configuración del formulario con react-hook-form
   const {
     register,
     handleSubmit,
@@ -68,27 +68,28 @@ const Register = () => {
   // Limpiar errores al montar el componente
   useEffect(() => {
     clearError();
-    setSuccess(false);
+    setRegistroExitoso(false);
   }, [clearError]);
 
-  // Manejar envío del formulario
-  const onSubmit = async (data) => {
-    setSuccess(false);
+  // Manejar envío del formulario de registro
+  const manejarEnvioFormularioRegistro = async (datosFormulario) => {
+    setRegistroExitoso(false);
     
-    const { confirmPassword, ...userData } = data;
-    const result = await registerUser(userData);
+    // Extraer datos sin la confirmación de contraseña
+    const { confirmPassword, ...datosUsuario } = datosFormulario;
+    const resultado = await registerUser(datosUsuario);
     
-    if (result.ok) {
-      setSuccess(true);
+    if (resultado.ok) {
+      setRegistroExitoso(true);
       reset();
-      // Auto-redirigir a login después de 3 segundos
+      // Redirigir automáticamente a login después de 3 segundos
       setTimeout(() => {
         navigate('/login');
       }, 3000);
     }
   };
 
-  const isLoading = loading || isSubmitting;
+  const estaEnviando = loading || isSubmitting;
 
   return (
     <Layout showFooter={false}>
@@ -104,7 +105,7 @@ const Register = () => {
             </header>
 
             {/* Mensaje de éxito */}
-            {success && (
+            {registroExitoso && (
               <SuccessMessage 
                 title="¡Cuenta creada exitosamente!"
                 message="Ahora puedes iniciar sesión con tus credenciales. Te redirigiremos automáticamente..."
@@ -113,8 +114,8 @@ const Register = () => {
             )}
 
             {/* Formulario */}
-            {!success && (
-              <form onSubmit={handleSubmit(onSubmit)} className={styles.form} noValidate>
+            {!registroExitoso && (
+              <form onSubmit={handleSubmit(manejarEnvioFormularioRegistro)} className={styles.form} noValidate>
                 {/* Mensaje de error global */}
                 {error && (
                   <ErrorMessage 
@@ -131,7 +132,7 @@ const Register = () => {
                   placeholder="Tu nombre completo"
                   icon={User}
                   error={errors.nombre?.message}
-                  disabled={isLoading}
+                  disabled={estaEnviando}
                   required
                   {...register('nombre')}
                 />
@@ -144,7 +145,7 @@ const Register = () => {
                   placeholder="tu@email.com"
                   icon={Mail}
                   error={errors.email?.message}
-                  disabled={isLoading}
+                  disabled={estaEnviando}
                   required
                   {...register('email')}
                 />
@@ -156,7 +157,7 @@ const Register = () => {
                   placeholder="Crea una contraseña segura"
                   icon={Lock}
                   error={errors.password?.message}
-                  disabled={isLoading}
+                  disabled={estaEnviando}
                   required
                   {...register('password')}
                 />
@@ -168,7 +169,7 @@ const Register = () => {
                   placeholder="Repite tu contraseña"
                   icon={Lock}
                   error={errors.confirmPassword?.message}
-                  disabled={isLoading}
+                  disabled={estaEnviando}
                   required
                   {...register('confirmPassword')}
                 />
@@ -179,10 +180,10 @@ const Register = () => {
                   variant="primary"
                   size="large"
                   fullWidth
-                  disabled={isLoading}
+                  disabled={estaEnviando}
                   className={styles.submitButton}
                 >
-                  {isLoading ? 'Creando cuenta...' : 'Crear cuenta'}
+                  {estaEnviando ? 'Creando cuenta...' : 'Crear cuenta'}
                 </Button>
               </form>
             )}

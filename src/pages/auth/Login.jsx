@@ -11,7 +11,7 @@ import { ErrorMessage } from '../../components/feedback';
 import Button from '../../components/common/Button';
 import styles from './Login.module.css';
 
-// Schema de validación con Zod
+// Esquema de validación para el formulario de login
 const loginSchema = z.object({
   email: z
     .string()
@@ -29,14 +29,14 @@ const Login = () => {
   const navigate = useNavigate();
   const { login, loading, error, clearError, isAuthenticated } = useAuth();
 
-  // Redirigir si ya está autenticado
+  // Redirigir al dashboard si ya está autenticado
   useEffect(() => {
     if (isAuthenticated) {
-      navigate('/', { replace: true });
+      navigate('/dashboard', { replace: true });
     }
   }, [isAuthenticated, navigate]);
 
-  // Configurar formulario
+  // Configuración del formulario con react-hook-form
   const {
     register,
     handleSubmit,
@@ -54,16 +54,17 @@ const Login = () => {
     clearError();
   }, [clearError]);
 
-  // Manejar envío del formulario
-  const onSubmit = async (data) => {
-    const result = await login(data);
+  // Manejar envío del formulario de login
+  const manejarEnvioFormularioLogin = async (datosFormulario) => {
+    const resultado = await login(datosFormulario);
     
-    if (result.ok) {
-      navigate('/', { replace: true });
+    if (resultado.ok) {
+      // Redirigir al dashboard después del login exitoso
+      navigate('/dashboard', { replace: true });
     }
   };
 
-  const isLoading = loading || isSubmitting;
+  const estaEnviando = loading || isSubmitting;
 
   return (
     <Layout showFooter={false}>
@@ -79,7 +80,7 @@ const Login = () => {
             </header>
 
             {/* Formulario */}
-            <form onSubmit={handleSubmit(onSubmit)} className={styles.form} noValidate>
+            <form onSubmit={handleSubmit(manejarEnvioFormularioLogin)} className={styles.form} noValidate>
               {/* Mensaje de error global */}
               {error && (
                 <ErrorMessage 
@@ -96,7 +97,7 @@ const Login = () => {
                 placeholder="tu@email.com"
                 icon={Mail}
                 error={errors.email?.message}
-                disabled={isLoading}
+                disabled={estaEnviando}
                 required
                 {...register('email')}
               />
@@ -108,7 +109,7 @@ const Login = () => {
                 placeholder="Ingresa tu contraseña"
                 icon={Lock}
                 error={errors.password?.message}
-                disabled={isLoading}
+                disabled={estaEnviando}
                 required
                 {...register('password')}
               />
@@ -119,10 +120,10 @@ const Login = () => {
                 variant="primary"
                 size="large"
                 fullWidth
-                disabled={isLoading}
+                disabled={estaEnviando}
                 className={styles.submitButton}
               >
-                {isLoading ? 'Iniciando sesión...' : 'Iniciar sesión'}
+                {estaEnviando ? 'Iniciando sesión...' : 'Iniciar sesión'}
               </Button>
             </form>
 

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, NavLink, useLocation } from 'react-router-dom';
+import { useAuth } from '../../contexts/AuthContext';
 import Button from '../common/Button';
 import styles from './Header.module.css';
 
@@ -9,6 +10,7 @@ import styles from './Header.module.css';
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { isAuthenticated, user, logout } = useAuth();
   const location = useLocation();
 
   // Detectar scroll para cambiar el estilo del header
@@ -29,6 +31,11 @@ const Header = () => {
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
+  // Manejar cierre de sesión
+  const manejarCierreSesion = async () => {
+    await logout();
   };
 
   const isActiveLink = (path) => {
@@ -60,6 +67,7 @@ const Header = () => {
                     className={styles.navLink}
                     onClick={(e) => {
                       e.preventDefault();
+                      // Scroll suave a la sección correspondiente
                       const element = document.querySelector(item.path);
                       if (element) {
                         element.scrollIntoView({ behavior: 'smooth' });
@@ -69,21 +77,37 @@ const Header = () => {
                     {item.label}
                   </a>
                 ) : (
-                  <Link
+                  <NavLink
                     to={item.path}
-                    className={`${styles.navLink} ${isActiveLink(item.path) ? styles.active : ''}`}
+                    className={({ isActive }) => 
+                      `${styles.navLink} ${isActive ? styles.active : ''}`
+                    }
                   >
                     {item.label}
-                  </Link>
+                  </NavLink>
                 )}
               </li>
             ))}
           </ul>
           
-          <div className={styles.loginButton}>
-            <Button as={Link} to="/login" variant="primary" size="medium">
-              Iniciar sesión
-            </Button>
+          {/* Botones de autenticación o información de usuario */}
+          <div className={styles.authSection}>
+            {isAuthenticated ? (
+              <div className={styles.userInfo}>
+                <span className={styles.userName}>Hola, {user?.nombre}</span>
+                <Button 
+                  variant="secondary" 
+                  size="medium"
+                  onClick={manejarCierreSesion}
+                >
+                  Cerrar sesión
+                </Button>
+              </div>
+            ) : (
+              <Button as={Link} to="/login" variant="primary" size="medium">
+                Iniciar sesión
+              </Button>
+            )}
           </div>
         </nav>
 
@@ -115,6 +139,7 @@ const Header = () => {
                       className={styles.mobileNavLink}
                       onClick={(e) => {
                         e.preventDefault();
+                        // Scroll suave y cierre del menú móvil
                         const element = document.querySelector(item.path);
                         if (element) {
                           element.scrollIntoView({ behavior: 'smooth' });
@@ -125,21 +150,49 @@ const Header = () => {
                       {item.label}
                     </a>
                   ) : (
-                    <Link
+                    <NavLink
                       to={item.path}
-                      className={`${styles.mobileNavLink} ${isActiveLink(item.path) ? styles.active : ''}`}
+                      className={({ isActive }) => 
+                        `${styles.mobileNavLink} ${isActive ? styles.active : ''}`
+                      }
+                      onClick={() => setIsMobileMenuOpen(false)}
                     >
                       {item.label}
-                    </Link>
+                    </NavLink>
                   )}
                 </li>
               ))}
             </ul>
             
-            <div className={styles.mobileLoginButton}>
-              <Button as={Link} to="/login" variant="primary" size="medium" fullWidth>
-                Iniciar sesión
-              </Button>
+            {/* Sección de autenticación en menú móvil */}
+            <div className={styles.mobileAuthSection}>
+              {isAuthenticated ? (
+                <div className={styles.mobileUserInfo}>
+                  <span className={styles.mobileUserName}>Hola, {user?.nombre}</span>
+                  <Button 
+                    variant="secondary" 
+                    size="medium" 
+                    fullWidth
+                    onClick={() => {
+                      manejarCierreSesion();
+                      setIsMobileMenuOpen(false);
+                    }}
+                  >
+                    Cerrar sesión
+                  </Button>
+                </div>
+              ) : (
+                <Button 
+                  as={Link} 
+                  to="/login" 
+                  variant="primary" 
+                  size="medium" 
+                  fullWidth
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  Iniciar sesión
+                </Button>
+              )}
             </div>
           </nav>
         </div>

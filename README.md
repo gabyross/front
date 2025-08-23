@@ -6,13 +6,15 @@ Plataforma web para ayudar a restaurantes y locales gastronómicos en CABA a pre
 
 ## 🔐 Módulo de Autenticación
 
-Sistema completo de autenticación con registro, inicio de sesión y recuperación de contraseña implementado con:
+Sistema completo de autenticación SPA (Single Page Application) con navegación sin recargas, implementado con:
 
 ### **Funcionalidades**
 - ✅ **Registro de usuarios** con validación completa
 - ✅ **Inicio de sesión** con credenciales
 - ✅ **Recuperación de contraseña** con flujo mock
 - ✅ **Gestión de sesión** con localStorage
+- ✅ **Navegación SPA** sin recargas de página
+- ✅ **Rutas protegidas** y públicas
 - ✅ **Validación de formularios** con Zod + React Hook Form
 - ✅ **Mensajes de feedback** (éxito/error) accesibles
 
@@ -22,19 +24,33 @@ Sistema completo de autenticación con registro, inicio de sesión y recuperaci�
 - `@hookform/resolvers` - Integración Zod + React Hook Form
 - `classnames` - Utilidad para clases CSS condicionales
 - `lucide-react` - Iconografía moderna y liviana
+- `react-router-dom` - Navegación SPA y gestión de rutas
 
 ### **Rutas de Autenticación**
 - `/login` - Iniciar sesión
 - `/registro` - Crear cuenta nueva
 - `/recuperar` - Recuperar contraseña olvidada
+- `/dashboard` - Página principal (requiere autenticación)
+
+### **Navegación SPA**
+La aplicación utiliza **React Router v6** para navegación sin recargas:
+- **BrowserRouter** configurado en `src/main.jsx`
+- **AuthProvider** envuelve toda la aplicación para gestión de estado
+- **Link/NavLink** en lugar de `<a href>` para navegación interna
+- **useNavigate** para redirecciones programáticas
+- **Rutas protegidas** que redirigen a login si no hay autenticación
+- **Rutas públicas** que redirigen a dashboard si ya está autenticado
 
 ### **Arquitectura Implementada**
 ```
 src/
+├── main.jsx                     # Punto de entrada con BrowserRouter y AuthProvider
 ├── contexts/
 │   └── AuthContext.jsx          # Contexto global de autenticación
 ├── services/
 │   └── auth.mock.js            # Servicio mock con localStorage
+├── routes/
+│   └── AppRoutes.jsx           # Configuración de rutas y protección
 ├── pages/auth/
 │   ├── Login.jsx + .module.css # Página de inicio de sesión
 │   ├── Register.jsx + .module.css # Página de registro
@@ -46,6 +62,19 @@ src/
     ├── SuccessMessage.jsx + .module.css # Mensajes de éxito
     └── ErrorMessage.jsx + .module.css # Mensajes de error
 ```
+
+### **Rehidratación de Sesión**
+El sistema mantiene la sesión del usuario entre recargas:
+1. **AuthContext** lee `localStorage('auth')` al inicializar
+2. Si existe una sesión válida, rehidrata el estado del usuario
+3. Las rutas protegidas verifican automáticamente la autenticación
+4. El header muestra información del usuario o botón de login según el estado
+
+### **Configuración Técnica**
+- **`<base href="/" />`** en `index.html` para compatibilidad con BrowserRouter
+- **Providers en orden correcto**: BrowserRouter → AuthProvider → App
+- **Variables con nombres descriptivos** (ej: `manejarEnvioFormularioLogin`)
+- **Comentarios explicativos** en funciones y bloques importantes
 
 ### **Validaciones Implementadas**
 - **Email**: Formato válido requerido
@@ -59,6 +88,15 @@ src/
 - ✅ Estados `aria-invalid` y `aria-describedby`
 - ✅ Mensajes con `aria-live` para screen readers
 - ✅ Focus visible en todos los elementos interactivos
+- ✅ Navegación semántica con `<main>`, `<header>`, `<nav>`
+
+### **Buenas Prácticas Implementadas**
+- ✅ **Nombres descriptivos**: `manejarEnvioFormularioLogin` vs `onSubmit`
+- ✅ **Comentarios claros**: Explicaciones breves sobre qué hace cada función
+- ✅ **Navegación SPA**: Link/NavLink en lugar de `<a href>`
+- ✅ **Estado centralizado**: AuthContext para toda la aplicación
+- ✅ **Validación robusta**: Zod + react-hook-form
+- ✅ **Código modular**: Componentes pequeños y reutilizables
 
 ## 🎨 Design System
 
