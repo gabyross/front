@@ -18,7 +18,8 @@ const Checkbox = ({
   children,
   ...props
 }) => {
-  const checkboxId = id || name;
+  const autoId = useId();
+  const checkboxId = id || name || autoId;
   
   const checkboxClasses = [
     styles.checkboxContainer,
@@ -39,34 +40,28 @@ const Checkbox = ({
           required={required}
           disabled={disabled}
           className={styles.hiddenCheckbox}
-          aria-invalid={error ? 'true' : 'false'}
+          aria-invalid={!!error}
           aria-describedby={error ? `${checkboxId}-error` : undefined}
           {...props}
         />
         
-        <div className={styles.customCheckbox} aria-hidden="true">
-          {checked && (
-            <Check size={14} className={styles.checkIcon} />
-          )}
-        </div>
-        
-        {(label || children) && (
-          <label 
-            htmlFor={checkboxId} 
-            className={styles.label}
-          >
-            {label || children}
-            {required && <span className={styles.required} aria-label="obligatorio">*</span>}
-          </label>
-        )}
-      </div>
-      
+        {/* cuadrito visual */}
+        <span className={styles.customCheckbox} aria-hidden="true">
+          {checked && <Check size={14} className={styles.checkIcon} />}
+        </span>
+
+        {/* texto */}
+        <span className={styles.text}>
+          {label || children}
+          {required && <span className={styles.required} aria-label="obligatorio">*</span>}
+        </span>
+      </label>
+
       {error && (
-        <span 
+        <span
           id={`${checkboxId}-error`}
           className={styles.errorMessage}
           role="alert"
-          onClick={(e) => e.preventDefault()}
         >
           {error}
         </span>
