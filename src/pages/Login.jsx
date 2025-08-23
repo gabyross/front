@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import Layout from '../components/layout/Layout';
 import Button from '../components/common/Button';
 import Input from '../components/common/Input';
+import PasswordInput from '../components/common/PasswordInput';
 import styles from './Login.module.css';
 
 /**
@@ -125,8 +126,7 @@ const Login = () => {
                 autoFocus
               />
 
-              <Input
-                type="password"
+              <PasswordInput
                 name="password"
                 label="Contraseña"
                 placeholder="Ingresa tu contraseña"
