@@ -199,5 +199,3 @@ const Encabezado = () => {
     </header>
   );
 };
-
-export default Encabezado;
