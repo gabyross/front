@@ -135,7 +135,7 @@ const LandingPage = () => {
             <div className={styles.beneficiosGrid}>
               {beneficios.map((beneficio, index) => (
                 <div key={index} className={styles.beneficioCard}>
-                  <div className={styles.beneficioIcon}>
+                  <div className={styles.beneficioIcon} aria-hidden="true">
                     {beneficio.icon}
                   </div>
                   <h3 className={styles.beneficioTitle}>
@@ -163,7 +163,7 @@ const LandingPage = () => {
             <div className={styles.pasosGrid}>
               {pasos.map((paso, index) => (
                 <div key={index} className={styles.paso}>
-                  <div className={styles.pasoNumero}>
+                  <div className={styles.pasoNumero} aria-hidden="true">
                     {paso.numero}
                   </div>
                   <h3 className={styles.pasoTitle}>
@@ -195,7 +195,7 @@ const LandingPage = () => {
                     "{testimonio.texto}"
                   </p>
                   <div className={styles.testimonioAutor}>
-                    <div className={styles.testimonioAvatar}>
+                    <div className={styles.testimonioAvatar} aria-hidden="true">
                       {testimonio.avatar}
                     </div>
                     <div className={styles.testimonioInfo}>
@@ -218,7 +218,7 @@ const LandingPage = () => {
             <p className={styles.ctaSubtitle}>
               Únete a los restaurantes que ya están maximizando sus ganancias con SmartStocker
             </p>
-            <Link to="/login" className={styles.ctaButton}>
+            <Link to="/login" className={styles.ctaButton} aria-label="Empezar a usar SmartStocker ahora">
               Empezar ahora
             </Link>
           </div>

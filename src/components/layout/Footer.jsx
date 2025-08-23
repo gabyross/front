@@ -32,14 +32,18 @@ const Footer = () => {
           {/* Enlaces del footer */}
           <nav aria-label="Enlaces del pie de página">
             <ul className={styles.links}>
+            <ul className={styles.links}>
               {footerLinks.map((link) => (
                 <li key={link.path}>
                   <Link to={link.path} className={styles.link}>
                     {link.label}
                   </Link>
                 </li>
+                  </Link>
+                </li>
               ))}
             </ul>
+          </nav>
           </nav>
         </div>
 

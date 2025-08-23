@@ -10,6 +10,7 @@ const Button = ({
   size = 'medium',
   disabled = false,
   fullWidth = false,
+  as: Component = 'button',
   onClick,
   type = 'button',
   className = '',
@@ -23,13 +24,25 @@ const Button = ({
     className
   ].filter(Boolean).join(' ');
 
+  const buttonProps = {
+    className: buttonClasses,
+    disabled,
+    onClick,
+    ...props
+  };
+
+  if (Component !== 'button') {
+    return (
+      <Component {...buttonProps}>
+        {children}
+      </Component>
+    );
+  }
+
   return (
     <button
       type={type}
-      className={buttonClasses}
-      disabled={disabled}
-      onClick={onClick}
-      {...props}
+      {...buttonProps}
     >
       {children}
     </button>

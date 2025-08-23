@@ -140,10 +140,12 @@ const Header = () => {
               Iniciar sesión
             </Button>
           </div>
-        </div>
+        </nav>
       </div>
     </header>
   );
 };
 
 export default Header;
+          aria-label={isMobileMenuOpen ? 'Cerrar menú' : 'Abrir menú'}
+          aria-expanded={isMobileMenuOpen}
