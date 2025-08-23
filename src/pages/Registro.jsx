@@ -264,33 +264,3 @@ const Registro = () => {
 };
 
 export default Registro;
-              </div>
-            </div>
-          </div>
-
-          {/* Información adicional */}
-          <div className={styles.registroInfo}>
-            <h2 className={styles.infoTitle}>
-              Comienza a optimizar tu restaurante hoy
-            </h2>
-            <ul className={styles.infoList}>
-              <li>Predicciones precisas de ventas</li>
-              <li>Optimización automática de inventario</li>
-              <li>Reducción de desperdicios hasta 40%</li>
-              <li>Análisis detallados y reportes</li>
-              <li>Soporte especializado para restaurantes</li>
-            </ul>
-            
-            <div className={styles.trustIndicators}>
-              <p className={styles.trustText}>
-                <strong>+500 restaurantes</strong> ya confían en SmartStocker
-              </p>
-            </div>
-          </div>
-        </div>
-      </main>
-    </Layout>
-  );
-};
-
-export default Registro;
