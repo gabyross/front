@@ -63,7 +63,7 @@ const Checkbox = ({
             }
           }}
         >
-          {checked && <Check size={14} className={styles.checkIcon} />}
+          <Check size={14} className={`${styles.checkIcon} ${checked ? styles.visible : ''}`} />
         </span>
 
         {/* texto */}

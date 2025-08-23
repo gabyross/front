@@ -43,6 +43,11 @@
   transition: all var(--transition-fast);
 }
 
+.checkIcon.visible {
+  opacity: 1;
+  transform: scale(1);
+}
+
 /* Estados del checkbox */
 .hiddenCheckbox:checked + .customCheckbox {
   background-color: var(--color-primary);
