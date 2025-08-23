@@ -1,4 +1,5 @@
 import React from 'react';
+import { useId } from 'react';
 import { Check } from 'lucide-react';
 import styles from './Checkbox.module.css';
 
@@ -30,7 +31,7 @@ const Checkbox = ({
 
   return (
     <div className={checkboxClasses}>
-      <div className={styles.checkboxWrapper}>
+      <label htmlFor={checkboxId} className={styles.checkboxWrapper} onClick={(e) => e.preventDefault()}>
         <input
           type="checkbox"
           id={checkboxId}
