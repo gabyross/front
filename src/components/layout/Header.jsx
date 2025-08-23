@@ -55,8 +55,9 @@ const Header = () => {
             {navItems.map((item) => (
               <li key={item.path}>
                 {item.path.startsWith('#') ? (
-                  <a
+                  <button
                     href={item.path}
+                   type="button"
                     className={styles.navLink}
                     onClick={(e) => {
                       e.preventDefault();
@@ -67,7 +68,7 @@ const Header = () => {
                     }}
                   >
                     {item.label}
-                  </a>
+                  </button>
                 ) : (
                   <Link
                     to={item.path}
