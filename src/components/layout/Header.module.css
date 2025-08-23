@@ -117,20 +117,8 @@
 }
 
 /* Botón de login */
-.authSection {
+.loginButton {
   margin-left: var(--spacing-md);
-}
-
-.userInfo {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-md);
-}
-
-.userName {
-  font-size: 0.875rem;
-  color: var(--color-text-secondary);
-  font-weight: 500;
 }
 
 /* Menú móvil */
@@ -263,20 +251,7 @@
   font-weight: 600;
 }
 
-.mobileAuthSection {
+.mobileLoginButton {
   margin-top: var(--spacing-lg);
   width: 100%;
-}
-
-.mobileUserInfo {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-md);
-  text-align: center;
-}
-
-.mobileUserName {
-  font-size: 0.875rem;
-  color: var(--color-text-secondary);
-  font-weight: 500;
 }
