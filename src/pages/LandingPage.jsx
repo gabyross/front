@@ -3,12 +3,7 @@ import { Link } from 'react-router-dom';
 import Layout from '../components/layout/Layout';
 import Button from '../components/common/Button';
 import Card from '../components/common/Card';
-import ChartIcon from '../components/icons/ChartIcon';
-import InventoryIcon from '../components/icons/InventoryIcon';
-import BrainIcon from '../components/icons/BrainIcon';
-import ClockIcon from '../components/icons/ClockIcon';
-import TrendingUpIcon from '../components/icons/TrendingUpIcon';
-import ShieldIcon from '../components/icons/ShieldIcon';
+import { ChartIcon, InventoryIcon, BrainIcon, ClockIcon, TrendingUpIcon, ShieldIcon } from '../components/Icon';
 import styles from './LandingPage.module.css';
 
 /**
