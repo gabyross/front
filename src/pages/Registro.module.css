@@ -1,0 +1,230 @@
+/* Estilos para la página de Registro */
+
+.registroPage {
+  min-height: calc(100vh - 4rem);
+  background: linear-gradient(135deg, var(--color-background-accent) 0%, var(--color-background-light) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-xl) var(--spacing-md);
+}
+
+.registroContainer {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--spacing-2xl);
+  max-width: 1200px;
+  width: 100%;
+  align-items: center;
+}
+
+@media (min-width: 1024px) {
+  .registroContainer {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-4xl);
+  }
+}
+
+/* Tarjeta de registro */
+.registroCard {
+  background-color: var(--color-background);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-xl);
+  padding: var(--spacing-2xl);
+  width: 100%;
+  max-width: 450px;
+  margin: 0 auto;
+}
+
+@media (min-width: 768px) {
+  .registroCard {
+    padding: var(--spacing-3xl);
+  }
+}
+
+/* Header del registro */
+.registroHeader {
+  text-align: center;
+  margin-bottom: var(--spacing-2xl);
+}
+
+.logoLink {
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  text-decoration: none;
+  display: inline-block;
+  margin-bottom: var(--spacing-lg);
+  transition: color var(--transition-normal);
+}
+
+.logoLink:hover {
+  color: var(--color-primary-light);
+}
+
+.registroTitle {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin-bottom: var(--spacing-sm);
+}
+
+.registroSubtitle {
+  color: var(--color-text-secondary);
+  font-size: 1rem;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Formulario */
+.registroForm {
+  margin-bottom: var(--spacing-xl);
+}
+
+.generalError {
+  background-color: rgba(239, 68, 68, 0.1);
+  color: var(--color-error);
+  padding: var(--spacing-md);
+  border-radius: var(--radius-md);
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: var(--spacing-lg);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+/* Enlaces en términos */
+.termsLink {
+  color: var(--color-primary);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color var(--transition-normal);
+}
+
+.termsLink:hover {
+  color: var(--color-primary-light);
+  text-decoration: underline;
+}
+
+/* Footer del registro */
+.registroFooter {
+  text-align: center;
+}
+
+.loginPrompt {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+}
+
+.loginLink {
+  color: var(--color-primary);
+  text-decoration: none;
+  font-weight: 600;
+  transition: color var(--transition-normal);
+}
+
+.loginLink:hover {
+  color: var(--color-primary-light);
+  text-decoration: underline;
+}
+
+/* Información lateral */
+.registroInfo {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .registroInfo {
+    display: block;
+    padding: var(--spacing-xl);
+  }
+}
+
+.infoTitle {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin-bottom: var(--spacing-xl);
+  line-height: 1.2;
+}
+
+.infoList {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 var(--spacing-2xl) 0;
+}
+
+.infoList li {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  padding: var(--spacing-md) 0;
+  color: var(--color-text-secondary);
+  font-size: 1.125rem;
+  line-height: 1.5;
+}
+
+.infoList li::before {
+  content: '✓';
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  background-color: var(--color-success);
+  color: white;
+  border-radius: 50%;
+  font-weight: 600;
+  font-size: 0.875rem;
+  flex-shrink: 0;
+}
+
+/* Indicadores de confianza */
+.trustIndicators {
+  padding: var(--spacing-lg);
+  background-color: var(--color-background-accent);
+  border-radius: var(--radius-lg);
+  text-align: center;
+}
+
+.trustText {
+  color: var(--color-text-primary);
+  font-size: 1rem;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.trustText strong {
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+/* Estados de focus y accesibilidad */
+.registroCard *:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .registroPage {
+    padding: var(--spacing-lg) var(--spacing-md);
+  }
+  
+  .registroCard {
+    padding: var(--spacing-xl);
+  }
+  
+  .registroTitle {
+    font-size: 1.5rem;
+  }
+  
+  .loginPrompt {
+    flex-direction: column;
+    gap: var(--spacing-sm);
+  }
+}
