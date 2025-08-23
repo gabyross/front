@@ -54,7 +54,6 @@ const Checkbox = ({
           <label 
             htmlFor={checkboxId} 
             className={styles.label}
-            onClick={(e) => e.preventDefault()}
           >
             {label || children}
             {required && <span className={styles.required} aria-label="obligatorio">*</span>}
