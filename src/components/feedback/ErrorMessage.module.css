@@ -1,0 +1,52 @@
+/* Estilos para ErrorMessage */
+
+.errorMessage {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-md);
+  padding: var(--spacing-lg);
+  background-color: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--spacing-lg);
+}
+
+.icon {
+  flex-shrink: 0;
+  color: var(--color-error);
+  margin-top: 0.125rem;
+}
+
+.content {
+  flex: 1;
+  min-width: 0;
+}
+
+.title {
+  font-family: var(--font-heading);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-error);
+  margin: 0 0 var(--spacing-xs) 0;
+  line-height: 1.4;
+}
+
+.message {
+  font-size: 0.875rem;
+  color: var(--color-text-primary);
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Variante sin icono */
+.errorMessage:not(:has(.icon)) {
+  padding-left: var(--spacing-lg);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .errorMessage {
+    padding: var(--spacing-md);
+    gap: var(--spacing-sm);
+  }
+}
