@@ -232,3 +232,5 @@ const PaginaInicio = () => {
     </Layout>
   );
 };
+
+export default PaginaInicio;
