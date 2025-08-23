@@ -174,6 +174,12 @@ input:focus, textarea:focus, select:focus {
   }
 }
 
+/* Layout principal */
+.main-content {
+  padding-top: 4rem;
+  min-height: calc(100vh - 4rem);
+}
+
 /* Responsive typography */
 @media (min-width: 768px) {
   h1 {

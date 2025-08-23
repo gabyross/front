@@ -12,32 +12,32 @@ import styles from './LandingPage.module.css';
 const LandingPage = () => {
   const beneficios = [
     {
-      icon: <BrainIcon size={32} />,
+      icon: <BrainIcon size={32} aria-hidden="true" />,
       title: 'Predicción Inteligente',
       description: 'Algoritmos avanzados analizan tus datos históricos para predecir ventas futuras con alta precisión.'
     },
     {
-      icon: <InventoryIcon size={32} />,
+      icon: <InventoryIcon size={32} aria-hidden="true" />,
       title: 'Optimización de Inventario',
       description: 'Reduce desperdicios y costos manteniendo el stock óptimo basado en predicciones reales.'
     },
     {
-      icon: <ChartIcon size={32} />,
+      icon: <ChartIcon size={32} aria-hidden="true" />,
       title: 'Análisis Detallado',
       description: 'Visualiza tendencias, patrones y métricas clave para tomar decisiones informadas.'
     },
     {
-      icon: <ClockIcon size={32} />,
+      icon: <ClockIcon size={32} aria-hidden="true" />,
       title: 'Ahorro de Tiempo',
       description: 'Automatiza la planificación de compras y reduce el tiempo dedicado a gestión manual.'
     },
     {
-      icon: <TrendingUpIcon size={32} />,
+      icon: <TrendingUpIcon size={32} aria-hidden="true" />,
       title: 'Aumento de Rentabilidad',
       description: 'Maximiza ganancias reduciendo costos operativos y mejorando la eficiencia del negocio.'
     },
     {
-      icon: <ShieldIcon size={32} />,
+      icon: <ShieldIcon size={32} aria-hidden="true" />,
       title: 'Datos Seguros',
       description: 'Tu información está protegida con los más altos estándares de seguridad y privacidad.'
     }
@@ -91,7 +91,7 @@ const LandingPage = () => {
 
   return (
     <Layout>
-      <div className={styles.landingPage}>
+      <main className={styles.landingPage}>
         {/* Hero Section */}
         <section className={styles.hero}>
           <div className={styles.heroContent}>
@@ -110,6 +110,7 @@ const LandingPage = () => {
                 variant="secondary" 
                 size="large"
                 onClick={() => scrollToSection('caracteristicas')}
+                aria-label="Ver demostración de características"
               >
                 Ver demo
               </Button>
@@ -130,7 +131,7 @@ const LandingPage = () => {
             <div className={styles.beneficiosGrid}>
               {beneficios.map((beneficio, index) => (
                 <div key={index} className={styles.beneficioCard}>
-                  <div className={styles.beneficioIcon} aria-hidden="true">
+                  <div className={styles.beneficioIcon}>
                     {beneficio.icon}
                   </div>
                   <h3 className={styles.beneficioTitle}>
@@ -158,7 +159,7 @@ const LandingPage = () => {
             <div className={styles.pasosGrid}>
               {pasos.map((paso, index) => (
                 <div key={index} className={styles.paso}>
-                  <div className={styles.pasoNumero} aria-hidden="true">
+                  <div className={styles.pasoNumero}>
                     {paso.numero}
                   </div>
                   <h3 className={styles.pasoTitle}>
@@ -190,7 +191,7 @@ const LandingPage = () => {
                     "{testimonio.texto}"
                   </p>
                   <div className={styles.testimonioAutor}>
-                    <div className={styles.testimonioAvatar} aria-hidden="true">
+                    <div className={styles.testimonioAvatar}>
                       {testimonio.avatar}
                     </div>
                     <div className={styles.testimonioInfo}>
@@ -213,12 +214,12 @@ const LandingPage = () => {
             <p className={styles.ctaSubtitle}>
               Únete a los restaurantes que ya están maximizando sus ganancias con SmartStocker
             </p>
-            <Link to="/login" className={styles.ctaButton} aria-label="Empezar a usar SmartStocker ahora">
+            <Link to="/login" className={styles.ctaButton} aria-label="Comenzar a usar SmartStocker">
               Empezar ahora
             </Link>
           </div>
         </section>
-      </div>
+      </main>
     </Layout>
   );
 };

@@ -7,48 +7,59 @@ import Layout from '../components/layout/Layout';
 const Login = () => {
   return (
     <Layout showFooter={false}>
-      <div style={{ 
-        display: 'flex', 
-        alignItems: 'center', 
-        justifyContent: 'center', 
-        minHeight: 'calc(100vh - 4rem)',
-        padding: '2rem' 
-      }}>
-        <div style={{
-          background: 'white',
-          padding: '3rem',
-          borderRadius: '12px',
-          boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
-          maxWidth: '400px',
-          width: '100%',
-          textAlign: 'center'
-        }}>
-          <h1 style={{ 
-            fontFamily: 'var(--font-heading)',
-            fontSize: '2rem',
-            fontWeight: '700',
-            color: 'var(--color-text-primary)',
-            marginBottom: '1rem'
-          }}>
+      <main className="login-page">
+        <section className="login-container">
+          <h1>
             Iniciar sesión
           </h1>
-          <p style={{
-            color: 'var(--color-text-secondary)',
-            marginBottom: '2rem'
-          }}>
+          <p>
             Esta página será implementada en la próxima iteración
           </p>
-          <div style={{
-            padding: '1rem',
-            backgroundColor: 'var(--color-background-accent)',
-            borderRadius: '8px',
-            fontSize: '0.875rem',
-            color: 'var(--color-text-secondary)'
-          }}>
+          <div className="placeholder-content">
             Formulario de login próximamente...
           </div>
-        </div>
-      </div>
+        </section>
+      </main>
+      <style jsx>{`
+        .login-page {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          min-height: calc(100vh - 4rem);
+          padding: 2rem;
+        }
+        
+        .login-container {
+          background: white;
+          padding: 3rem;
+          border-radius: 12px;
+          box-shadow: var(--shadow-lg);
+          max-width: 400px;
+          width: 100%;
+          text-align: center;
+        }
+        
+        .login-container h1 {
+          font-family: var(--font-heading);
+          font-size: 2rem;
+          font-weight: 700;
+          color: var(--color-text-primary);
+          margin-bottom: 1rem;
+        }
+        
+        .login-container p {
+          color: var(--color-text-secondary);
+          margin-bottom: 2rem;
+        }
+        
+        .placeholder-content {
+          padding: 1rem;
+          background-color: var(--color-background-accent);
+          border-radius: 8px;
+          font-size: 0.875rem;
+          color: var(--color-text-secondary);
+        }
+      `}</style>
     </Layout>
   );
 };

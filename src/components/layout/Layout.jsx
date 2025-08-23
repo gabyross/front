@@ -7,13 +7,13 @@ import Footer from './Footer';
  */
 const Layout = ({ children, showFooter = true }) => {
   return (
-    <div className="layout">
+    <>
       <Header />
-      <main style={{ paddingTop: '4rem', minHeight: 'calc(100vh - 4rem)' }}>
+      <div className="main-content">
         {children}
-      </main>
+      </div>
       {showFooter && <Footer />}
-    </div>
+    </>
   );
 };
 

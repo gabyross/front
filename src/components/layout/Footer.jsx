@@ -21,7 +21,7 @@ const Footer = () => {
         <div className={styles.content}>
           {/* Marca y descripción */}
           <div className={styles.brand}>
-            <Link to="/" className={styles.logo} aria-label="SmartStocker - Inicio">
+            <Link to="/" className={styles.logo} aria-label="SmartStocker - Ir al inicio">
               SmartStocker
             </Link>
             <p className={styles.description}>
