@@ -6,7 +6,7 @@ Plataforma web para ayudar a restaurantes y locales gastronómicos en CABA a pre
 
 ## 🔐 Módulo de Autenticación
 
-Sistema completo de autenticación SPA (Single Page Application) con navegación sin recargas, implementado con:
+Sistema completo de autenticación SPA (Single Page Application) con navegación sin recargas de página, implementado con React Router v6 y estado global persistente.
 
 ### **Funcionalidades**
 - ✅ **Registro de usuarios** con validación completa
@@ -17,6 +17,9 @@ Sistema completo de autenticación SPA (Single Page Application) con navegación
 - ✅ **Rutas protegidas** y públicas
 - ✅ **Validación de formularios** con Zod + React Hook Form
 - ✅ **Mensajes de feedback** (éxito/error) accesibles
+- ✅ **Rehidratación de sesión** automática al recargar
+- ✅ **Redirecciones inteligentes** según estado de autenticación
+- ✅ **Iconos modernos** con lucide-react
 
 ### **Librerías Agregadas**
 - `react-hook-form` - Gestión eficiente de formularios
@@ -33,13 +36,15 @@ Sistema completo de autenticación SPA (Single Page Application) con navegación
 - `/dashboard` - Página principal (requiere autenticación)
 
 ### **Navegación SPA**
-La aplicación utiliza **React Router v6** para navegación sin recargas:
+La aplicación utiliza **React Router v6** para navegación instantánea sin recargas de página:
 - **BrowserRouter** configurado en `src/main.jsx`
 - **AuthProvider** envuelve toda la aplicación para gestión de estado
-- **Link/NavLink** en lugar de `<a href>` para navegación interna
+- **Link/NavLink** y **useNavigate** en lugar de `<a href>` para navegación interna
 - **useNavigate** para redirecciones programáticas
 - **Rutas protegidas** que redirigen a login si no hay autenticación
 - **Rutas públicas** que redirigen a dashboard si ya está autenticado
+- **`<base href="/" />`** en index.html para compatibilidad con BrowserRouter
+- **Estados de loading** durante verificación de autenticación
 
 ### **Arquitectura Implementada**
 ```
@@ -58,9 +63,12 @@ src/
 ├── components/forms/
 │   ├── TextField.jsx + .module.css # Input con validación
 │   └── PasswordField.jsx + .module.css # Input de contraseña con toggle
-└── components/feedback/
+├── components/feedback/
     ├── SuccessMessage.jsx + .module.css # Mensajes de éxito
     └── ErrorMessage.jsx + .module.css # Mensajes de error
+└── components/icons/
+    ├── Icon.jsx                # Wrapper para iconos de lucide-react
+    └── [Icono]Icon.jsx        # Componentes de compatibilidad
 ```
 
 ### **Rehidratación de Sesión**
@@ -70,17 +78,33 @@ El sistema mantiene la sesión del usuario entre recargas:
 3. Las rutas protegidas verifican automáticamente la autenticación
 4. El header muestra información del usuario o botón de login según el estado
 
+### **Sistema de Rutas Protegidas**
+- **RutaProtegida**: Componente que verifica autenticación antes de mostrar contenido
+- **RutaPublica**: Redirige a dashboard si el usuario ya está autenticado
+- **Estados de loading**: Evita parpadeos durante verificación de sesión
+- **Redirecciones automáticas**: Login exitoso → dashboard, logout → landing
+
 ### **Configuración Técnica**
 - **`<base href="/" />`** en `index.html` para compatibilidad con BrowserRouter
 - **Providers en orden correcto**: BrowserRouter → AuthProvider → App
-- **Variables con nombres descriptivos** (ej: `manejarEnvioFormularioLogin`)
+- **Variables con nombres descriptivos** (ej: `manejarEnvioFormularioLogin`, `estaEnviando`)
 - **Comentarios explicativos** en funciones y bloques importantes
+- **Navegación programática** con `useNavigate` en lugar de enlaces directos
+- **Estados de loading** y feedback visual durante operaciones
 
 ### **Validaciones Implementadas**
 - **Email**: Formato válido requerido
 - **Contraseña**: Mínimo 6 caracteres, al menos 1 letra y 1 número
 - **Nombre**: 2-60 caracteres, solo letras y espacios
 - **Confirmación**: Las contraseñas deben coincidir
+
+### **Servicio de Autenticación Mock**
+El sistema utiliza `localStorage` para simular un backend completo:
+- **Registro**: Verifica emails únicos, guarda usuarios en `localStorage('smartstocker_users')`
+- **Login**: Valida credenciales y crea sesión en `localStorage('smartstocker_auth')`
+- **Logout**: Limpia sesión del localStorage
+- **Recuperación**: Simula envío de email con mensaje genérico de seguridad
+- **Rehidratación**: Restaura sesión automáticamente al recargar la aplicación
 
 ### **Accesibilidad**
 - ✅ Navegación por teclado completa
@@ -93,10 +117,31 @@ El sistema mantiene la sesión del usuario entre recargas:
 ### **Buenas Prácticas Implementadas**
 - ✅ **Nombres descriptivos**: `manejarEnvioFormularioLogin` vs `onSubmit`
 - ✅ **Comentarios claros**: Explicaciones breves sobre qué hace cada función
-- ✅ **Navegación SPA**: Link/NavLink en lugar de `<a href>`
+- ✅ **Navegación SPA**: Link/NavLink/useNavigate en lugar de `<a href>`
 - ✅ **Estado centralizado**: AuthContext para toda la aplicación
 - ✅ **Validación robusta**: Zod + react-hook-form
 - ✅ **Código modular**: Componentes pequeños y reutilizables
+- ✅ **Imports organizados**: React/librerías primero, componentes internos después
+- ✅ **Manejo de errores**: Estados de loading y mensajes de feedback claros
+
+## 🎨 Migración de Iconos
+
+### **Lucide React Integration**
+Los iconos han sido migrados de SVG manuales a **lucide-react** para mayor consistencia:
+
+- ✅ **Wrapper unificado**: Componente `<Icon name="..." />` para nuevos iconos
+- ✅ **Compatibilidad**: Componentes existentes (`BrainIcon`, `ChartIcon`, etc.) mantienen su API
+- ✅ **Fallback robusto**: `HelpCircle` automático si un icono no existe
+- ✅ **Props consistentes**: `size`, `color`, `strokeWidth` funcionan igual que antes
+- ✅ **Tree-shaking**: Solo se incluyen los iconos utilizados en el bundle
+
+### **Iconos Disponibles**
+- `brain` → Inteligencia artificial y predicciones
+- `chart` → Gráficos y análisis
+- `clock` → Tiempo y horarios
+- `inventory` → Gestión de inventario
+- `shield` → Seguridad y protección
+- `trending-up` → Crecimiento y tendencias
 
 ## 🎨 Design System
 
@@ -517,6 +562,62 @@ Estos componentes se utilizan en múltiples pantallas:
 
 ## 🚀 Desarrollo
 
+### **Instalación y Configuración**
+
+1. **Clonar el repositorio**:
+```bash
+git clone [url-del-repositorio]
+cd smartstocker
+```
+
+2. **Instalar dependencias**:
+```bash
+npm ci
+```
+
+3. **Ejecutar en desarrollo**:
+```bash
+npm run dev
+```
+
+4. **Compilar para producción**:
+```bash
+npm run build
+```
+
+### **Estructura del Proyecto**
+```
+src/
+├── main.jsx                 # Punto de entrada con providers
+├── App.jsx                  # Componente raíz
+├── routes/
+│   └── AppRoutes.jsx       # Configuración de rutas
+├── contexts/
+│   └── AuthContext.jsx     # Estado global de autenticación
+├── services/
+│   └── auth.mock.js        # Servicios de autenticación mock
+├── pages/
+│   ├── LandingPage.jsx     # Página principal
+│   └── auth/               # Páginas de autenticación
+├── components/
+│   ├── layout/             # Header, Footer, Layout
+│   ├── forms/              # TextField, PasswordField
+│   ├── feedback/           # Success/Error messages
+│   ├── common/             # Button, Card, etc.
+│   └── icons/              # Iconos con lucide-react
+└── assets/
+    └── styles/             # CSS global y variables
+```
+
+### **Tecnologías Utilizadas**
+- **React 18** - Librería principal
+- **React Router v6** - Navegación SPA
+- **React Hook Form** - Gestión de formularios
+- **Zod** - Validación de esquemas
+- **Lucide React** - Iconografía moderna
+- **CSS Modules** - Estilos modulares
+- **Vite** - Build tool y dev server
+
 ## Pasos para usar
 
 1. Instalar dependencias:
@@ -532,3 +633,30 @@ npm run dev
 3. Conectar el repo en Amplify Console y desplegar.
 
 4. (Opcional) Configurar variable `VITE_API_URL` en Amplify.
+
+### **Comandos Disponibles**
+- `npm run dev` - Servidor de desarrollo
+- `npm run build` - Compilar para producción
+- `npm run preview` - Vista previa de build de producción
+- `npm run lint` - Verificar código con ESLint
+
+### **Variables de Entorno**
+- `VITE_API_URL` - URL de la API (opcional para desarrollo)
+
+### **Navegación y Estado**
+La aplicación funciona como una **Single Page Application (SPA)**:
+- ✅ **Sin recargas**: Toda la navegación es instantánea
+- ✅ **Estado persistente**: La sesión se mantiene entre recargas
+- ✅ **Rutas protegidas**: Redirección automática según autenticación
+- ✅ **Experiencia fluida**: Transiciones suaves entre páginas
+
+### **Desarrollo Local**
+Para trabajar en el proyecto:
+1. Todas las rutas funcionan sin servidor backend
+2. Los datos se almacenan en `localStorage` del navegador
+3. La autenticación es completamente funcional en modo mock
+4. Hot reload automático durante desarrollo
+
+---
+
+**Nota**: Este proyecto utiliza servicios mock para desarrollo. En producción, los servicios de `auth.mock.js` deberían reemplazarse por llamadas a una API real.
