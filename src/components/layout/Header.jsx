@@ -105,47 +105,47 @@ const Header = () => {
       {/* Menú móvil */}
       <div className={`${styles.mobileMenu} ${isMobileMenuOpen ? styles.open : ''}`}>
         <div className={styles.mobileMenuContent}>
-          <ul className={styles.mobileNavLinks}>
-            {navItems.map((item) => (
-              <li key={item.path}>
-                {item.path.startsWith('#') ? (
-                  <a
-                    href={item.path}
-                    className={styles.mobileNavLink}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      const element = document.querySelector(item.path);
-                      if (element) {
-                        element.scrollIntoView({ behavior: 'smooth' });
-                      }
-                      setIsMobileMenuOpen(false);
-                    }}
-                  >
-                    {item.label}
-                  </a>
-                ) : (
-                  <Link
-                    to={item.path}
-                    className={`${styles.mobileNavLink} ${isActiveLink(item.path) ? styles.active : ''}`}
-                  >
-                    {item.label}
-                  </Link>
-                )}
-              </li>
-            ))}
-          </ul>
-          
-          <div className={styles.mobileLoginButton}>
-            <Button as={Link} to="/login" variant="primary" size="medium" fullWidth>
-              Iniciar sesión
-            </Button>
-          </div>
-        </nav>
+          <nav aria-label="Navegación móvil">
+            <ul className={styles.mobileNavLinks}>
+              {navItems.map((item) => (
+                <li key={item.path}>
+                  {item.path.startsWith('#') ? (
+                    <a
+                      href={item.path}
+                      className={styles.mobileNavLink}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        const element = document.querySelector(item.path);
+                        if (element) {
+                          element.scrollIntoView({ behavior: 'smooth' });
+                        }
+                        setIsMobileMenuOpen(false);
+                      }}
+                    >
+                      {item.label}
+                    </a>
+                  ) : (
+                    <Link
+                      to={item.path}
+                      className={`${styles.mobileNavLink} ${isActiveLink(item.path) ? styles.active : ''}`}
+                    >
+                      {item.label}
+                    </Link>
+                  )}
+                </li>
+              ))}
+            </ul>
+            
+            <div className={styles.mobileLoginButton}>
+              <Button as={Link} to="/login" variant="primary" size="medium" fullWidth>
+                Iniciar sesión
+              </Button>
+            </div>
+          </nav>
+        </div>
       </div>
     </header>
   );
 };
 
 export default Header;
-          aria-label={isMobileMenuOpen ? 'Cerrar menú' : 'Abrir menú'}
-          aria-expanded={isMobileMenuOpen}
