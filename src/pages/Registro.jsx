@@ -134,9 +134,13 @@ const Registro = () => {
 
   return (
     <Layout showFooter={false}>
-              <span className={styles.termsText}>
-                Acepto los términos y condiciones y la política de privacidad
-              </span>
+      <main className={styles.registroPage}>
+        <div className={styles.registroContainer}>
+          <div className={styles.registroCard}>
+            <div className={styles.registroHeader}>
+              <Link to="/" className={styles.logoLink}>
+                SmartStocker
+              </Link>
               <h1 className={styles.registroTitle}>
                 Crear cuenta
               </h1>
@@ -207,14 +211,9 @@ const Registro = () => {
                 error={errors.acceptTerms}
                 required
               >
-                Acepto los{' '}
-                <Link to="/terminos" className={styles.termsLink}>
-                  términos y condiciones
-                </Link>
-                {' '}y la{' '}
-                <Link to="/privacidad" className={styles.termsLink}>
-                  política de privacidad
-                </Link>
+                <span className={styles.termsText}>
+                  Acepto los términos y condiciones y la política de privacidad
+                </span>
               </Checkbox>
 
               <Button
@@ -235,6 +234,36 @@ const Registro = () => {
                 <Link to="/login" className={styles.loginLink}>
                   Iniciar sesión
                 </Link>
+              </div>
+            </div>
+          </div>
+
+          {/* Información adicional */}
+          <div className={styles.registroInfo}>
+            <h2 className={styles.infoTitle}>
+              Comienza a optimizar tu restaurante hoy
+            </h2>
+            <ul className={styles.infoList}>
+              <li>Predicciones precisas de ventas</li>
+              <li>Optimización automática de inventario</li>
+              <li>Reducción de desperdicios hasta 40%</li>
+              <li>Análisis detallados y reportes</li>
+              <li>Soporte especializado para restaurantes</li>
+            </ul>
+            
+            <div className={styles.trustIndicators}>
+              <p className={styles.trustText}>
+                <strong>+500 restaurantes</strong> ya confían en SmartStocker
+              </p>
+            </div>
+          </div>
+        </div>
+      </main>
+    </Layout>
+  );
+};
+
+export default Registro;
               </div>
             </div>
           </div>
