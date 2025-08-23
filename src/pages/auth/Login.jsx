@@ -157,3 +157,6 @@ const InicioSesion = () => {
     </Layout>
   );
 };
+
+
+export default InicioSesion

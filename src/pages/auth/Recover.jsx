@@ -164,3 +164,6 @@ const Recuperacion = () => {
     </Layout>
   );
 };
+
+
+export default Recuperacion

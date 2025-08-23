@@ -210,3 +210,6 @@ const Registro = () => {
     </Layout>
   );
 };
+
+
+export default Registro
