@@ -106,8 +106,9 @@ const Registro = () => {
     // Simular llamada a API
     await new Promise(resolve => setTimeout(resolve, 1500));
     
-    // Simular éxito y redirigir
-    navigate('/');
+    // Simular éxito y redirigir a login
+    alert('¡Cuenta creada exitosamente! Ahora puedes iniciar sesión.');
+    navigate('/login');
   };
 
   // Manejar envío del formulario
@@ -211,8 +212,23 @@ const Registro = () => {
                 error={errors.acceptTerms}
                 required
               >
-                <span className={styles.termsText}>
-                  Acepto los términos y condiciones y la política de privacidad
+                <span>
+                  Acepto los{' '}
+                  <a 
+                    href="/terminos" 
+                    className={styles.termsLink}
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    términos y condiciones
+                  </a>
+                  {' '}y la{' '}
+                  <a 
+                    href="/privacidad" 
+                    className={styles.termsLink}
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    política de privacidad
+                  </a>
                 </span>
               </Checkbox>
 

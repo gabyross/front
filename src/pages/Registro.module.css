@@ -106,11 +106,6 @@
   text-decoration: underline;
 }
 
-/* Texto de términos no clickeable */
-.termsText {
-  pointer-events: none;
-  user-select: none;
-}
 
 /* Footer del registro */
 .registroFooter {

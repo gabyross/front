@@ -66,6 +66,7 @@ const Checkbox = ({
           id={`${checkboxId}-error`}
           className={styles.errorMessage}
           role="alert"
+          onClick={(e) => e.preventDefault()}
         >
           {error}
         </span>
