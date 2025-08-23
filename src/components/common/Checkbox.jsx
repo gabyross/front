@@ -47,12 +47,27 @@ const Checkbox = ({
         />
         
         {/* cuadrito visual */}
-        <span className={styles.customCheckbox} aria-hidden="true">
+        <span 
+          className={styles.customCheckbox} 
+          aria-hidden="true"
+          onClick={(e) => {
+            e.stopPropagation();
+            if (!disabled && onChange) {
+              onChange({
+                target: {
+                  name,
+                  checked: !checked,
+                  type: 'checkbox'
+                }
+              });
+            }
+          }}
+        >
           {checked && <Check size={14} className={styles.checkIcon} />}
         </span>
 
         {/* texto */}
-        <span className={styles.text}>
+        <span className={styles.label}>
           {label || children}
           {required && <span className={styles.required} aria-label="obligatorio">*</span>}
         </span>
