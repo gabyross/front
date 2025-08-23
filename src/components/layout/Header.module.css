@@ -83,11 +83,6 @@
   color: var(--color-text-secondary);
   font-weight: 500;
   text-decoration: none;
-  background: none;
-  border: none;
-  font-family: inherit;
-  font-size: inherit;
-  cursor: pointer;
   padding: var(--spacing-sm) var(--spacing-md);
   border-radius: var(--radius-sm);
   transition: all var(--transition-normal);
@@ -239,13 +234,6 @@
   color: var(--color-text-secondary);
   font-weight: 500;
   text-decoration: none;
-  background: none;
-  border: none;
-  font-family: inherit;
-  font-size: inherit;
-  cursor: pointer;
-  width: 100%;
-  text-align: left;
   padding: var(--spacing-md);
   border-radius: var(--radius-sm);
   transition: all var(--transition-normal);
@@ -255,11 +243,6 @@
 .mobileNavLink:hover {
   color: var(--color-primary);
   background-color: var(--color-background-accent);
-}
-
-.mobileNavLink:focus-visible {
-  outline: 2px solid var(--color-primary);
-  outline-offset: 2px;
 }
 
 .mobileNavLink.active {

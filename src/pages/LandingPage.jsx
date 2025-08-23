@@ -3,7 +3,12 @@ import { Link } from 'react-router-dom';
 import Layout from '../components/layout/Layout';
 import Button from '../components/common/Button';
 import Card from '../components/common/Card';
-import { ChartIcon, InventoryIcon, BrainIcon, ClockIcon, TrendingUpIcon, ShieldIcon } from '../components/Icon';
+import ChartIcon from '../components/icons/ChartIcon';
+import InventoryIcon from '../components/icons/InventoryIcon';
+import BrainIcon from '../components/icons/BrainIcon';
+import ClockIcon from '../components/icons/ClockIcon';
+import TrendingUpIcon from '../components/icons/TrendingUpIcon';
+import ShieldIcon from '../components/icons/ShieldIcon';
 import styles from './LandingPage.module.css';
 
 /**
@@ -12,32 +17,32 @@ import styles from './LandingPage.module.css';
 const LandingPage = () => {
   const beneficios = [
     {
-      icon: <BrainIcon size={32} aria-hidden="true" />,
+      icon: <BrainIcon size={32} />,
       title: 'Predicción Inteligente',
       description: 'Algoritmos avanzados analizan tus datos históricos para predecir ventas futuras con alta precisión.'
     },
     {
-      icon: <InventoryIcon size={32} aria-hidden="true" />,
+      icon: <InventoryIcon size={32} />,
       title: 'Optimización de Inventario',
       description: 'Reduce desperdicios y costos manteniendo el stock óptimo basado en predicciones reales.'
     },
     {
-      icon: <ChartIcon size={32} aria-hidden="true" />,
+      icon: <ChartIcon size={32} />,
       title: 'Análisis Detallado',
       description: 'Visualiza tendencias, patrones y métricas clave para tomar decisiones informadas.'
     },
     {
-      icon: <ClockIcon size={32} aria-hidden="true" />,
+      icon: <ClockIcon size={32} />,
       title: 'Ahorro de Tiempo',
       description: 'Automatiza la planificación de compras y reduce el tiempo dedicado a gestión manual.'
     },
     {
-      icon: <TrendingUpIcon size={32} aria-hidden="true" />,
+      icon: <TrendingUpIcon size={32} />,
       title: 'Aumento de Rentabilidad',
       description: 'Maximiza ganancias reduciendo costos operativos y mejorando la eficiencia del negocio.'
     },
     {
-      icon: <ShieldIcon size={32} aria-hidden="true" />,
+      icon: <ShieldIcon size={32} />,
       title: 'Datos Seguros',
       description: 'Tu información está protegida con los más altos estándares de seguridad y privacidad.'
     }
@@ -91,7 +96,7 @@ const LandingPage = () => {
 
   return (
     <Layout>
-      <main className={styles.landingPage}>
+      <div className={styles.landingPage}>
         {/* Hero Section */}
         <section className={styles.hero}>
           <div className={styles.heroContent}>
@@ -110,7 +115,6 @@ const LandingPage = () => {
                 variant="secondary" 
                 size="large"
                 onClick={() => scrollToSection('caracteristicas')}
-                aria-label="Ver demostración de características"
               >
                 Ver demo
               </Button>
@@ -131,7 +135,7 @@ const LandingPage = () => {
             <div className={styles.beneficiosGrid}>
               {beneficios.map((beneficio, index) => (
                 <div key={index} className={styles.beneficioCard}>
-                  <div className={styles.beneficioIcon}>
+                  <div className={styles.beneficioIcon} aria-hidden="true">
                     {beneficio.icon}
                   </div>
                   <h3 className={styles.beneficioTitle}>
@@ -159,7 +163,7 @@ const LandingPage = () => {
             <div className={styles.pasosGrid}>
               {pasos.map((paso, index) => (
                 <div key={index} className={styles.paso}>
-                  <div className={styles.pasoNumero}>
+                  <div className={styles.pasoNumero} aria-hidden="true">
                     {paso.numero}
                   </div>
                   <h3 className={styles.pasoTitle}>
@@ -191,7 +195,7 @@ const LandingPage = () => {
                     "{testimonio.texto}"
                   </p>
                   <div className={styles.testimonioAutor}>
-                    <div className={styles.testimonioAvatar}>
+                    <div className={styles.testimonioAvatar} aria-hidden="true">
                       {testimonio.avatar}
                     </div>
                     <div className={styles.testimonioInfo}>
@@ -214,12 +218,12 @@ const LandingPage = () => {
             <p className={styles.ctaSubtitle}>
               Únete a los restaurantes que ya están maximizando sus ganancias con SmartStocker
             </p>
-            <Link to="/login" className={styles.ctaButton} aria-label="Comenzar a usar SmartStocker">
+            <Link to="/login" className={styles.ctaButton} aria-label="Empezar a usar SmartStocker ahora">
               Empezar ahora
             </Link>
           </div>
         </section>
-      </main>
+      </div>
     </Layout>
   );
 };

@@ -41,14 +41,6 @@ const Header = () => {
     { path: '#precios', label: 'Precios' },
   ];
 
-  const handleAnchorClick = (anchor) => {
-    const element = document.querySelector(anchor);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
-    setIsMobileMenuOpen(false);
-  };
-
   return (
     <header className={`${styles.header} ${isScrolled ? styles.scrolled : ''}`}>
       <div className={styles.container}>
@@ -66,11 +58,16 @@ const Header = () => {
                   <a
                     href={item.path}
                     className={styles.navLink}
-                    onClick={() => handleAnchorClick(item.path)}
-                    aria-label={`Ir a sección ${item.label}`}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      const element = document.querySelector(item.path);
+                      if (element) {
+                        element.scrollIntoView({ behavior: 'smooth' });
+                      }
+                    }}
                   >
                     {item.label}
-                  </button>
+                  </a>
                 ) : (
                   <Link
                     to={item.path}
@@ -96,7 +93,6 @@ const Header = () => {
           onClick={toggleMobileMenu}
           aria-label={isMobileMenuOpen ? 'Cerrar menú' : 'Abrir menú'}
           aria-expanded={isMobileMenuOpen}
-          aria-controls="mobile-menu"
         >
           <div className={`${styles.hamburger} ${isMobileMenuOpen ? styles.open : ''}`}>
             <span></span>
@@ -107,24 +103,27 @@ const Header = () => {
       </div>
 
       {/* Menú móvil */}
-      <div 
-        id="mobile-menu"
-        className={`${styles.mobileMenu} ${isMobileMenuOpen ? styles.open : ''}`}
-        aria-hidden={!isMobileMenuOpen}
-      >
+      <div className={`${styles.mobileMenu} ${isMobileMenuOpen ? styles.open : ''}`}>
         <div className={styles.mobileMenuContent}>
           <nav aria-label="Navegación móvil">
             <ul className={styles.mobileNavLinks}>
               {navItems.map((item) => (
                 <li key={item.path}>
                   {item.path.startsWith('#') ? (
-                    <button
+                    <a
+                      href={item.path}
                       className={styles.mobileNavLink}
-                      onClick={() => handleAnchorClick(item.path)}
-                      aria-label={`Ir a sección ${item.label}`}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        const element = document.querySelector(item.path);
+                        if (element) {
+                          element.scrollIntoView({ behavior: 'smooth' });
+                        }
+                        setIsMobileMenuOpen(false);
+                      }}
                     >
                       {item.label}
-                    </button>
+                    </a>
                   ) : (
                     <Link
                       to={item.path}
