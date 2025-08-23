@@ -4,6 +4,62 @@
 
 Plataforma web para ayudar a restaurantes y locales gastronómicos en CABA a predecir ventas y optimizar su inventario.
 
+## 🔐 Módulo de Autenticación
+
+Sistema completo de autenticación con registro, inicio de sesión y recuperación de contraseña implementado con:
+
+### **Funcionalidades**
+- ✅ **Registro de usuarios** con validación completa
+- ✅ **Inicio de sesión** con credenciales
+- ✅ **Recuperación de contraseña** con flujo mock
+- ✅ **Gestión de sesión** con localStorage
+- ✅ **Validación de formularios** con Zod + React Hook Form
+- ✅ **Mensajes de feedback** (éxito/error) accesibles
+
+### **Librerías Agregadas**
+- `react-hook-form` - Gestión eficiente de formularios
+- `zod` - Validación de esquemas TypeScript-first
+- `@hookform/resolvers` - Integración Zod + React Hook Form
+- `classnames` - Utilidad para clases CSS condicionales
+- `lucide-react` - Iconografía moderna y liviana
+
+### **Rutas de Autenticación**
+- `/login` - Iniciar sesión
+- `/registro` - Crear cuenta nueva
+- `/recuperar` - Recuperar contraseña olvidada
+
+### **Arquitectura Implementada**
+```
+src/
+├── contexts/
+│   └── AuthContext.jsx          # Contexto global de autenticación
+├── services/
+│   └── auth.mock.js            # Servicio mock con localStorage
+├── pages/auth/
+│   ├── Login.jsx + .module.css # Página de inicio de sesión
+│   ├── Register.jsx + .module.css # Página de registro
+│   └── Recover.jsx + .module.css # Página de recuperación
+├── components/forms/
+│   ├── TextField.jsx + .module.css # Input con validación
+│   └── PasswordField.jsx + .module.css # Input de contraseña con toggle
+└── components/feedback/
+    ├── SuccessMessage.jsx + .module.css # Mensajes de éxito
+    └── ErrorMessage.jsx + .module.css # Mensajes de error
+```
+
+### **Validaciones Implementadas**
+- **Email**: Formato válido requerido
+- **Contraseña**: Mínimo 6 caracteres, al menos 1 letra y 1 número
+- **Nombre**: 2-60 caracteres, solo letras y espacios
+- **Confirmación**: Las contraseñas deben coincidir
+
+### **Accesibilidad**
+- ✅ Navegación por teclado completa
+- ✅ Labels asociados con `htmlFor`
+- ✅ Estados `aria-invalid` y `aria-describedby`
+- ✅ Mensajes con `aria-live` para screen readers
+- ✅ Focus visible en todos los elementos interactivos
+
 ## 🎨 Design System
 
 ### Filosofía de Diseño
