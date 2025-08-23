@@ -134,14 +134,9 @@ const Registro = () => {
 
   return (
     <Layout showFooter={false}>
-      <main className={styles.registroPage}>
-        <div className={styles.registroContainer}>
-          <div className={styles.registroCard}>
-            {/* Header */}
-            <div className={styles.registroHeader}>
-              <Link to="/" className={styles.logoLink} aria-label="Volver al inicio">
-                SmartStocker
-              </Link>
+              <span className={styles.termsText}>
+                Acepto los términos y condiciones y la política de privacidad
+              </span>
               <h1 className={styles.registroTitle}>
                 Crear cuenta
               </h1>

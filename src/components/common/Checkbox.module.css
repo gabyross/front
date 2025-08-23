@@ -11,7 +11,6 @@
   display: flex;
   align-items: flex-start;
   gap: var(--spacing-md);
-  cursor: pointer;
 }
 
 .hiddenCheckbox {
@@ -33,6 +32,7 @@
   transition: all var(--transition-normal);
   flex-shrink: 0;
   margin-top: 0.125rem;
+  cursor: pointer;
 }
 
 .checkIcon {
@@ -73,7 +73,6 @@
   font-size: 0.875rem;
   color: var(--color-text-primary);
   line-height: 1.5;
-  cursor: pointer;
   display: flex;
   align-items: center;
   gap: var(--spacing-xs);
@@ -103,17 +102,16 @@
 
 /* Estado deshabilitado */
 .checkboxContainer.disabled .checkboxWrapper {
-  cursor: not-allowed;
   opacity: 0.6;
 }
 
 .checkboxContainer.disabled .customCheckbox {
   background-color: var(--color-background-light);
   border-color: var(--color-border-light);
+  cursor: not-allowed;
 }
 
 .checkboxContainer.disabled .label {
-  cursor: not-allowed;
   color: var(--color-text-light);
 }
 
