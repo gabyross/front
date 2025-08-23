@@ -2,33 +2,33 @@ import React, { createContext, useContext, useReducer, useEffect } from 'react';
 import * as authService from '../services/auth.mock';
 
 /**
- * Estados del contexto de autenticación
+ * Reducer para manejar los estados del contexto de autenticación
  */
-const authReducer = (state, action) => {
+const reductorAutenticacion = (state, action) => {
   switch (action.type) {
-    case 'SET_LOADING':
-      return { ...state, loading: action.payload };
+    case 'ESTABLECER_CARGA':
+      return { ...state, cargandoAutenticacion: action.payload };
     
-    case 'SET_USER':
+    case 'ESTABLECER_USUARIO':
       return { 
         ...state, 
-        user: action.payload, 
-        isAuthenticated: !!action.payload,
-        loading: false 
+        usuario: action.payload, 
+        usuarioAutenticado: !!action.payload,
+        cargandoAutenticacion: false 
       };
     
-    case 'SET_ERROR':
-      return { ...state, error: action.payload, loading: false };
+    case 'ESTABLECER_ERROR':
+      return { ...state, error: action.payload, cargandoAutenticacion: false };
     
-    case 'CLEAR_ERROR':
+    case 'LIMPIAR_ERROR':
       return { ...state, error: null };
     
-    case 'LOGOUT':
+    case 'CERRAR_SESION':
       return { 
         ...state, 
-        user: null, 
-        isAuthenticated: false, 
-        loading: false,
+        usuario: null, 
+        usuarioAutenticado: false, 
+        cargandoAutenticacion: false,
         error: null 
       };
     
@@ -37,155 +37,161 @@ const authReducer = (state, action) => {
   }
 };
 
+// Estado inicial del contexto de autenticación
 const initialState = {
-  user: null,
-  isAuthenticated: false,
-  loading: true,
+  usuario: null,
+  usuarioAutenticado: false,
+  cargandoAutenticacion: true,
   error: null
 };
 
-const AuthContext = createContext();
+const ContextoAutenticacion = createContext();
 
 /**
- * Provider del contexto de autenticación
+ * Proveedor del contexto de autenticación
+ * Maneja el estado global de autenticación y rehidrata desde localStorage
  */
-export const AuthProvider = ({ children }) => {
-  const [state, dispatch] = useReducer(authReducer, initialState);
+export const ProveedorAutenticacion = ({ children }) => {
+  const [estado, despachar] = useReducer(reductorAutenticacion, initialState);
 
-  // Rehidratar sesión al cargar la app
+  // Rehidratar sesión desde localStorage al cargar la aplicación
+  // Esto permite mantener la sesión entre recargas de página
   useEffect(() => {
-    const initAuth = () => {
+    const inicializarAutenticacion = () => {
       try {
-        const currentUser = authService.getCurrentUser();
-        if (currentUser) {
-          dispatch({ type: 'SET_USER', payload: currentUser });
+        const usuarioActual = authService.getCurrentUser();
+        if (usuarioActual) {
+          despachar({ type: 'ESTABLECER_USUARIO', payload: usuarioActual });
         } else {
-          dispatch({ type: 'SET_LOADING', payload: false });
+          despachar({ type: 'ESTABLECER_CARGA', payload: false });
         }
       } catch (error) {
         console.error('Error al inicializar autenticación:', error);
-        dispatch({ type: 'SET_LOADING', payload: false });
+        despachar({ type: 'ESTABLECER_CARGA', payload: false });
       }
     };
 
-    initAuth();
+    inicializarAutenticacion();
   }, []);
 
   /**
-   * Iniciar sesión
+   * Función para iniciar sesión de usuario
    */
-  const login = async (credentials) => {
+  const iniciarSesion = async (credenciales) => {
     try {
-      dispatch({ type: 'SET_LOADING', payload: true });
-      dispatch({ type: 'CLEAR_ERROR' });
+      despachar({ type: 'ESTABLECER_CARGA', payload: true });
+      despachar({ type: 'LIMPIAR_ERROR' });
       
-      const result = await authService.login(credentials);
+      const resultado = await authService.login(credenciales);
       
-      if (result.ok) {
-        dispatch({ type: 'SET_USER', payload: result.user });
+      if (resultado.ok) {
+        despachar({ type: 'ESTABLECER_USUARIO', payload: resultado.user });
         return { ok: true };
       } else {
-        dispatch({ type: 'SET_ERROR', payload: result.message });
-        return { ok: false, message: result.message };
+        despachar({ type: 'ESTABLECER_ERROR', payload: resultado.message });
+        return { ok: false, message: resultado.message };
       }
     } catch (error) {
-      const errorMessage = 'Error al iniciar sesión. Intenta nuevamente.';
-      dispatch({ type: 'SET_ERROR', payload: errorMessage });
-      return { ok: false, message: errorMessage };
+      const mensajeError = 'Error al iniciar sesión. Intenta nuevamente.';
+      despachar({ type: 'ESTABLECER_ERROR', payload: mensajeError });
+      return { ok: false, message: mensajeError };
     }
   };
 
   /**
-   * Registrar usuario
+   * Función para registrar nuevo usuario
    */
-  const register = async (userData) => {
+  const registrarUsuario = async (datosUsuario) => {
     try {
-      dispatch({ type: 'SET_LOADING', payload: true });
-      dispatch({ type: 'CLEAR_ERROR' });
+      despachar({ type: 'ESTABLECER_CARGA', payload: true });
+      despachar({ type: 'LIMPIAR_ERROR' });
       
-      const result = await authService.register(userData);
+      const resultado = await authService.register(datosUsuario);
       
-      if (result.ok) {
-        dispatch({ type: 'SET_LOADING', payload: false });
-        return { ok: true, message: result.message };
+      if (resultado.ok) {
+        despachar({ type: 'ESTABLECER_CARGA', payload: false });
+        return { ok: true, message: resultado.message };
       } else {
-        dispatch({ type: 'SET_ERROR', payload: result.message });
-        return { ok: false, message: result.message };
+        despachar({ type: 'ESTABLECER_ERROR', payload: resultado.message });
+        return { ok: false, message: resultado.message };
       }
     } catch (error) {
-      const errorMessage = 'Error al crear la cuenta. Intenta nuevamente.';
-      dispatch({ type: 'SET_ERROR', payload: errorMessage });
-      return { ok: false, message: errorMessage };
+      const mensajeError = 'Error al crear la cuenta. Intenta nuevamente.';
+      despachar({ type: 'ESTABLECER_ERROR', payload: mensajeError });
+      return { ok: false, message: mensajeError };
     }
   };
 
   /**
-   * Cerrar sesión
+   * Función para cerrar sesión de usuario
    */
-  const logout = async () => {
+  const cerrarSesion = async () => {
     try {
       await authService.logout();
-      dispatch({ type: 'LOGOUT' });
+      despachar({ type: 'CERRAR_SESION' });
       return { ok: true };
     } catch (error) {
       console.error('Error al cerrar sesión:', error);
-      // Forzar logout local aunque falle
-      dispatch({ type: 'LOGOUT' });
+      // Forzar cierre de sesión local aunque falle el servicio
+      despachar({ type: 'CERRAR_SESION' });
       return { ok: true };
     }
   };
 
   /**
-   * Solicitar recuperación de contraseña
+   * Función para solicitar recuperación de contraseña
    */
-  const requestPasswordReset = async (email) => {
+  const solicitarRecuperacionContrasena = async (email) => {
     try {
-      dispatch({ type: 'SET_LOADING', payload: true });
-      dispatch({ type: 'CLEAR_ERROR' });
+      despachar({ type: 'ESTABLECER_CARGA', payload: true });
+      despachar({ type: 'LIMPIAR_ERROR' });
       
-      const result = await authService.requestPasswordReset(email);
-      dispatch({ type: 'SET_LOADING', payload: false });
+      const resultado = await authService.requestPasswordReset(email);
+      despachar({ type: 'ESTABLECER_CARGA', payload: false });
       
-      return result;
+      return resultado;
     } catch (error) {
-      const errorMessage = 'Error al procesar la solicitud. Intenta nuevamente.';
-      dispatch({ type: 'SET_ERROR', payload: errorMessage });
-      return { ok: false, message: errorMessage };
+      const mensajeError = 'Error al procesar la solicitud. Intenta nuevamente.';
+      despachar({ type: 'ESTABLECER_ERROR', payload: mensajeError });
+      return { ok: false, message: mensajeError };
     }
   };
 
   /**
-   * Limpiar errores
+   * Función para limpiar mensajes de error
    */
-  const clearError = () => {
-    dispatch({ type: 'CLEAR_ERROR' });
+  const limpiarError = () => {
+    despachar({ type: 'LIMPIAR_ERROR' });
   };
 
-  const value = {
-    ...state,
-    login,
-    register,
-    logout,
-    requestPasswordReset,
-    clearError
+  // Valor del contexto con estado y funciones
+  const valorContexto = {
+    ...estado,
+    iniciarSesion,
+    registrarUsuario,
+    cerrarSesion,
+    solicitarRecuperacionContrasena,
+    limpiarError
   };
 
   return (
-    <AuthContext.Provider value={value}>
+    <ContextoAutenticacion.Provider value={valorContexto}>
       {children}
-    </AuthContext.Provider>
+    </ContextoAutenticacion.Provider>
   );
 };
 
+// Mantener compatibilidad con el nombre anterior
+export const AuthProvider = ProveedorAutenticacion;
+
 /**
  * Hook para usar el contexto de autenticación
+ * Proporciona acceso al estado y funciones de autenticación
  */
 export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error('useAuth debe usarse dentro de AuthProvider');
+  const contexto = useContext(ContextoAutenticacion);
+  if (!contexto) {
+    throw new Error('useAuth debe usarse dentro de ProveedorAutenticacion');
   }
-  return context;
+  return contexto;
 };
-
-export default AuthContext;

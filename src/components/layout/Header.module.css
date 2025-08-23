@@ -1,6 +1,6 @@
-/* Estilos para el componente Header */
+/* Estilos para el componente de encabezado */
 
-.header {
+.encabezado {
   position: fixed;
   top: 0;
   left: 0;
@@ -12,13 +12,13 @@
   transition: all var(--transition-slow);
 }
 
-.header.scrolled {
+.encabezado.conScroll {
   background-color: var(--color-background);
   border-bottom-color: var(--color-border-light);
   box-shadow: var(--shadow-sm);
 }
 
-.container {
+.contenedor {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -29,18 +29,18 @@
 }
 
 @media (min-width: 768px) {
-  .container {
+  .contenedor {
     padding: 0 var(--spacing-lg);
   }
 }
 
 @media (min-width: 1024px) {
-  .container {
+  .contenedor {
     padding: 0 var(--spacing-xl);
   }
 }
 
-/* Logo */
+/* Estilos del logo */
 .logo {
   font-family: var(--font-heading);
   font-size: 1.5rem;
@@ -54,20 +54,20 @@
   color: var(--color-primary-light);
 }
 
-/* Navegación desktop */
-.nav {
+/* Navegación para escritorio */
+.navegacion {
   display: none;
   align-items: center;
   gap: var(--spacing-xl);
 }
 
 @media (min-width: 768px) {
-  .nav {
+  .navegacion {
     display: flex;
   }
 }
 
-.navLinks {
+.enlacesNavegacion {
   display: flex;
   align-items: center;
   gap: var(--spacing-lg);
@@ -79,7 +79,7 @@
   padding: 0;
 }
 
-.navLink {
+.enlaceNavegacion {
   color: var(--color-text-secondary);
   font-weight: 500;
   text-decoration: none;
@@ -89,22 +89,23 @@
   position: relative;
 }
 
-.navLink:hover {
+.enlaceNavegacion:hover {
   color: var(--color-primary);
   background-color: var(--color-background-accent);
 }
 
-.navLink:focus-visible {
+.enlaceNavegacion:focus-visible {
   outline: 2px solid var(--color-primary);
   outline-offset: 2px;
 }
 
-.navLink.active {
+/* Resalta la sección activa en la navegación */
+.enlaceNavegacion.activo {
   color: var(--color-primary);
   font-weight: 600;
 }
 
-.navLink.active::after {
+.enlaceNavegacion.activo::after {
   content: '';
   position: absolute;
   bottom: -0.5rem;
@@ -116,25 +117,25 @@
   border-radius: var(--radius-sm);
 }
 
-/* Botón de login */
-.authSection {
+/* Sección de autenticación */
+.seccionAutenticacion {
   margin-left: var(--spacing-md);
 }
 
-.userInfo {
+.informacionUsuario {
   display: flex;
   align-items: center;
   gap: var(--spacing-md);
 }
 
-.userName {
+.nombreUsuario {
   font-size: 0.875rem;
   color: var(--color-text-secondary);
   font-weight: 500;
 }
 
-/* Menú móvil */
-.mobileMenuButton {
+/* Botón del menú móvil */
+.botonMenuMovil {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -149,28 +150,28 @@
 }
 
 @media (min-width: 768px) {
-  .mobileMenuButton {
+  .botonMenuMovil {
     display: none;
   }
 }
 
-.mobileMenuButton:hover {
+.botonMenuMovil:hover {
   background-color: var(--color-background-light);
 }
 
-.mobileMenuButton:focus-visible {
+.botonMenuMovil:focus-visible {
   outline: 2px solid var(--color-primary);
   outline-offset: 2px;
 }
 
-/* Icono hamburguesa */
-.hamburger {
+/* Icono de hamburguesa para menú móvil */
+.hamburguesa {
   width: 1.5rem;
   height: 1.5rem;
   position: relative;
 }
 
-.hamburger span {
+.hamburguesa span {
   display: block;
   width: 100%;
   height: 2px;
@@ -180,35 +181,35 @@
   position: absolute;
 }
 
-.hamburger span:nth-child(1) {
+.hamburguesa span:nth-child(1) {
   top: 0.25rem;
 }
 
-.hamburger span:nth-child(2) {
+.hamburguesa span:nth-child(2) {
   top: 0.6875rem;
 }
 
-.hamburger span:nth-child(3) {
+.hamburguesa span:nth-child(3) {
   top: 1.125rem;
 }
 
-/* Animación del hamburger cuando está abierto */
-.hamburger.open span:nth-child(1) {
+/* Animación de la hamburguesa cuando el menú está abierto */
+.hamburguesa.abierto span:nth-child(1) {
   transform: rotate(45deg);
   top: 0.6875rem;
 }
 
-.hamburger.open span:nth-child(2) {
+.hamburguesa.abierto span:nth-child(2) {
   opacity: 0;
 }
 
-.hamburger.open span:nth-child(3) {
+.hamburguesa.abierto span:nth-child(3) {
   transform: rotate(-45deg);
   top: 0.6875rem;
 }
 
-/* Menú móvil desplegable */
-.mobileMenu {
+/* Menú desplegable para móviles */
+.menuMovil {
   position: absolute;
   top: 100%;
   left: 0;
@@ -222,17 +223,17 @@
   transition: all var(--transition-slow);
 }
 
-.mobileMenu.open {
+.menuMovil.abierto {
   transform: translateY(0);
   opacity: 1;
   visibility: visible;
 }
 
-.mobileMenuContent {
+.contenidoMenuMovil {
   padding: var(--spacing-lg) var(--spacing-md);
 }
 
-.mobileNavLinks {
+.enlacesNavegacionMovil {
   list-style: none;
   margin: 0;
   padding: 0;
@@ -241,7 +242,7 @@
   padding: 0;
 }
 
-.mobileNavLink {
+.enlaceNavegacionMovil {
   display: block;
   color: var(--color-text-secondary);
   font-weight: 500;
@@ -252,30 +253,30 @@
   margin-bottom: var(--spacing-sm);
 }
 
-.mobileNavLink:hover {
+.enlaceNavegacionMovil:hover {
   color: var(--color-primary);
   background-color: var(--color-background-accent);
 }
 
-.mobileNavLink.active {
+.enlaceNavegacionMovil.activo {
   color: var(--color-primary);
   background-color: var(--color-background-accent);
   font-weight: 600;
 }
 
-.mobileAuthSection {
+.seccionAutenticacionMovil {
   margin-top: var(--spacing-lg);
   width: 100%;
 }
 
-.mobileUserInfo {
+.informacionUsuarioMovil {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-md);
   text-align: center;
 }
 
-.mobileUserName {
+.nombreUsuarioMovil {
   font-size: 0.875rem;
   color: var(--color-text-secondary);
   font-weight: 500;

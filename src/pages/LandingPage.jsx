@@ -12,9 +12,11 @@ import ShieldIcon from '../components/icons/ShieldIcon';
 import styles from './LandingPage.module.css';
 
 /**
- * Página principal de SmartStocker con información del producto y beneficios
+ * Página de inicio de SmartStocker con información del producto y beneficios
+ * Presenta la propuesta de valor y guía al usuario hacia el registro
  */
-const LandingPage = () => {
+const PaginaInicio = () => {
+  // Beneficios principales de la plataforma
   const beneficios = [
     {
       icon: <BrainIcon size={32} />,
@@ -48,6 +50,7 @@ const LandingPage = () => {
     }
   ];
 
+  // Pasos del proceso de uso de la plataforma
   const pasos = [
     {
       numero: '1',
@@ -66,6 +69,7 @@ const LandingPage = () => {
     }
   ];
 
+  // Testimonios de clientes (datos de ejemplo)
   const testimonios = [
     {
       texto: 'SmartStocker revolucionó la gestión de nuestro restaurante. Redujimos desperdicios en un 40% y aumentamos la rentabilidad significativamente.',
@@ -87,34 +91,35 @@ const LandingPage = () => {
     }
   ];
 
-  const scrollToSection = (sectionId) => {
-    const element = document.getElementById(sectionId);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+  // Función para desplazamiento suave a secciones de la página
+  const desplazarseASeccion = (idSeccion) => {
+    const elemento = document.getElementById(idSeccion);
+    if (elemento) {
+      elemento.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
   return (
     <Layout>
-      <div className={styles.landingPage}>
-        {/* Hero Section */}
-        <section className={styles.hero}>
-          <div className={styles.heroContent}>
-            <h1 className={styles.heroTitle}>
+      <div className={styles.paginaInicio}>
+        {/* Sección principal de presentación */}
+        <section className={styles.seccionPrincipal}>
+          <div className={styles.contenidoPrincipal}>
+            <h1 className={styles.tituloPrincipal}>
               Predecí ventas y optimizá tu inventario con inteligencia artificial
             </h1>
-            <p className={styles.heroSubtitle}>
+            <p className={styles.subtituloPrincipal}>
               SmartStocker ayuda a restaurantes en CABA a tomar decisiones inteligentes, 
               reducir desperdicios y maximizar ganancias a través de predicciones precisas.
             </p>
-            <div className={styles.heroButtons}>
+            <div className={styles.botonesPrincipales}>
               <Button as={Link} to="/login" variant="primary" size="large">
                 Iniciar sesión
               </Button>
               <Button 
                 variant="secondary" 
                 size="large"
-                onClick={() => scrollToSection('caracteristicas')}
+                onClick={() => desplazarseASeccion('caracteristicas')}
               >
                 Ver demo
               </Button>
@@ -122,26 +127,26 @@ const LandingPage = () => {
           </div>
         </section>
 
-        {/* Beneficios */}
-        <section id="caracteristicas" className={`${styles.section} ${styles.beneficios}`}>
-          <div className={styles.sectionContainer}>
-            <h2 className={styles.sectionTitle}>
+        {/* Sección de beneficios y características */}
+        <section id="caracteristicas" className={`${styles.seccion} ${styles.beneficios}`}>
+          <div className={styles.contenedorSeccion}>
+            <h2 className={styles.tituloSeccion}>
               ¿Por qué elegir SmartStocker?
             </h2>
-            <p className={styles.sectionSubtitle}>
+            <p className={styles.subtituloSeccion}>
               Descubrí cómo nuestra plataforma puede transformar la gestión de tu restaurante
             </p>
             
-            <div className={styles.beneficiosGrid}>
+            <div className={styles.grillaBeneficios}>
               {beneficios.map((beneficio, index) => (
-                <div key={index} className={styles.beneficioCard}>
-                  <div className={styles.beneficioIcon} aria-hidden="true">
+                <div key={index} className={styles.tarjetaBeneficio}>
+                  <div className={styles.iconoBeneficio} aria-hidden="true">
                     {beneficio.icon}
                   </div>
-                  <h3 className={styles.beneficioTitle}>
+                  <h3 className={styles.tituloBeneficio}>
                     {beneficio.title}
                   </h3>
-                  <p className={styles.beneficioDescription}>
+                  <p className={styles.descripcionBeneficio}>
                     {beneficio.description}
                   </p>
                 </div>
@@ -150,26 +155,26 @@ const LandingPage = () => {
           </div>
         </section>
 
-        {/* Cómo funciona */}
-        <section className={`${styles.section} ${styles.comoFunciona}`}>
-          <div className={styles.sectionContainer}>
-            <h2 className={styles.sectionTitle}>
+        {/* Sección explicativa del proceso */}
+        <section className={`${styles.seccion} ${styles.comoFunciona}`}>
+          <div className={styles.contenedorSeccion}>
+            <h2 className={styles.tituloSeccion}>
               ¿Cómo funciona?
             </h2>
-            <p className={styles.sectionSubtitle}>
+            <p className={styles.subtituloSeccion}>
               En solo 3 pasos simples, comenzá a optimizar tu restaurante
             </p>
             
-            <div className={styles.pasosGrid}>
+            <div className={styles.grillaPasos}>
               {pasos.map((paso, index) => (
                 <div key={index} className={styles.paso}>
-                  <div className={styles.pasoNumero} aria-hidden="true">
+                  <div className={styles.numeroPaso} aria-hidden="true">
                     {paso.numero}
                   </div>
-                  <h3 className={styles.pasoTitle}>
+                  <h3 className={styles.tituloPaso}>
                     {paso.title}
                   </h3>
-                  <p className={styles.pasoDescription}>
+                  <p className={styles.descripcionPaso}>
                     {paso.description}
                   </p>
                 </div>
@@ -178,27 +183,27 @@ const LandingPage = () => {
           </div>
         </section>
 
-        {/* Testimonios */}
-        <section className={`${styles.section} ${styles.testimonios}`}>
-          <div className={styles.sectionContainer}>
-            <h2 className={styles.sectionTitle}>
+        {/* Sección de testimonios de clientes */}
+        <section className={`${styles.seccion} ${styles.testimonios}`}>
+          <div className={styles.contenedorSeccion}>
+            <h2 className={styles.tituloSeccion}>
               Lo que dicen nuestros clientes
             </h2>
-            <p className={styles.sectionSubtitle}>
+            <p className={styles.subtituloSeccion}>
               Restaurantes en CABA ya están optimizando sus operaciones con SmartStocker
             </p>
             
-            <div className={styles.testimoniosGrid}>
+            <div className={styles.grillaTestimonios}>
               {testimonios.map((testimonio, index) => (
-                <div key={index} className={styles.testimonioCard}>
-                  <p className={styles.testimonioTexto}>
+                <div key={index} className={styles.tarjetaTestimonio}>
+                  <p className={styles.textoTestimonio}>
                     "{testimonio.texto}"
                   </p>
-                  <div className={styles.testimonioAutor}>
-                    <div className={styles.testimonioAvatar} aria-hidden="true">
+                  <div className={styles.autorTestimonio}>
+                    <div className={styles.avatarTestimonio} aria-hidden="true">
                       {testimonio.avatar}
                     </div>
-                    <div className={styles.testimonioInfo}>
+                    <div className={styles.informacionTestimonio}>
                       <h4>{testimonio.autor}</h4>
                       <p>{testimonio.restaurante}</p>
                     </div>
@@ -209,16 +214,16 @@ const LandingPage = () => {
           </div>
         </section>
 
-        {/* CTA Final */}
-        <section className={`${styles.section} ${styles.ctaFinal}`}>
-          <div className={styles.ctaContent}>
-            <h2 className={styles.ctaTitle}>
+        {/* Llamada a la acción final */}
+        <section className={`${styles.seccion} ${styles.llamadaAccionFinal}`}>
+          <div className={styles.contenidoLlamadaAccion}>
+            <h2 className={styles.tituloLlamadaAccion}>
               ¿Listo para optimizar tu restaurante?
             </h2>
-            <p className={styles.ctaSubtitle}>
+            <p className={styles.subtituloLlamadaAccion}>
               Únete a los restaurantes que ya están maximizando sus ganancias con SmartStocker
             </p>
-            <Link to="/login" className={styles.ctaButton} aria-label="Empezar a usar SmartStocker ahora">
+            <Link to="/login" className={styles.botonLlamadaAccion} aria-label="Empezar a usar SmartStocker ahora">
               Empezar ahora
             </Link>
           </div>
@@ -227,5 +232,3 @@ const LandingPage = () => {
     </Layout>
   );
 };
-
-export default LandingPage;

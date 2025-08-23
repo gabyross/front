@@ -11,8 +11,8 @@ import { ErrorMessage } from '../../components/feedback';
 import Button from '../../components/common/Button';
 import styles from './Login.module.css';
 
-// Esquema de validación para el formulario de login
-const loginSchema = z.object({
+// Esquema de validación para el formulario de inicio de sesión
+const esquemaInicioSesion = z.object({
   email: z
     .string()
     .min(1, 'El email es requerido')
@@ -23,73 +23,75 @@ const loginSchema = z.object({
 });
 
 /**
- * Página de inicio de sesión
+ * Página de inicio de sesión de usuarios
+ * Permite a usuarios registrados acceder a la plataforma
  */
-const Login = () => {
-  const navigate = useNavigate();
-  const { login, loading, error, clearError, isAuthenticated } = useAuth();
+const InicioSesion = () => {
+  const navegar = useNavigate();
+  const { iniciarSesion, cargandoAutenticacion, error, limpiarError, usuarioAutenticado } = useAuth();
 
-  // Redirigir al dashboard si ya está autenticado
+  // Redirigir al dashboard si el usuario ya está autenticado
   useEffect(() => {
-    if (isAuthenticated) {
-      navigate('/dashboard', { replace: true });
+    if (usuarioAutenticado) {
+      navegar('/dashboard', { replace: true });
     }
-  }, [isAuthenticated, navigate]);
+  }, [usuarioAutenticado, navegar]);
 
-  // Configuración del formulario con react-hook-form
+  // Configuración del formulario con react-hook-form y validación Zod
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting }
   } = useForm({
-    resolver: zodResolver(loginSchema),
+    resolver: zodResolver(esquemaInicioSesion),
     defaultValues: {
       email: '',
       password: ''
     }
   });
 
-  // Limpiar errores al montar el componente
+  // Limpiar mensajes de error al cargar la página
   useEffect(() => {
-    clearError();
-  }, [clearError]);
+    limpiarError();
+  }, [limpiarError]);
 
-  // Manejar envío del formulario de login
-  const manejarEnvioFormularioLogin = async (datosFormulario) => {
-    const resultado = await login(datosFormulario);
+  // Manejar el envío del formulario de inicio de sesión
+  const manejarEnvioFormularioInicioSesion = async (datosFormulario) => {
+    const resultado = await iniciarSesion(datosFormulario);
     
     if (resultado.ok) {
-      // Redirigir al dashboard después del login exitoso
-      navigate('/dashboard', { replace: true });
+      // Redirigir al dashboard después del inicio de sesión exitoso
+      navegar('/dashboard', { replace: true });
     }
   };
 
-  const estaEnviando = loading || isSubmitting;
+  // Estado de carga durante el envío del formulario
+  const estaEnviando = cargandoAutenticacion || isSubmitting;
 
   return (
     <Layout showFooter={false}>
-      <main className={styles.loginPage}>
-        <div className={styles.container}>
-          <div className={styles.loginCard}>
-            {/* Header */}
-            <header className={styles.header}>
-              <h1 className={styles.title}>Iniciar sesión</h1>
-              <p className={styles.subtitle}>
+      <main className={styles.paginaInicioSesion}>
+        <div className={styles.contenedor}>
+          <div className={styles.tarjetaInicioSesion}>
+            {/* Encabezado de la página */}
+            <header className={styles.encabezado}>
+              <h1 className={styles.titulo}>Iniciar sesión</h1>
+              <p className={styles.subtitulo}>
                 Accede a tu cuenta de SmartStocker
               </p>
             </header>
 
-            {/* Formulario */}
-            <form onSubmit={handleSubmit(manejarEnvioFormularioLogin)} className={styles.form} noValidate>
-              {/* Mensaje de error global */}
+            {/* Formulario de inicio de sesión */}
+            <form onSubmit={handleSubmit(manejarEnvioFormularioInicioSesion)} className={styles.formulario} noValidate>
+              {/* Mensaje de error general */}
               {error && (
                 <ErrorMessage 
                   message={error}
-                  className={styles.errorMessage}
+                  className={styles.mensajeError}
                 />
               )}
 
-              {/* Campo Email */}
+              {/* Campo de email */}
               <TextField
                 label="Email"
                 name="email"
@@ -102,7 +104,7 @@ const Login = () => {
                 {...register('email')}
               />
 
-              {/* Campo Contraseña */}
+              {/* Campo de contraseña */}
               <PasswordField
                 label="Contraseña"
                 name="password"
@@ -114,36 +116,36 @@ const Login = () => {
                 {...register('password')}
               />
 
-              {/* Botón de envío */}
+              {/* Botón para enviar el formulario */}
               <Button
                 type="submit"
                 variant="primary"
                 size="large"
                 fullWidth
                 disabled={estaEnviando}
-                className={styles.submitButton}
+                className={styles.botonEnvio}
               >
                 {estaEnviando ? 'Iniciando sesión...' : 'Iniciar sesión'}
               </Button>
             </form>
 
-            {/* Enlaces adicionales */}
-            <footer className={styles.footer}>
+            {/* Enlaces de navegación adicionales */}
+            <footer className={styles.pieFormulario}>
               <Link 
                 to="/recuperar" 
-                className={styles.link}
+                className={styles.enlace}
                 aria-label="Recuperar contraseña olvidada"
               >
                 ¿Olvidaste tu contraseña?
               </Link>
               
-              <div className={styles.divider}>
+              <div className={styles.separador}>
                 <span>¿No tienes cuenta?</span>
               </div>
               
               <Link 
                 to="/registro" 
-                className={styles.registerLink}
+                className={styles.enlaceRegistro}
                 aria-label="Crear nueva cuenta"
               >
                 Crear cuenta
@@ -155,5 +157,3 @@ const Login = () => {
     </Layout>
   );
 };
-
-export default Login;

@@ -11,8 +11,8 @@ import { ErrorMessage, SuccessMessage } from '../../components/feedback';
 import Button from '../../components/common/Button';
 import styles from './Register.module.css';
 
-// Esquema de validación para el formulario de registro
-const registerSchema = z.object({
+// Esquema de validación para el formulario de registro de usuario
+const esquemaRegistro = z.object({
   nombre: z
     .string()
     .min(2, 'El nombre debe tener al menos 2 caracteres')
@@ -35,28 +35,29 @@ const registerSchema = z.object({
 });
 
 /**
- * Página de registro de usuario
+ * Página de registro de nuevos usuarios
+ * Permite crear cuentas nuevas en la plataforma
  */
-const Register = () => {
-  const navigate = useNavigate();
-  const { register: registerUser, loading, error, clearError, isAuthenticated } = useAuth();
+const Registro = () => {
+  const navegar = useNavigate();
+  const { registrarUsuario, cargandoAutenticacion, error, limpiarError, usuarioAutenticado } = useAuth();
   const [registroExitoso, setRegistroExitoso] = useState(false);
 
-  // Redirigir al dashboard si ya está autenticado
+  // Redirigir al dashboard si el usuario ya está autenticado
   useEffect(() => {
-    if (isAuthenticated) {
-      navigate('/dashboard', { replace: true });
+    if (usuarioAutenticado) {
+      navegar('/dashboard', { replace: true });
     }
-  }, [isAuthenticated, navigate]);
+  }, [usuarioAutenticado, navegar]);
 
-  // Configuración del formulario con react-hook-form
+  // Configuración del formulario con react-hook-form y validación Zod
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
     reset
   } = useForm({
-    resolver: zodResolver(registerSchema),
+    resolver: zodResolver(esquemaRegistro),
     defaultValues: {
       nombre: '',
       email: '',
@@ -65,66 +66,67 @@ const Register = () => {
     }
   });
 
-  // Limpiar errores al montar el componente
+  // Limpiar mensajes de error al cargar la página
   useEffect(() => {
-    clearError();
+    limpiarError();
     setRegistroExitoso(false);
-  }, [clearError]);
+  }, [limpiarError]);
 
-  // Manejar envío del formulario de registro
+  // Manejar el envío del formulario de registro
   const manejarEnvioFormularioRegistro = async (datosFormulario) => {
     setRegistroExitoso(false);
     
-    // Extraer datos sin la confirmación de contraseña
+    // Extraer datos del formulario sin la confirmación de contraseña
     const { confirmPassword, ...datosUsuario } = datosFormulario;
-    const resultado = await registerUser(datosUsuario);
+    const resultado = await registrarUsuario(datosUsuario);
     
     if (resultado.ok) {
       setRegistroExitoso(true);
       reset();
-      // Redirigir automáticamente a login después de 3 segundos
+      // Redirigir automáticamente al login después de 3 segundos
       setTimeout(() => {
-        navigate('/login');
+        navegar('/login');
       }, 3000);
     }
   };
 
-  const estaEnviando = loading || isSubmitting;
+  // Estado de carga durante el envío del formulario
+  const estaEnviando = cargandoAutenticacion || isSubmitting;
 
   return (
     <Layout showFooter={false}>
-      <main className={styles.registerPage}>
-        <div className={styles.container}>
-          <div className={styles.registerCard}>
-            {/* Header */}
-            <header className={styles.header}>
-              <h1 className={styles.title}>Crear cuenta</h1>
-              <p className={styles.subtitle}>
+      <main className={styles.paginaRegistro}>
+        <div className={styles.contenedor}>
+          <div className={styles.tarjetaRegistro}>
+            {/* Encabezado de la página */}
+            <header className={styles.encabezado}>
+              <h1 className={styles.titulo}>Crear cuenta</h1>
+              <p className={styles.subtitulo}>
                 Únete a SmartStocker y optimiza tu restaurante
               </p>
             </header>
 
-            {/* Mensaje de éxito */}
+            {/* Mensaje de registro exitoso */}
             {registroExitoso && (
               <SuccessMessage 
                 title="¡Cuenta creada exitosamente!"
                 message="Ahora puedes iniciar sesión con tus credenciales. Te redirigiremos automáticamente..."
-                className={styles.successMessage}
+                className={styles.mensajeExito}
               />
             )}
 
-            {/* Formulario */}
+            {/* Formulario de registro */}
             {!registroExitoso && (
-              <form onSubmit={handleSubmit(manejarEnvioFormularioRegistro)} className={styles.form} noValidate>
-                {/* Mensaje de error global */}
+              <form onSubmit={handleSubmit(manejarEnvioFormularioRegistro)} className={styles.formulario} noValidate>
+                {/* Mensaje de error general */}
                 {error && (
                   <ErrorMessage 
                     message={error}
-                    className={styles.errorMessage}
+                    className={styles.mensajeError}
                   />
                 )}
 
-                {/* Campo Nombre */}
+                {/* Campo de nombre completo */}
                 <TextField
                   label="Nombre completo"
                   name="nombre"
@@ -137,7 +139,7 @@ const Register = () => {
                   {...register('nombre')}
                 />
 
-                {/* Campo Email */}
+                {/* Campo de email */}
                 <TextField
                   label="Email"
                   name="email"
@@ -150,7 +152,7 @@ const Register = () => {
                   {...register('email')}
                 />
 
-                {/* Campo Contraseña */}
+                {/* Campo de contraseña */}
                 <PasswordField
                   label="Contraseña"
                   name="password"
@@ -162,7 +164,7 @@ const Register = () => {
                   {...register('password')}
                 />
 
-                {/* Campo Confirmar Contraseña */}
+                {/* Campo de confirmación de contraseña */}
                 <PasswordField
                   label="Confirmar contraseña"
                   name="confirmPassword"
@@ -174,29 +176,29 @@ const Register = () => {
                   {...register('confirmPassword')}
                 />
 
-                {/* Botón de envío */}
+                {/* Botón para enviar el formulario */}
                 <Button
                   type="submit"
                   variant="primary"
                   size="large"
                   fullWidth
                   disabled={estaEnviando}
-                  className={styles.submitButton}
+                  className={styles.botonEnvio}
                 >
                   {estaEnviando ? 'Creando cuenta...' : 'Crear cuenta'}
                 </Button>
               </form>
             )}
 
-            {/* Enlaces adicionales */}
-            <footer className={styles.footer}>
-              <div className={styles.divider}>
+            {/* Enlaces de navegación adicionales */}
+            <footer className={styles.pieFormulario}>
+              <div className={styles.separador}>
                 <span>¿Ya tienes cuenta?</span>
               </div>
               
               <Link 
                 to="/login" 
-                className={styles.loginLink}
+                className={styles.enlaceInicioSesion}
                 aria-label="Iniciar sesión con cuenta existente"
               >
                 Iniciar sesión
@@ -208,5 +210,3 @@ const Register = () => {
     </Layout>
   );
 };
-
-export default Register;

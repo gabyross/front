@@ -11,8 +11,8 @@ import { ErrorMessage, SuccessMessage } from '../../components/feedback';
 import Button from '../../components/common/Button';
 import styles from './Recover.module.css';
 
-// Esquema de validación para el formulario de recuperación
-const recoverSchema = z.object({
+// Esquema de validación para el formulario de recuperación de contraseña
+const esquemaRecuperacion = z.object({
   email: z
     .string()
     .min(1, 'El email es requerido')
@@ -20,44 +20,45 @@ const recoverSchema = z.object({
 });
 
 /**
- * Página de recuperación de contraseña
+ * Página de recuperación de contraseña olvidada
+ * Permite a usuarios solicitar instrucciones para restablecer su contraseña
  */
-const Recover = () => {
-  const navigate = useNavigate();
-  const { requestPasswordReset, loading, error, clearError, isAuthenticated } = useAuth();
+const Recuperacion = () => {
+  const navegar = useNavigate();
+  const { solicitarRecuperacionContrasena, cargandoAutenticacion, error, limpiarError, usuarioAutenticado } = useAuth();
   const [solicitudEnviada, setSolicitudEnviada] = useState(false);
 
-  // Redirigir al dashboard si ya está autenticado
+  // Redirigir al dashboard si el usuario ya está autenticado
   useEffect(() => {
-    if (isAuthenticated) {
-      navigate('/dashboard', { replace: true });
+    if (usuarioAutenticado) {
+      navegar('/dashboard', { replace: true });
     }
-  }, [isAuthenticated, navigate]);
+  }, [usuarioAutenticado, navegar]);
 
-  // Configuración del formulario con react-hook-form
+  // Configuración del formulario con react-hook-form y validación Zod
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
     reset
   } = useForm({
-    resolver: zodResolver(recoverSchema),
+    resolver: zodResolver(esquemaRecuperacion),
     defaultValues: {
       email: ''
     }
   });
 
-  // Limpiar errores al montar el componente
+  // Limpiar mensajes de error al cargar la página
   useEffect(() => {
-    clearError();
+    limpiarError();
     setSolicitudEnviada(false);
-  }, [clearError]);
+  }, [limpiarError]);
 
-  // Manejar envío del formulario de recuperación
+  // Manejar el envío del formulario de recuperación de contraseña
   const manejarEnvioFormularioRecuperacion = async (datosFormulario) => {
     setSolicitudEnviada(false);
     
-    const resultado = await requestPasswordReset(datosFormulario.email);
+    const resultado = await solicitarRecuperacionContrasena(datosFormulario.email);
     
     if (resultado.ok) {
       setSolicitudEnviada(true);
@@ -65,42 +66,43 @@ const Recover = () => {
     }
   };
 
-  const estaEnviando = loading || isSubmitting;
+  // Estado de carga durante el envío del formulario
+  const estaEnviando = cargandoAutenticacion || isSubmitting;
 
   return (
     <Layout showFooter={false}>
-      <main className={styles.recoverPage}>
-        <div className={styles.container}>
-          <div className={styles.recoverCard}>
-            {/* Header */}
-            <header className={styles.header}>
-              <h1 className={styles.title}>Recuperar contraseña</h1>
-              <p className={styles.subtitle}>
+      <main className={styles.paginaRecuperacion}>
+        <div className={styles.contenedor}>
+          <div className={styles.tarjetaRecuperacion}>
+            {/* Encabezado de la página */}
+            <header className={styles.encabezado}>
+              <h1 className={styles.titulo}>Recuperar contraseña</h1>
+              <p className={styles.subtitulo}>
                 Ingresa tu email y te enviaremos instrucciones para restablecer tu contraseña
               </p>
             </header>
 
-            {/* Mensaje de éxito */}
+            {/* Mensaje de solicitud enviada exitosamente */}
             {solicitudEnviada && (
               <SuccessMessage 
                 title="Instrucciones enviadas"
                 message="Si el email está registrado en nuestro sistema, recibirás instrucciones para recuperar tu contraseña en los próximos minutos."
-                className={styles.successMessage}
+                className={styles.mensajeExito}
               />
             )}
 
-            {/* Formulario */}
+            {/* Formulario de recuperación */}
             {!solicitudEnviada && (
-              <form onSubmit={handleSubmit(manejarEnvioFormularioRecuperacion)} className={styles.form} noValidate>
-                {/* Mensaje de error global */}
+              <form onSubmit={handleSubmit(manejarEnvioFormularioRecuperacion)} className={styles.formulario} noValidate>
+                {/* Mensaje de error general */}
                 {error && (
                   <ErrorMessage 
                     message={error}
-                    className={styles.errorMessage}
+                    className={styles.mensajeError}
                   />
                 )}
 
-                {/* Campo Email */}
+                {/* Campo de email */}
                 <TextField
                   label="Email"
                   name="email"
@@ -113,41 +115,42 @@ const Recover = () => {
                   {...register('email')}
                 />
 
-                {/* Botón de envío */}
+                {/* Botón para enviar el formulario */}
                 <Button
                   type="submit"
                   variant="primary"
                   size="large"
                   fullWidth
                   disabled={estaEnviando}
-                  className={styles.submitButton}
+                  className={styles.botonEnvio}
                 >
                   {estaEnviando ? 'Enviando instrucciones...' : 'Enviar instrucciones'}
                 </Button>
               </form>
             )}
 
-            {/* Enlaces adicionales */}
-            <footer className={styles.footer}>
+            {/* Enlaces de navegación adicionales */}
+            <footer className={styles.pieFormulario}>
               <Link 
                 to="/login" 
-                className={styles.backLink}
+                className={styles.enlaceRegreso}
                 aria-label="Volver a iniciar sesión"
               >
                 <ArrowLeft size={16} aria-hidden="true" />
                 Volver a iniciar sesión
               </Link>
               
+              {/* Opciones adicionales cuando la solicitud fue enviada */}
               {solicitudEnviada && (
                 <>
-                  <div className={styles.divider}>
+                  <div className={styles.separador}>
                     <span>¿No recibiste el email?</span>
                   </div>
                   
                   <button
                     type="button"
                     onClick={() => setSolicitudEnviada(false)}
-                    className={styles.retryButton}
+                    className={styles.botonReintentar}
                     aria-label="Intentar nuevamente"
                   >
                     Intentar nuevamente
@@ -161,5 +164,3 @@ const Recover = () => {
     </Layout>
   );
 };
-
-export default Recover;

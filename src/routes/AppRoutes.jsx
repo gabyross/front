@@ -2,13 +2,13 @@ import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 
-// Páginas públicas
+// Importar páginas públicas
 import LandingPage from '../pages/LandingPage';
 import Login from '../pages/auth/Login';
 import Register from '../pages/auth/Register';
 import Recover from '../pages/auth/Recover';
 
-// Página placeholder para dashboard
+// Página placeholder para dashboard (próximamente)
 const Dashboard = () => (
   <div style={{ padding: '2rem', textAlign: 'center' }}>
     <h1>Dashboard - Próximamente</h1>
@@ -16,7 +16,7 @@ const Dashboard = () => (
   </div>
 );
 
-// Página 404 para rutas no encontradas
+// Página de error 404 para rutas no encontradas
 const NotFound = () => (
   <div style={{ padding: '2rem', textAlign: 'center' }}>
     <h1>404 - Página no encontrada</h1>
@@ -26,12 +26,13 @@ const NotFound = () => (
 
 /**
  * Componente de ruta protegida que requiere autenticación
+ * Redirige a login si el usuario no está autenticado
  */
 const RutaProtegida = ({ children }) => {
-  const { isAuthenticated, loading } = useAuth();
+  const { usuarioAutenticado, cargandoAutenticacion } = useAuth();
 
-  // Mostrar loading mientras se verifica la autenticación
-  if (loading) {
+  // Mostrar indicador de carga mientras se verifica la autenticación
+  if (cargandoAutenticacion) {
     return (
       <div style={{ padding: '2rem', textAlign: 'center' }}>
         <p>Cargando...</p>
@@ -39,18 +40,19 @@ const RutaProtegida = ({ children }) => {
     );
   }
 
-  // Redirigir a login si no está autenticado
-  return isAuthenticated ? children : <Navigate to="/login" replace />;
+  // Redirigir a login si el usuario no está autenticado
+  return usuarioAutenticado ? children : <Navigate to="/login" replace />;
 };
 
 /**
  * Componente de ruta pública que redirige si ya está autenticado
+ * Evita que usuarios autenticados accedan a páginas de login/registro
  */
 const RutaPublica = ({ children }) => {
-  const { isAuthenticated, loading } = useAuth();
+  const { usuarioAutenticado, cargandoAutenticacion } = useAuth();
 
-  // Mostrar loading mientras se verifica la autenticación
-  if (loading) {
+  // Mostrar indicador de carga mientras se verifica la autenticación
+  if (cargandoAutenticacion) {
     return (
       <div style={{ padding: '2rem', textAlign: 'center' }}>
         <p>Cargando...</p>
@@ -58,17 +60,18 @@ const RutaPublica = ({ children }) => {
     );
   }
 
-  // Redirigir a dashboard si ya está autenticado
-  return !isAuthenticated ? children : <Navigate to="/dashboard" replace />;
+  // Redirigir a dashboard si el usuario ya está autenticado
+  return !usuarioAutenticado ? children : <Navigate to="/dashboard" replace />;
 };
 
 /**
- * Configuración principal de rutas de la aplicación
+ * Configuración principal de rutas usando React Router v6
+ * Define todas las rutas de la aplicación sin condicionales manuales
  */
 const AppRoutes = () => {
   return (
     <Routes>
-      {/* Página de inicio - accesible para todos */}
+      {/* Página de inicio - accesible para todos los usuarios */}
       <Route path="/" element={<LandingPage />} />
       
       {/* Rutas de autenticación - solo para usuarios no autenticados */}
@@ -107,7 +110,7 @@ const AppRoutes = () => {
         } 
       />
       
-      {/* Ruta 404 para páginas no encontradas */}
+      {/* Ruta de error 404 para páginas no encontradas */}
       <Route path="*" element={<NotFound />} />
     </Routes>
   );

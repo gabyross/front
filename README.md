@@ -4,9 +4,9 @@
 
 Plataforma web para ayudar a restaurantes y locales gastronómicos en CABA a predecir ventas y optimizar su inventario.
 
-## 🔐 Módulo de Autenticación
+## 🔐 Módulo de Autenticación SPA
 
-Sistema completo de autenticación SPA (Single Page Application) con navegación sin recargas, implementado con:
+Sistema completo de autenticación SPA (Single Page Application) con navegación sin recargas de página, implementado con React Router v6 y Context API.
 
 ### **Funcionalidades**
 - ✅ **Registro de usuarios** con validación completa
@@ -32,14 +32,41 @@ Sistema completo de autenticación SPA (Single Page Application) con navegación
 - `/recuperar` - Recuperar contraseña olvidada
 - `/dashboard` - Página principal (requiere autenticación)
 
-### **Navegación SPA**
-La aplicación utiliza **React Router v6** para navegación sin recargas:
-- **BrowserRouter** configurado en `src/main.jsx`
-- **AuthProvider** envuelve toda la aplicación para gestión de estado
-- **Link/NavLink** en lugar de `<a href>` para navegación interna
-- **useNavigate** para redirecciones programáticas
-- **Rutas protegidas** que redirigen a login si no hay autenticación
-- **Rutas públicas** que redirigen a dashboard si ya está autenticado
+### **Arquitectura de Navegación SPA**
+
+#### **Orden de Providers (src/main.jsx)**
+```jsx
+// AuthProvider envuelve BrowserRouter para que el estado de autenticación
+// se mantenga durante la navegación sin recargas de página
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <React.StrictMode>
+    <AuthProvider>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </AuthProvider>
+  </React.StrictMode>
+);
+```
+
+**¿Por qué este orden?**
+- **AuthProvider** por encima permite que el estado de autenticación persista durante toda la navegación
+- **BrowserRouter** maneja las rutas sin recargar la página
+- Este orden garantiza re-renders automáticos cuando cambia el estado de autenticación
+
+#### **Navegación Sin Recargas**
+- ✅ **Link/NavLink** en lugar de `<a href>` para navegación interna
+- ✅ **useNavigate** para redirecciones programáticas después de login/registro
+- ✅ **Rutas protegidas** que redirigen a `/login` si no hay autenticación
+- ✅ **Rutas públicas** que redirigen a `/dashboard` si ya está autenticado
+- ✅ **Estados de loading** durante verificación de autenticación
+
+#### **Base href en index.html**
+```html
+<!-- Base requerida para BrowserRouter en despliegues estáticos -->
+<base href="/" />
+```
+Esta configuración es esencial para que BrowserRouter funcione correctamente tanto en desarrollo como en producción.
 
 ### **Arquitectura Implementada**
 ```
@@ -64,17 +91,28 @@ src/
 ```
 
 ### **Rehidratación de Sesión**
-El sistema mantiene la sesión del usuario entre recargas:
-1. **AuthContext** lee `localStorage('auth')` al inicializar
+El sistema mantiene la sesión del usuario entre recargas de página:
+1. **AuthContext** lee `localStorage('smartstocker_auth')` al inicializar la aplicación
 2. Si existe una sesión válida, rehidrata el estado del usuario
-3. Las rutas protegidas verifican automáticamente la autenticación
-4. El header muestra información del usuario o botón de login según el estado
+3. Las rutas protegidas verifican automáticamente el estado de autenticación
+4. El header se actualiza dinámicamente mostrando información del usuario o botón de login
+5. **No se requieren recargas manuales** - todo funciona automáticamente
 
-### **Configuración Técnica**
-- **`<base href="/" />`** en `index.html` para compatibilidad con BrowserRouter
-- **Providers en orden correcto**: BrowserRouter → AuthProvider → App
-- **Variables con nombres descriptivos** (ej: `manejarEnvioFormularioLogin`)
-- **Comentarios explicativos** en funciones y bloques importantes
+### **Anti-patrones Evitados**
+Para garantizar una navegación SPA correcta, se evitaron estos anti-patrones:
+- ❌ **window.location** para navegación interna
+- ❌ **location.assign()** o **location.reload()**
+- ❌ **navigate(0)** para forzar recargas
+- ❌ Estados manuales para decidir qué página mostrar (en lugar de usar `<Routes>`)
+- ❌ Condicionales basados en `window.location.pathname` para renderizado
+- ❌ Enlaces `<a href="/ruta">` para navegación interna
+
+### **Buenas Prácticas Implementadas**
+- ✅ **Nombres descriptivos**: `manejarEnvioFormularioInicioSesion`, `usuarioAutenticado`, `cargandoAutenticacion`
+- ✅ **Comentarios explicativos**: Cada función y bloque importante tiene comentarios breves
+- ✅ **Navegación semántica**: `<Link>` y `<NavLink>` para navegación interna
+- ✅ **Estados de carga**: Indicadores durante operaciones asíncronas
+- ✅ **Redirecciones inteligentes**: Automáticas según estado de autenticación
 
 ### **Validaciones Implementadas**
 - **Email**: Formato válido requerido
@@ -89,14 +127,6 @@ El sistema mantiene la sesión del usuario entre recargas:
 - ✅ Mensajes con `aria-live` para screen readers
 - ✅ Focus visible en todos los elementos interactivos
 - ✅ Navegación semántica con `<main>`, `<header>`, `<nav>`
-
-### **Buenas Prácticas Implementadas**
-- ✅ **Nombres descriptivos**: `manejarEnvioFormularioLogin` vs `onSubmit`
-- ✅ **Comentarios claros**: Explicaciones breves sobre qué hace cada función
-- ✅ **Navegación SPA**: Link/NavLink en lugar de `<a href>`
-- ✅ **Estado centralizado**: AuthContext para toda la aplicación
-- ✅ **Validación robusta**: Zod + react-hook-form
-- ✅ **Código modular**: Componentes pequeños y reutilizables
 
 ## 🎨 Design System
 

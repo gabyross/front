@@ -1,18 +1,18 @@
-/* Estilos para la Landing Page */
+/* Estilos para la página de inicio */
 
-.landingPage {
+.paginaInicio {
   overflow-x: hidden;
 }
 
-/* Hero Section */
-.hero {
+/* Sección principal de presentación */
+.seccionPrincipal {
   background: linear-gradient(135deg, var(--color-background-accent) 0%, var(--color-background) 100%);
   padding: var(--spacing-4xl) 0 var(--spacing-3xl);
   text-align: center;
   position: relative;
 }
 
-.hero::before {
+.seccionPrincipal::before {
   content: '';
   position: absolute;
   top: 0;
@@ -24,7 +24,7 @@
   z-index: 0;
 }
 
-.heroContent {
+.contenidoPrincipal {
   position: relative;
   z-index: 1;
   max-width: 800px;
@@ -32,7 +32,7 @@
   padding: 0 var(--spacing-md);
 }
 
-.heroTitle {
+.tituloPrincipal {
   font-size: 2.5rem;
   font-weight: 700;
   color: var(--color-text-primary);
@@ -41,12 +41,12 @@
 }
 
 @media (min-width: 768px) {
-  .heroTitle {
+  .tituloPrincipal {
     font-size: 3.5rem;
   }
 }
 
-.heroSubtitle {
+.subtituloPrincipal {
   font-size: 1.25rem;
   color: var(--color-text-secondary);
   margin-bottom: var(--spacing-2xl);
@@ -57,12 +57,12 @@
 }
 
 @media (min-width: 768px) {
-  .heroSubtitle {
+  .subtituloPrincipal {
     font-size: 1.375rem;
   }
 }
 
-.heroButtons {
+.botonesPrincipales {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-md);
@@ -70,36 +70,36 @@
 }
 
 @media (min-width: 640px) {
-  .heroButtons {
+  .botonesPrincipales {
     flex-direction: row;
     justify-content: center;
   }
 }
 
-/* Secciones generales */
-.section {
+/* Estilos generales para secciones */
+.seccion {
   padding: var(--spacing-4xl) 0;
 }
 
-.sectionContainer {
+.contenedorSeccion {
   max-width: 1280px;
   margin: 0 auto;
   padding: 0 var(--spacing-md);
 }
 
 @media (min-width: 768px) {
-  .sectionContainer {
+  .contenedorSeccion {
     padding: 0 var(--spacing-lg);
   }
 }
 
 @media (min-width: 1024px) {
-  .sectionContainer {
+  .contenedorSeccion {
     padding: 0 var(--spacing-xl);
   }
 }
 
-.sectionTitle {
+.tituloSeccion {
   text-align: center;
   font-size: 2rem;
   font-weight: 700;
@@ -108,12 +108,12 @@
 }
 
 @media (min-width: 768px) {
-  .sectionTitle {
+  .tituloSeccion {
     font-size: 2.5rem;
   }
 }
 
-.sectionSubtitle {
+.subtituloSeccion {
   text-align: center;
   font-size: 1.125rem;
   color: var(--color-text-secondary);
@@ -123,39 +123,39 @@
   margin-right: auto;
 }
 
-/* Beneficios */
+/* Sección de beneficios */
 .beneficios {
   background-color: var(--color-background-light);
 }
 
-.beneficiosGrid {
+.grillaBeneficios {
   display: grid;
   grid-template-columns: 1fr;
   gap: var(--spacing-xl);
 }
 
 @media (min-width: 768px) {
-  .beneficiosGrid {
+  .grillaBeneficios {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
 @media (min-width: 1024px) {
-  .beneficiosGrid {
+  .grillaBeneficios {
     grid-template-columns: repeat(3, 1fr);
   }
 }
 
-.beneficioCard {
+.tarjetaBeneficio {
   text-align: center;
   transition: transform var(--transition-normal);
 }
 
-.beneficioCard:hover {
+.tarjetaBeneficio:hover {
   transform: translateY(-4px);
 }
 
-.beneficioIcon {
+.iconoBeneficio {
   width: 4rem;
   height: 4rem;
   margin: 0 auto var(--spacing-lg);
@@ -167,32 +167,32 @@
   color: white;
 }
 
-.beneficioTitle {
+.tituloBeneficio {
   font-size: 1.25rem;
   font-weight: 600;
   color: var(--color-text-primary);
   margin-bottom: var(--spacing-sm);
 }
 
-.beneficioDescription {
+.descripcionBeneficio {
   color: var(--color-text-secondary);
   line-height: 1.6;
   margin: 0;
 }
 
-/* Cómo funciona */
+/* Sección de proceso */
 .comoFunciona {
   background-color: var(--color-background);
 }
 
-.pasosGrid {
+.grillaPasos {
   display: grid;
   grid-template-columns: 1fr;
   gap: var(--spacing-2xl);
 }
 
 @media (min-width: 768px) {
-  .pasosGrid {
+  .grillaPasos {
     grid-template-columns: repeat(3, 1fr);
   }
 }
@@ -202,7 +202,7 @@
   position: relative;
 }
 
-.pasoNumero {
+.numeroPaso {
   width: 3rem;
   height: 3rem;
   background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-light) 100%);
@@ -219,7 +219,7 @@
   z-index: 2;
 }
 
-.pasoNumero::after {
+.numeroPaso::after {
   content: '';
   position: absolute;
   top: 50%;
@@ -232,52 +232,52 @@
 }
 
 @media (max-width: 767px) {
-  .pasoNumero::after {
+  .numeroPaso::after {
     display: none;
   }
 }
 
-.paso:last-child .pasoNumero::after {
+.paso:last-child .numeroPaso::after {
   display: none;
 }
 
-.pasoTitle {
+.tituloPaso {
   font-size: 1.25rem;
   font-weight: 600;
   color: var(--color-text-primary);
   margin-bottom: var(--spacing-sm);
 }
 
-.pasoDescription {
+.descripcionPaso {
   color: var(--color-text-secondary);
   line-height: 1.6;
   margin: 0;
 }
 
-/* Testimonios */
+/* Sección de testimonios */
 .testimonios {
   background-color: var(--color-background-light);
 }
 
-.testimoniosGrid {
+.grillaTestimonios {
   display: grid;
   grid-template-columns: 1fr;
   gap: var(--spacing-xl);
 }
 
 @media (min-width: 768px) {
-  .testimoniosGrid {
+  .grillaTestimonios {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
 @media (min-width: 1024px) {
-  .testimoniosGrid {
+  .grillaTestimonios {
     grid-template-columns: repeat(3, 1fr);
   }
 }
 
-.testimonioCard {
+.tarjetaTestimonio {
   background-color: var(--color-background);
   padding: var(--spacing-xl);
   border-radius: var(--radius-lg);
@@ -285,25 +285,25 @@
   transition: all var(--transition-normal);
 }
 
-.testimonioCard:hover {
+.tarjetaTestimonio:hover {
   box-shadow: var(--shadow-md);
   transform: translateY(-2px);
 }
 
-.testimonioTexto {
+.textoTestimonio {
   font-style: italic;
   color: var(--color-text-secondary);
   margin-bottom: var(--spacing-lg);
   line-height: 1.6;
 }
 
-.testimonioAutor {
+.autorTestimonio {
   display: flex;
   align-items: center;
   gap: var(--spacing-md);
 }
 
-.testimonioAvatar {
+.avatarTestimonio {
   width: 3rem;
   height: 3rem;
   background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-light) 100%);
@@ -316,33 +316,33 @@
   font-size: 1.125rem;
 }
 
-.testimonioInfo h4 {
+.informacionTestimonio h4 {
   font-size: 1rem;
   font-weight: 600;
   color: var(--color-text-primary);
   margin: 0 0 var(--spacing-xs);
 }
 
-.testimonioInfo p {
+.informacionTestimonio p {
   font-size: 0.875rem;
   color: var(--color-text-secondary);
   margin: 0;
 }
 
-/* CTA Final */
-.ctaFinal {
+/* Llamada a la acción final */
+.llamadaAccionFinal {
   background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-light) 100%);
   color: white;
   text-align: center;
 }
 
-.ctaContent {
+.contenidoLlamadaAccion {
   max-width: 600px;
   margin: 0 auto;
   padding: 0 var(--spacing-md);
 }
 
-.ctaTitle {
+.tituloLlamadaAccion {
   font-size: 2rem;
   font-weight: 700;
   margin-bottom: var(--spacing-md);
@@ -350,19 +350,19 @@
 }
 
 @media (min-width: 768px) {
-  .ctaTitle {
+  .tituloLlamadaAccion {
     font-size: 2.5rem;
   }
 }
 
-.ctaSubtitle {
+.subtituloLlamadaAccion {
   font-size: 1.125rem;
   margin-bottom: var(--spacing-2xl);
   opacity: 0.9;
   line-height: 1.6;
 }
 
-.ctaButton {
+.botonLlamadaAccion {
   background-color: white;
   color: var(--color-primary);
   font-weight: 600;
@@ -374,7 +374,7 @@
   box-shadow: var(--shadow-lg);
 }
 
-.ctaButton:hover {
+.botonLlamadaAccion:hover {
   transform: translateY(-2px);
   box-shadow: var(--shadow-xl);
   color: var(--color-primary-dark);
