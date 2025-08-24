@@ -6,10 +6,9 @@ import { Plus, Search, Edit, Trash2, RefreshCw } from 'lucide-react';
 import styles from './ViewIngredients.module.css';
 
 /** Base de API; usa .env y normaliza la barra final. Fallback al endpoint de Postman. (ESP) */
-const RAW_API_BASE =
-  import.meta.env.VITE_API_URL
+const RAW_API_BASE = import.meta.env.VITE_API_URL
 const API_BASE = typeof RAW_API_BASE === 'string' ? RAW_API_BASE.replace(/\/+$/, '') : '';
-const USER_ID = 'ulises'; // TODO: reemplazar cuando exista autenticación real
+const USER_ID = import.meta.env.VITE_DEFAULT_USER_ID
 
 /** Utilidades (ESP) */
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
