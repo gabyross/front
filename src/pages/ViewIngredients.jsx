@@ -7,8 +7,7 @@ import styles from './ViewIngredients.module.css';
 
 /** Base de API; usa .env y normaliza la barra final. Fallback al endpoint de Postman. (ESP) */
 const RAW_API_BASE =
-  import.meta.env.VITE_API_URL ??
-  'https://nwlvr7r0v4.execute-api.us-east-1.amazonaws.com/Prod';
+  import.meta.env.VITE_API_URL
 const API_BASE = typeof RAW_API_BASE === 'string' ? RAW_API_BASE.replace(/\/+$/, '') : '';
 const USER_ID = 'ulises'; // TODO: reemplazar cuando exista autenticación real
 
