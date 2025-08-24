@@ -53,13 +53,14 @@ const Checkbox = ({
           onClick={(e) => {
             e.stopPropagation();
             if (!disabled && onChange) {
-              onChange({
-                target: {
-                  name,
-                  checked: !checked,
-                  type: 'checkbox'
-                }
-              });
+             const syntheticEvent = {
+               target: {
+                 name,
+                 checked: !checked,
+                 type: 'checkbox'
+               }
+             };
+             onChange(syntheticEvent);
             }
           }}
         >
