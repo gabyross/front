@@ -2,16 +2,19 @@ import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Layout from '../components/layout/Layout';
 import Button from '../components/common/Button';
-// import Input from '../components/common/Input'; // No usado en esta vista
 import { Plus, Search, Edit, Trash2, RefreshCw } from 'lucide-react';
 import styles from './ViewIngredients.module.css';
 
-/** Base de API con fallback; userId hardcodeado hasta tener auth */
-const RAW_API_BASE = import.meta.env.VITE_API_URL ?? 'https://t6o79uz216.execute-api.us-east-1.amazonaws.com/Prod';
+/** Base de API; usa .env y normaliza la barra final. Fallback al endpoint de Postman. (ESP) */
+const RAW_API_BASE =
+  import.meta.env.VITE_API_URL ??
+  'https://nwlvr7r0v4.execute-api.us-east-1.amazonaws.com/Prod';
 const API_BASE = typeof RAW_API_BASE === 'string' ? RAW_API_BASE.replace(/\/+$/, '') : '';
 const USER_ID = 'ulises'; // TODO: reemplazar cuando exista autenticación real
 
-/** Helper: formateo de cantidades según unidad (ESP) */
+/** Utilidades (ESP) */
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
 const formatQuantity = (value, unit) => {
   const needsDecimals = unit === 'kilogramos' || unit === 'litros';
   return new Intl.NumberFormat('es-AR', {
@@ -21,21 +24,20 @@ const formatQuantity = (value, unit) => {
   }).format(value);
 };
 
-/** Helper: estado de stock (ESP) */
 const getStockStatus = (ingredient) => {
   if (ingredient.cantidadEnStock === 0) return 'Crítico';
   if (ingredient.cantidadEnStock < ingredient.cantidadMinima) return 'Bajo';
   return 'OK';
 };
 
-/** Helper: fecha corta (ESP) */
 const formatShortDate = (isoString) => {
   const date = new Date(isoString);
-  return date.toLocaleDateString('es-AR', {
-    day: '2-digit',
-    month: '2-digit',
-    year: '2-digit'
-  });
+  return date.toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit', year: '2-digit' });
+};
+
+const buildUrl = (path, params = {}) => {
+  const qs = new URLSearchParams(params).toString();
+  return `${API_BASE}${path}${qs ? `?${qs}` : ''}`;
 };
 
 const ViewIngredients = () => {
@@ -56,24 +58,29 @@ const ViewIngredients = () => {
 
   const itemsPerPage = 10;
 
-  /** Helper: construir URL (ESP) */
-  const buildUrl = (path, params = {}) => {
-    const qs = new URLSearchParams(params).toString();
-    return `${API_BASE}${path}${qs ? `?${qs}` : ''}`;
-  };
-
-  /** Fetch real con abort support (ESP) */
+  /** Fetch real con abort y delay mínimo; evita bajar isLoading si fue abortado (ESP) */
   const fetchIngredients = useCallback(
-    async (signal) => {
+    async (signal, { minDelayMs = 0 } = {}) => {
       setIsLoading(true);
       setHasError(false);
+
+      let aborted = false;
+      const onAbort = () => { aborted = true; };
+      signal?.addEventListener?.('abort', onAbort);
+
       try {
         const url = buildUrl('/ingredientes', { userId: USER_ID });
-        const res = await fetch(url, { method: 'GET', signal });
+
+        // Ejecutar fetch y delay en paralelo para garantizar tiempo mínimo de carga
+        const resPromise = fetch(url, { method: 'GET', signal });
+        const delayPromise = minDelayMs > 0 ? sleep(minDelayMs) : Promise.resolve();
+
+        const [res] = await Promise.all([resPromise, delayPromise]);
+        if (aborted) return; // si se abortó, no toques estado
+
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const json = await res.json(); // se espera un array
 
-        // Normalización mínima (ESP): convertir numéricos en caso de venir como string
         const normalized = Array.isArray(json)
           ? json.map((it) => ({
               ...it,
@@ -90,18 +97,19 @@ const ViewIngredients = () => {
 
         setIngredients(normalized);
       } catch (err) {
-        if (err.name !== 'AbortError') setHasError(true);
+        if (!aborted) setHasError(true);
       } finally {
-        setIsLoading(false);
+        if (!aborted) setIsLoading(false);
+        signal?.removeEventListener?.('abort', onAbort);
       }
     },
-    [API_BASE]
+    []
   );
 
-  /** Carga inicial (ESP) */
+  /** Carga inicial: garantiza al menos 2s de “Cargando…” (ESP) */
   useEffect(() => {
     const controller = new AbortController();
-    fetchIngredients(controller.signal);
+    fetchIngredients(controller.signal, { minDelayMs: 2000 });
     return () => controller.abort();
   }, [fetchIngredients]);
 
@@ -112,9 +120,7 @@ const ViewIngredients = () => {
     // Búsqueda por nombre
     if (searchTerm.trim()) {
       const term = searchTerm.trim().toLowerCase();
-      filtered = filtered.filter((ing) =>
-        ing.nombre?.toLowerCase().includes(term)
-      );
+      filtered = filtered.filter((ing) => ing.nombre?.toLowerCase().includes(term));
     }
 
     // Filtro por unidad
@@ -153,14 +159,7 @@ const ViewIngredients = () => {
     const startIndex = (safePage - 1) * itemsPerPage;
     const data = toSort.slice(startIndex, startIndex + itemsPerPage);
 
-    return {
-      data,
-      totalItems,
-      totalPages,
-      hasResults: totalItems > 0,
-      page: safePage,
-    };
-    // 🔧 IMPORTANTE: incluir `ingredients` en dependencias
+    return { data, totalItems, totalPages, hasResults: totalItems > 0, page: safePage };
   }, [
     ingredients,
     searchTerm,
@@ -190,11 +189,10 @@ const ViewIngredients = () => {
   const handleEdit = (id) => console.log('Editar ingrediente:', id);
   const handleDelete = (id) => console.log('Eliminar ingrediente:', id);
 
-  /** Reintentar (ESP) */
+  /** Reintentar sin delay extra (ESP) */
   const handleRetry = () => {
     const controller = new AbortController();
     fetchIngredients(controller.signal);
-    // No retornamos cleanup: acción instantánea
   };
 
   /** Clase para badge de estado (ESP) */
@@ -345,8 +343,7 @@ const ViewIngredients = () => {
           <div className={styles.resultsInfo} aria-live="polite">
             {!isLoading && !hasError && (
               <span>
-                {processedData.totalItems} resultado
-                {processedData.totalItems !== 1 ? 's' : ''}
+                {processedData.totalItems} resultado{processedData.totalItems !== 1 ? 's' : ''}
               </span>
             )}
           </div>
@@ -459,29 +456,17 @@ const ViewIngredients = () => {
                           <td className={styles.nameCell}>{ingredient.nombre}</td>
                           <td className={styles.unitCell}>{ingredient.unidadMedida}</td>
                           <td className={styles.numCell}>
-                            {formatQuantity(
-                              ingredient.cantidadEnStock,
-                              ingredient.unidadMedida
-                            )}
+                            {formatQuantity(ingredient.cantidadEnStock, ingredient.unidadMedida)}
                           </td>
                           <td className={styles.numCell}>
-                            {formatQuantity(
-                              ingredient.cantidadMinima,
-                              ingredient.unidadMedida
-                            )}
+                            {formatQuantity(ingredient.cantidadMinima, ingredient.unidadMedida)}
                           </td>
                           <td>
-                            <span
-                              className={`${styles.statusBadge} ${getStatusClass(
-                                ingredient
-                              )}`}
-                            >
+                            <span className={`${styles.statusBadge} ${getStatusClass(ingredient)}`}>
                               {getStockStatus(ingredient)}
                             </span>
                           </td>
-                          <td className={styles.dateCell}>
-                            {formatShortDate(ingredient.updatedAt)}
-                          </td>
+                          <td className={styles.dateCell}>{formatShortDate(ingredient.updatedAt)}</td>
                           <td>
                             <div className={styles.actions}>
                               <button
@@ -527,9 +512,7 @@ const ViewIngredients = () => {
                     <button
                       className={styles.paginationButton}
                       onClick={() =>
-                        setCurrentPage((p) =>
-                          Math.min(processedData.totalPages, p + 1)
-                        )
+                        setCurrentPage((p) => Math.min(processedData.totalPages, p + 1))
                       }
                       disabled={processedData.page === processedData.totalPages}
                       aria-label="Página siguiente"
