@@ -102,8 +102,7 @@ const Registro = () => {
     // Simular llamada a API
     await new Promise(resolve => setTimeout(resolve, 1500));
     
-    // Simular éxito y redirigir a login
-    alert('¡Cuenta creada exitosamente! Ahora puedes iniciar sesión.');
+    // Redirigir a login sin mostrar alert
     navigate('/login');
   };
 
