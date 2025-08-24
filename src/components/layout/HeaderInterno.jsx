@@ -61,17 +61,17 @@ const HeaderInterno = () => {
       icon: <Plus size={18} />
     },
     { 
-      path: '/ingredientes', 
+      path: '/ingredients', 
       label: 'Ingredientes', 
       icon: <Package size={18} />
     },
     { 
-      path: '/prediccion', 
+      path: '/prediction', 
       label: 'Predicción', 
       icon: <TrendingUp size={18} />
     },
     { 
-      path: '/reportes', 
+      path: '/reports', 
       label: 'Reportes', 
       icon: <BarChart3 size={18} />
     }
