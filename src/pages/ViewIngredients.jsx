@@ -555,7 +555,7 @@ const ViewIngredients = () => {
                             )}
                           </button>
                         </th>
-                        <th scope="col" data-align="right">
+                        <th scope="col">
                           <button
                             className={styles.sortButton}
                             onClick={() => handleSort('cantidadMinima')}

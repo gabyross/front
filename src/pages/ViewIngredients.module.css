@@ -241,12 +241,12 @@
 }
 
 /* Alinear headers numéricos */
-th[data-align="center"] {
-  text-align: center;
+th[data-align="right"] {
+  text-align: right;
 }
 
-th[data-align="center"] .sortButton {
-  justify-content: center;
+th[data-align="right"] .sortButton {
+  justify-content: flex-end;
 }
 
 /* Celdas específicas */
@@ -263,7 +263,7 @@ th[data-align="center"] .sortButton {
 .numCell,
 .stockCell,
 .numberCell {
-  text-align: center;
+  text-align: left;
   font-variant-numeric: tabular-nums lining-nums; /* dígitos de ancho fijo */
   font-feature-settings: "tnum" 1, "lnum" 1;
   font-variant-ligatures: none;
