@@ -1,11 +1,7 @@
-import React from 'react';
-import { useId } from 'react';
+import React, { useId } from 'react';
 import { Check } from 'lucide-react';
 import styles from './Checkbox.module.css';
 
-/**
- * Componente Checkbox reutilizable con estilos personalizados
- */
 const Checkbox = ({
   name,
   id,
@@ -21,7 +17,7 @@ const Checkbox = ({
 }) => {
   const autoId = useId();
   const checkboxId = id || name || autoId;
-  
+
   const checkboxClasses = [
     styles.checkboxContainer,
     error && styles.error,
@@ -31,7 +27,7 @@ const Checkbox = ({
 
   return (
     <div className={checkboxClasses}>
-      <label htmlFor={checkboxId} className={styles.checkboxWrapper} onClick={(e) => e.preventDefault()}>
+      <label htmlFor={checkboxId} className={styles.checkboxWrapper}>
         <input
           type="checkbox"
           id={checkboxId}
@@ -45,26 +41,10 @@ const Checkbox = ({
           aria-describedby={error ? `${checkboxId}-error` : undefined}
           {...props}
         />
-        
-        {/* cuadrito visual */}
-        <span 
-          className={styles.customCheckbox} 
-          aria-hidden="true"
-          onClick={(e) => {
-            e.stopPropagation();
-            if (!disabled && onChange) {
-             const syntheticEvent = {
-               target: {
-                 name,
-                 checked: !checked,
-                 type: 'checkbox'
-               }
-             };
-             onChange(syntheticEvent);
-            }
-          }}
-        >
-          <Check size={14} className={`${styles.checkIcon} ${checked ? styles.visible : ''}`} />
+
+        {/* cuadrito visual (sin onClick) */}
+        <span className={styles.customCheckbox} aria-hidden="true">
+          <Check size={14} className={styles.checkIcon} />
         </span>
 
         {/* texto */}
@@ -75,11 +55,7 @@ const Checkbox = ({
       </label>
 
       {error && (
-        <span
-          id={`${checkboxId}-error`}
-          className={styles.errorMessage}
-          role="alert"
-        >
+        <span id={`${checkboxId}-error`} className={styles.errorMessage} role="alert">
           {error}
         </span>
       )}
