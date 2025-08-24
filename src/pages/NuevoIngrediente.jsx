@@ -181,7 +181,7 @@ const NuevoIngrediente = () => {
   };
 
   return (
-    <Layout>
+    <Layout isInternal={true}>
       <main className={styles.nuevoIngredientePage}>
         <div className={styles.container}>
           <div className={styles.header}>
