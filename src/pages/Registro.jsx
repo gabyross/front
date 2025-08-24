@@ -85,35 +85,14 @@ const Registro = () => {
 
   // Verificar si el formulario es válido para habilitar el botón
   const isFormValid = () => {
-  const fullName = formData.fullName.trim();
-  const email = formData.email.trim();
-
-  return (
-    !!fullName &&
-    isValidFullName(fullName) &&
-    !!email &&
-    isValidEmail(email) &&
-    !!formData.password &&
-    isValidPassword(formData.password, 8) &&
-    !!formData.confirmPassword &&
-    passwordsMatch(formData.password, formData.confirmPassword) &&
-    !!formData.acceptTerms
-  );
-};
-
-  // Debug: mostrar estado del formulario (remover en producción)
-  console.log('Form state:', {
-    fullName: formData.fullName.trim(),
-    isValidFullName: isValidFullName(formData.fullName.trim()),
-    email: formData.email.trim(),
-    isValidEmail: isValidEmail(formData.email),
-    password: formData.password,
-    isValidPassword: isValidPassword(formData.password, 8),
-    confirmPassword: formData.confirmPassword,
-    passwordsMatch: passwordsMatch(formData.password, formData.confirmPassword),
-    acceptTerms: formData.acceptTerms,
-    isFormValid: isFormValid()
-  });
+    return (
+      formData.fullName.trim() &&
+      formData.email.trim() &&
+      formData.password &&
+      formData.confirmPassword &&
+      formData.acceptTerms
+    );
+  };
 
   // Handler de registro (stub para integración futura)
   const onRegister = async (userData) => {
