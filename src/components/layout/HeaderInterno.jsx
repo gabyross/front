@@ -71,6 +71,11 @@ const HeaderInterno = () => {
       icon: <Package size={18} />
     },
     { 
+      path: '/menu-items', 
+      label: 'Menu Items', 
+      icon: <Plus size={18} />
+    },
+    { 
       path: '/sales-prediction', 
       label: 'Sales Prediction', 
       icon: <TrendingUp size={18} />

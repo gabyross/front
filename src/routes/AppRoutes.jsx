@@ -7,6 +7,7 @@ import RecoverPassword from '../pages/RecoverPassword';
 import NewIngredient from '../pages/NewIngredient';
 import NewMenuItem from '../pages/NewMenuItem';
 import ViewIngredients from '../pages/ViewIngredients';
+import ViewMenuItems from '../pages/ViewMenuItems';
 
 /**
  * Configuración principal de rutas de la aplicación
@@ -22,6 +23,7 @@ const AppRoutes = () => {
         <Route path="/nuevo-ingrediente" element={<NewIngredient />} />
         <Route path="/nuevo-item-menu" element={<NewMenuItem />} />
         <Route path="/ingredients" element={<ViewIngredients />} />
+        <Route path="/menu-items" element={<ViewMenuItems />} />
         {/* Rutas futuras se agregarán aquí */}
       </Routes>
     </Router>
