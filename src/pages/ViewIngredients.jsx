@@ -1,18 +1,17 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Layout from '../components/layout/Layout';
 import Button from '../components/common/Button';
-import Input from '../components/common/Input';
+// import Input from '../components/common/Input'; // No usado en esta vista
 import { Plus, Search, Edit, Trash2, RefreshCw } from 'lucide-react';
 import styles from './ViewIngredients.module.css';
 
-// Base de API con fallback; userId hardcodeado hasta tener auth
-const API_BASE = import.meta.env.VITE_API_URL ?? 'https://nwlvr7r0v4.execute-api.us-east-1.amazonaws.com/Prod';
-const USER_ID = 'ulises'; // TODO: reemplazar cuando exista autenticación
+/** Base de API con fallback; userId hardcodeado hasta tener auth */
+const RAW_API_BASE = import.meta.env.VITE_API_URL ?? 'https://t6o79uz216.execute-api.us-east-1.amazonaws.com/Prod';
+const API_BASE = typeof RAW_API_BASE === 'string' ? RAW_API_BASE.replace(/\/+$/, '') : '';
+const USER_ID = 'ulises'; // TODO: reemplazar cuando exista autenticación real
 
-/**
- * Helper para formatear cantidades según unidad
- */
+/** Helper: formateo de cantidades según unidad (ESP) */
 const formatQuantity = (value, unit) => {
   const needsDecimals = unit === 'kilogramos' || unit === 'litros';
   return new Intl.NumberFormat('es-AR', {
@@ -22,18 +21,14 @@ const formatQuantity = (value, unit) => {
   }).format(value);
 };
 
-/**
- * Helper para determinar el estado del stock
- */
+/** Helper: estado de stock (ESP) */
 const getStockStatus = (ingredient) => {
   if (ingredient.cantidadEnStock === 0) return 'Crítico';
   if (ingredient.cantidadEnStock < ingredient.cantidadMinima) return 'Bajo';
   return 'OK';
 };
 
-/**
- * Helper para formatear fecha en formato corto
- */
+/** Helper: fecha corta (ESP) */
 const formatShortDate = (isoString) => {
   const date = new Date(isoString);
   return date.toLocaleDateString('es-AR', {
@@ -43,16 +38,13 @@ const formatShortDate = (isoString) => {
   });
 };
 
-/**
- * Página para visualizar la lista de ingredientes
- */
 const ViewIngredients = () => {
   const navigate = useNavigate();
 
-  // Estado para datos de ingredientes
+  /** Datos reales */
   const [ingredients, setIngredients] = useState([]);
 
-  // Estados para filtros y búsqueda
+  /** Filtros/estado UI */
   const [searchTerm, setSearchTerm] = useState('');
   const [unitFilter, setUnitFilter] = useState('Todas');
   const [statusFilter, setStatusFilter] = useState('Todos');
@@ -64,76 +56,90 @@ const ViewIngredients = () => {
 
   const itemsPerPage = 10;
 
-  // Carga inicial desde API real
-  useEffect(() => {
-    const controller = new AbortController();
-    (async () => {
+  /** Helper: construir URL (ESP) */
+  const buildUrl = (path, params = {}) => {
+    const qs = new URLSearchParams(params).toString();
+    return `${API_BASE}${path}${qs ? `?${qs}` : ''}`;
+  };
+
+  /** Fetch real con abort support (ESP) */
+  const fetchIngredients = useCallback(
+    async (signal) => {
       setIsLoading(true);
       setHasError(false);
       try {
-        const res = await fetch(`${API_BASE}/ingredientes?userId=${encodeURIComponent(USER_ID)}`, { 
-          signal: controller.signal 
-        });
+        const url = buildUrl('/ingredientes', { userId: USER_ID });
+        const res = await fetch(url, { method: 'GET', signal });
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const json = await res.json(); // array
-        const normalized = Array.isArray(json) ? json.map(it => ({
-          ...it,
-          cantidadEnStock: typeof it.cantidadEnStock === 'string' ? parseFloat(it.cantidadEnStock) : it.cantidadEnStock,
-          cantidadMinima: typeof it.cantidadMinima === 'string' ? parseFloat(it.cantidadMinima) : it.cantidadMinima,
-        })) : [];
-        setIngredients(normalized);
-      } catch (e) { 
-        if (e.name !== 'AbortError') setHasError(true); 
-      }
-      finally { 
-        setIsLoading(false); 
-      }
-    })();
-    return () => controller.abort();
-  }, []);
+        const json = await res.json(); // se espera un array
 
-  // Datos filtrados, ordenados y paginados
+        // Normalización mínima (ESP): convertir numéricos en caso de venir como string
+        const normalized = Array.isArray(json)
+          ? json.map((it) => ({
+              ...it,
+              cantidadEnStock:
+                typeof it.cantidadEnStock === 'string'
+                  ? parseFloat(it.cantidadEnStock)
+                  : it.cantidadEnStock,
+              cantidadMinima:
+                typeof it.cantidadMinima === 'string'
+                  ? parseFloat(it.cantidadMinima)
+                  : it.cantidadMinima,
+            }))
+          : [];
+
+        setIngredients(normalized);
+      } catch (err) {
+        if (err.name !== 'AbortError') setHasError(true);
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [API_BASE]
+  );
+
+  /** Carga inicial (ESP) */
+  useEffect(() => {
+    const controller = new AbortController();
+    fetchIngredients(controller.signal);
+    return () => controller.abort();
+  }, [fetchIngredients]);
+
+  /** Procesamiento: filtros + orden + paginación en memoria (ESP) */
   const processedData = useMemo(() => {
     let filtered = ingredients;
 
-    // Filtro por búsqueda
+    // Búsqueda por nombre
     if (searchTerm.trim()) {
       const term = searchTerm.trim().toLowerCase();
-      filtered = filtered.filter(ingredient =>
-        ingredient.nombre.toLowerCase().includes(term)
+      filtered = filtered.filter((ing) =>
+        ing.nombre?.toLowerCase().includes(term)
       );
     }
 
     // Filtro por unidad
     if (unitFilter !== 'Todas') {
-      filtered = filtered.filter(ingredient =>
-        ingredient.unidadMedida === unitFilter
-      );
+      filtered = filtered.filter((ing) => ing.unidadMedida === unitFilter);
     }
 
     // Filtro por estado
     if (statusFilter !== 'Todos') {
-      filtered = filtered.filter(ingredient => {
-        const status = getStockStatus(ingredient);
-        return status === statusFilter;
-      });
+      filtered = filtered.filter((ing) => getStockStatus(ing) === statusFilter);
     }
 
-    // Ordenamiento
-    filtered.sort((a, b) => {
+    // Ordenamiento (copiar antes de sort para no mutar estado)
+    const toSort = [...filtered];
+    toSort.sort((a, b) => {
       let aValue = a[sortColumn];
       let bValue = b[sortColumn];
 
-      // Casos especiales para ordenamiento
       if (sortColumn === 'status') {
         aValue = getStockStatus(a);
         bValue = getStockStatus(b);
       }
 
-      if (typeof aValue === 'string') {
-        aValue = aValue.toLowerCase();
-        bValue = bValue.toLowerCase();
-      }
+      if (typeof aValue === 'string') aValue = aValue.toLowerCase();
+      if (typeof bValue === 'string') bValue = bValue.toLowerCase();
 
       if (aValue < bValue) return sortDirection === 'asc' ? -1 : 1;
       if (aValue > bValue) return sortDirection === 'asc' ? 1 : -1;
@@ -141,22 +147,34 @@ const ViewIngredients = () => {
     });
 
     // Paginación
-    const totalPages = Math.ceil(filtered.length / itemsPerPage);
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    const paginatedData = filtered.slice(startIndex, startIndex + itemsPerPage);
+    const totalItems = toSort.length;
+    const totalPages = Math.ceil(totalItems / itemsPerPage) || 1;
+    const safePage = Math.min(currentPage, totalPages);
+    const startIndex = (safePage - 1) * itemsPerPage;
+    const data = toSort.slice(startIndex, startIndex + itemsPerPage);
 
     return {
-      data: paginatedData,
-      totalItems: filtered.length,
+      data,
+      totalItems,
       totalPages,
-      hasResults: filtered.length > 0
+      hasResults: totalItems > 0,
+      page: safePage,
     };
-  }, [searchTerm, unitFilter, statusFilter, sortColumn, sortDirection, currentPage]);
+    // 🔧 IMPORTANTE: incluir `ingredients` en dependencias
+  }, [
+    ingredients,
+    searchTerm,
+    unitFilter,
+    statusFilter,
+    sortColumn,
+    sortDirection,
+    currentPage,
+  ]);
 
-  // Manejar cambio de ordenamiento
+  /** Ordenar columnas (ESP) */
   const handleSort = (column) => {
     if (sortColumn === column) {
-      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+      setSortDirection((d) => (d === 'asc' ? 'desc' : 'asc'));
     } else {
       setSortColumn(column);
       setSortDirection('asc');
@@ -164,75 +182,36 @@ const ViewIngredients = () => {
     setCurrentPage(1);
   };
 
-  // Manejar cambio de filtros
-  const handleFilterChange = () => {
-    setCurrentPage(1);
-  };
+  /** Cambios de filtros/búsqueda (ESP) */
+  const handleFilterChange = () => setCurrentPage(1);
 
-  // Handlers stub para acciones
-  const handleCreate = () => {
-    console.log('Navegando a crear ingrediente...');
-    navigate('/nuevo-ingrediente');
-  };
+  /** Acciones (stubs) */
+  const handleCreate = () => navigate('/nuevo-ingrediente');
+  const handleEdit = (id) => console.log('Editar ingrediente:', id);
+  const handleDelete = (id) => console.log('Eliminar ingrediente:', id);
 
-  const handleView = (id) => {
-    console.log('Ver ingrediente:', id);
-  };
-
-  const handleEdit = (id) => {
-    console.log('Editar ingrediente:', id);
-  };
-
-  const handleAdjustStock = (id) => {
-    console.log('Ajustar stock:', id);
-  };
-
-  const handleDelete = (id) => {
-    console.log('Eliminar ingrediente:', id);
-  };
-
-  // Reintentar fetch
+  /** Reintentar (ESP) */
   const handleRetry = () => {
     const controller = new AbortController();
-    (async () => {
-      setIsLoading(true);
-      setHasError(false);
-      try {
-        const res = await fetch(`${API_BASE}/ingredientes?userId=${encodeURIComponent(USER_ID)}`, { 
-          signal: controller.signal 
-        });
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const json = await res.json();
-        const normalized = Array.isArray(json) ? json.map(it => ({
-          ...it,
-          cantidadEnStock: typeof it.cantidadEnStock === 'string' ? parseFloat(it.cantidadEnStock) : it.cantidadEnStock,
-          cantidadMinima: typeof it.cantidadMinima === 'string' ? parseFloat(it.cantidadMinima) : it.cantidadMinima,
-        })) : [];
-        setIngredients(normalized);
-      } catch (e) { 
-        if (e.name !== 'AbortError') setHasError(true); 
-      }
-      finally { 
-        setIsLoading(false); 
-      }
-    })();
+    fetchIngredients(controller.signal);
+    // No retornamos cleanup: acción instantánea
   };
 
-  // Obtener clase CSS para el estado del stock
+  /** Clase para badge de estado (ESP) */
   const getStatusClass = (ingredient) => {
-    const status = getStockStatus(ingredient);
-    switch (status) {
-      case 'Crítico': 
+    switch (getStockStatus(ingredient)) {
+      case 'Crítico':
         return styles.statusCritical;
-      case 'Bajo': 
+      case 'Bajo':
         return styles.statusLow;
-      case 'OK': 
+      case 'OK':
         return styles.statusOk;
-      default: return '';
+      default:
+        return '';
     }
   };
 
-  // Renderizar skeleton de carga
+  /** Skeleton (ESP) */
   const renderLoadingSkeleton = () => (
     <div className={styles.skeletonContainer}>
       {Array.from({ length: 5 }).map((_, index) => (
@@ -249,7 +228,7 @@ const ViewIngredients = () => {
     </div>
   );
 
-  // Renderizar estado de error
+  /** Error (ESP) */
   const renderError = () => (
     <div className={styles.errorState}>
       <div className={styles.errorIcon}>⚠️</div>
@@ -264,7 +243,7 @@ const ViewIngredients = () => {
     </div>
   );
 
-  // Renderizar estado vacío
+  /** Empty (ESP) */
   const renderEmptyState = () => (
     <div className={styles.emptyState}>
       <div className={styles.emptyIcon}>📦</div>
@@ -272,8 +251,7 @@ const ViewIngredients = () => {
       <p className={styles.emptyDescription}>
         {searchTerm || unitFilter !== 'Todas' || statusFilter !== 'Todos'
           ? 'Intenta ajustar los filtros de búsqueda.'
-          : 'Comienza agregando tu primer ingrediente al inventario.'
-        }
+          : 'Comienza agregando tu primer ingrediente al inventario.'}
       </p>
       {!searchTerm && unitFilter === 'Todas' && statusFilter === 'Todos' && (
         <Button variant="primary" onClick={handleCreate}>
@@ -367,7 +345,8 @@ const ViewIngredients = () => {
           <div className={styles.resultsInfo} aria-live="polite">
             {!isLoading && !hasError && (
               <span>
-                {processedData.totalItems} resultado{processedData.totalItems !== 1 ? 's' : ''}
+                {processedData.totalItems} resultado
+                {processedData.totalItems !== 1 ? 's' : ''}
               </span>
             )}
           </div>
@@ -415,7 +394,7 @@ const ViewIngredients = () => {
                             )}
                           </button>
                         </th>
-                        <th scope="col">
+                        <th scope="col" data-align="right">
                           <button
                             className={styles.sortButton}
                             onClick={() => handleSort('cantidadEnStock')}
@@ -429,7 +408,7 @@ const ViewIngredients = () => {
                             )}
                           </button>
                         </th>
-                        <th scope="col">
+                        <th scope="col" data-align="right">
                           <button
                             className={styles.sortButton}
                             onClick={() => handleSort('cantidadMinima')}
@@ -477,20 +456,26 @@ const ViewIngredients = () => {
                     <tbody>
                       {processedData.data.map((ingredient) => (
                         <tr key={ingredient._id}>
-                          <td className={styles.nameCell}>
-                            {ingredient.nombre}
-                          </td>
-                          <td className={styles.unitCell}>
-                            {ingredient.unidadMedida}
+                          <td className={styles.nameCell}>{ingredient.nombre}</td>
+                          <td className={styles.unitCell}>{ingredient.unidadMedida}</td>
+                          <td className={styles.numCell}>
+                            {formatQuantity(
+                              ingredient.cantidadEnStock,
+                              ingredient.unidadMedida
+                            )}
                           </td>
                           <td className={styles.numCell}>
-                            {formatQuantity(ingredient.cantidadEnStock, ingredient.unidadMedida)}
-                          </td>
-                          <td className={styles.numCell}>
-                            {formatQuantity(ingredient.cantidadMinima, ingredient.unidadMedida)}
+                            {formatQuantity(
+                              ingredient.cantidadMinima,
+                              ingredient.unidadMedida
+                            )}
                           </td>
                           <td>
-                            <span className={`${styles.statusBadge} ${getStatusClass(ingredient)}`}>
+                            <span
+                              className={`${styles.statusBadge} ${getStatusClass(
+                                ingredient
+                              )}`}
+                            >
                               {getStockStatus(ingredient)}
                             </span>
                           </td>
@@ -528,21 +513,25 @@ const ViewIngredients = () => {
                   <div className={styles.pagination}>
                     <button
                       className={styles.paginationButton}
-                      onClick={() => setCurrentPage(currentPage - 1)}
-                      disabled={currentPage === 1}
+                      onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                      disabled={processedData.page === 1}
                       aria-label="Página anterior"
                     >
                       Anterior
                     </button>
-                    
+
                     <div className={styles.paginationInfo}>
-                      Página {currentPage} de {processedData.totalPages}
+                      Página {processedData.page} de {processedData.totalPages}
                     </div>
-                    
+
                     <button
                       className={styles.paginationButton}
-                      onClick={() => setCurrentPage(currentPage + 1)}
-                      disabled={currentPage === processedData.totalPages}
+                      onClick={() =>
+                        setCurrentPage((p) =>
+                          Math.min(processedData.totalPages, p + 1)
+                        )
+                      }
+                      disabled={processedData.page === processedData.totalPages}
                       aria-label="Página siguiente"
                     >
                       Siguiente
