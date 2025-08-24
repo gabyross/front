@@ -87,7 +87,7 @@ const Registro = () => {
   const isFormValid = () => {
     return (
       formData.fullName.trim() &&
-      isValidFullName(formData.fullName) &&
+      isValidFullName(formData.fullName.trim()) &&
       formData.email.trim() &&
       isValidEmail(formData.email) &&
       formData.password &&
@@ -97,6 +97,20 @@ const Registro = () => {
       formData.acceptTerms
     );
   };
+
+  // Debug: mostrar estado del formulario (remover en producción)
+  console.log('Form state:', {
+    fullName: formData.fullName.trim(),
+    isValidFullName: isValidFullName(formData.fullName.trim()),
+    email: formData.email.trim(),
+    isValidEmail: isValidEmail(formData.email),
+    password: formData.password,
+    isValidPassword: isValidPassword(formData.password, 8),
+    confirmPassword: formData.confirmPassword,
+    passwordsMatch: passwordsMatch(formData.password, formData.confirmPassword),
+    acceptTerms: formData.acceptTerms,
+    isFormValid: isFormValid()
+  });
 
   // Handler de registro (stub para integración futura)
   const onRegister = async (userData) => {
