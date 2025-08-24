@@ -240,6 +240,10 @@
   color: var(--color-text-primary);
 }
 
+.unitCell {
+  color: var(--color-text-secondary);
+}
+
 .numberCell {
   text-align: right;
   font-variant-numeric: tabular-nums;

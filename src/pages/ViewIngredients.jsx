@@ -335,9 +335,12 @@ const ViewIngredients = () => {
   const getStatusClass = (ingredient) => {
     const status = getStockStatus(ingredient);
     switch (status) {
-      case 'Crítico': return styles.statusCritical;
-      case 'Bajo': return styles.statusLow;
-      case 'OK': return styles.statusOk;
+      case 'Crítico': 
+        return styles.statusCritical;
+      case 'Bajo': 
+        return styles.statusLow;
+      case 'OK': 
+        return styles.statusOk;
       default: return '';
     }
   };
@@ -590,7 +593,9 @@ const ViewIngredients = () => {
                           <td className={styles.nameCell}>
                             {ingredient.nombre}
                           </td>
-                          <td>{ingredient.unidadMedida}</td>
+                          <td className={styles.unitCell}>
+                            {ingredient.unidadMedida}
+                          </td>
                           <td className={styles.stockCell}>
                             {ingredient.cantidadEnStock}
                           </td>
