@@ -127,13 +127,7 @@ const NuevoIngrediente = () => {
       formData.nombre.trim() &&
       formData.unidadMedida &&
       formData.cantidadEnStock &&
-      formData.cantidadMinima &&
-      !isNaN(parseFloat(formData.cantidadEnStock)) &&
-      !isNaN(parseFloat(formData.cantidadMinima)) &&
-      parseFloat(formData.cantidadEnStock) >= 0 &&
-      parseFloat(formData.cantidadMinima) >= 0 &&
-      !ingredientesExistentes.includes(formData.nombre.trim().toLowerCase()) &&
-      unidadesMedida.some(u => u.value === formData.unidadMedida)
+      formData.cantidadMinima
     );
   };
 
