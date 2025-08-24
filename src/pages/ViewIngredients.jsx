@@ -4,6 +4,7 @@ import Layout from '../components/layout/Layout';
 import Button from '../components/common/Button';
 import Input from '../components/common/Input';
 import { Plus, Search, Edit, Trash2, RefreshCw } from 'lucide-react';
+import styles from './ViewIngredients.module.css';
 
 /**
  * Datos mock que replican exactamente el modelo del backend
