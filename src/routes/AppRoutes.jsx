@@ -2,8 +2,8 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import LandingPage from '../pages/LandingPage';
 import Login from '../pages/Login';
-import Registro from '../pages/Registro';
-import RecuperarPassword from '../pages/RecuperarPassword';
+import Register from '../pages/Register';
+import RecoverPassword from '../pages/RecoverPassword';
 import NewIngredient from '../pages/NewIngredient';
 import NewMenuItem from '../pages/NewMenuItem';
 import ViewIngredients from '../pages/ViewIngredients';
@@ -17,8 +17,8 @@ const AppRoutes = () => {
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/registro" element={<Registro />} />
-        <Route path="/recuperar-password" element={<RecuperarPassword />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/recover-password" element={<RecoverPassword />} />
         <Route path="/nuevo-ingrediente" element={<NewIngredient />} />
         <Route path="/nuevo-item-menu" element={<NewMenuItem />} />
         <Route path="/ingredients" element={<ViewIngredients />} />

@@ -6,12 +6,12 @@ import Input from '../components/common/Input';
 import PasswordInput from '../components/common/PasswordInput';
 import Checkbox from '../components/common/Checkbox';
 import { isValidEmail, isValidPassword, passwordsMatch, isValidFullName } from '../utils/validators';
-import styles from './Registro.module.css';
+import styles from './Register.module.css';
 
 /**
- * Página de registro de usuario
+ * User registration page
  */
-const Registro = () => {
+const Register = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     fullName: '',
@@ -23,7 +23,7 @@ const Registro = () => {
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
 
-  // Manejar cambios en los inputs
+  // Handle input changes
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
     const inputValue = type === 'checkbox' ? checked : value;
@@ -33,7 +33,7 @@ const Registro = () => {
       [name]: inputValue
     }));
     
-    // Limpiar error del campo cuando el usuario empiece a escribir/cambiar
+    // Clear field error when user starts typing/changing
     if (errors[name]) {
       setErrors(prev => ({
         ...prev,
@@ -42,48 +42,48 @@ const Registro = () => {
     }
   };
 
-  // Validar formulario completo
+  // Validate complete form
   const validateForm = () => {
     const newErrors = {};
 
-    // Validar nombre completo
+    // Validate full name
     if (!formData.fullName.trim()) {
-      newErrors.fullName = 'El nombre completo es obligatorio';
+      newErrors.fullName = 'Full name is required';
     } else if (!isValidFullName(formData.fullName)) {
-      newErrors.fullName = 'Ingresa tu nombre y apellido';
+      newErrors.fullName = 'Please enter your first and last name';
     }
 
-    // Validar email
+    // Validate email
     if (!formData.email.trim()) {
-      newErrors.email = 'El correo electrónico es obligatorio';
+      newErrors.email = 'Email address is required';
     } else if (!isValidEmail(formData.email)) {
-      newErrors.email = 'Ingresa un correo electrónico válido';
+      newErrors.email = 'Please enter a valid email address';
     }
 
-    // Validar contraseña
+    // Validate password
     if (!formData.password) {
-      newErrors.password = 'La contraseña es obligatoria';
+      newErrors.password = 'Password is required';
     } else if (!isValidPassword(formData.password, 8)) {
-      newErrors.password = 'La contraseña debe tener al menos 8 caracteres';
+      newErrors.password = 'Password must be at least 8 characters';
     }
 
-    // Validar confirmación de contraseña
+    // Validate password confirmation
     if (!formData.confirmPassword) {
-      newErrors.confirmPassword = 'Confirma tu contraseña';
+      newErrors.confirmPassword = 'Please confirm your password';
     } else if (!passwordsMatch(formData.password, formData.confirmPassword)) {
-      newErrors.confirmPassword = 'Las contraseñas no coinciden';
+      newErrors.confirmPassword = 'Passwords do not match';
     }
 
-    // Validar términos y condiciones
+    // Validate terms and conditions
     if (!formData.acceptTerms) {
-      newErrors.acceptTerms = 'Debes aceptar los términos y condiciones';
+      newErrors.acceptTerms = 'You must accept the terms and conditions';
     }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  // Verificar si el formulario es válido para habilitar el botón
+  // Check if form is valid to enable button
   const isFormValid = () => {
     return (
       formData.fullName.trim() &&
@@ -94,19 +94,19 @@ const Registro = () => {
     );
   };
 
-  // Handler de registro (stub para integración futura)
+  // Registration handler (stub for future integration)
   const onRegister = async (userData) => {
-    // TODO: Integrar con API de registro
-    console.log('Datos de registro:', userData);
+    // TODO: Integrate with registration API
+    console.log('Registration data:', userData);
     
-    // Simular llamada a API
+    // Simulate API call
     await new Promise(resolve => setTimeout(resolve, 1500));
     
-    // Redirigir a login sin mostrar alert
+    // Redirect to login without showing alert
     navigate('/login');
   };
 
-  // Manejar envío del formulario
+  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     
@@ -119,9 +119,9 @@ const Registro = () => {
     try {
       await onRegister(formData);
     } catch (error) {
-      console.error('Error en registro:', error);
+      console.error('Registration error:', error);
       setErrors({
-        general: 'Error al crear la cuenta. Inténtalo de nuevo.'
+        general: 'Error creating account. Please try again.'
       });
     } finally {
       setIsLoading(false);
@@ -130,23 +130,23 @@ const Registro = () => {
 
   return (
     <Layout showFooter={false}>
-      <main className={styles.registroPage}>
-        <div className={styles.registroContainer}>
-          <div className={styles.registroCard}>
-            <div className={styles.registroHeader}>
+      <main className={styles.registerPage}>
+        <div className={styles.registerContainer}>
+          <div className={styles.registerCard}>
+            <div className={styles.registerHeader}>
               <Link to="/" className={styles.logoLink}>
                 SmartStocker
               </Link>
-              <h1 className={styles.registroTitle}>
-                Crear cuenta
+              <h1 className={styles.registerTitle}>
+                Create Account
               </h1>
-              <p className={styles.registroSubtitle}>
-                Únete a SmartStocker y optimiza tu restaurante
+              <p className={styles.registerSubtitle}>
+                Join SmartStocker and optimize your restaurant
               </p>
             </div>
 
-            {/* Formulario */}
-            <form onSubmit={handleSubmit} className={styles.registroForm} noValidate>
+            {/* Form */}
+            <form onSubmit={handleSubmit} className={styles.registerForm} noValidate>
               {errors.general && (
                 <div className={styles.generalError} role="alert">
                   {errors.general}
@@ -156,8 +156,8 @@ const Registro = () => {
               <Input
                 type="text"
                 name="fullName"
-                label="Nombre completo"
-                placeholder="Juan Pérez"
+                label="Full Name"
+                placeholder="John Doe"
                 value={formData.fullName}
                 onChange={handleInputChange}
                 error={errors.fullName}
@@ -169,8 +169,8 @@ const Registro = () => {
               <Input
                 type="email"
                 name="email"
-                label="Correo electrónico"
-                placeholder="tu@restaurante.com"
+                label="Email Address"
+                placeholder="your@restaurant.com"
                 value={formData.email}
                 onChange={handleInputChange}
                 error={errors.email}
@@ -180,8 +180,8 @@ const Registro = () => {
 
               <PasswordInput
                 name="password"
-                label="Contraseña"
-                placeholder="Mínimo 8 caracteres"
+                label="Password"
+                placeholder="Minimum 8 characters"
                 value={formData.password}
                 onChange={handleInputChange}
                 error={errors.password}
@@ -191,8 +191,8 @@ const Registro = () => {
 
               <PasswordInput
                 name="confirmPassword"
-                label="Confirmar contraseña"
-                placeholder="Repite tu contraseña"
+                label="Confirm Password"
+                placeholder="Repeat your password"
                 value={formData.confirmPassword}
                 onChange={handleInputChange}
                 error={errors.confirmPassword}
@@ -208,21 +208,21 @@ const Registro = () => {
                 required
               >
                 <span>
-                  Acepto los{' '}
+                  I accept the{' '}
                   <a 
-                    href="/terminos" 
+                    href="/terms" 
                     className={styles.termsLink}
                     onClick={(e) => e.stopPropagation()}
                   >
-                    términos y condiciones
+                    terms and conditions
                   </a>
-                  {' '}y la{' '}
+                  {' '}and{' '}
                   <a 
-                    href="/privacidad" 
+                    href="/privacy" 
                     className={styles.termsLink}
                     onClick={(e) => e.stopPropagation()}
                   >
-                    política de privacidad
+                    privacy policy
                   </a>
                 </span>
               </Checkbox>
@@ -234,37 +234,37 @@ const Registro = () => {
                 fullWidth
                 disabled={!isFormValid() || isLoading}
               >
-                {isLoading ? 'Creando cuenta...' : 'Crear cuenta'}
+                {isLoading ? 'Creating account...' : 'Create Account'}
               </Button>
             </form>
 
-            {/* Enlaces adicionales */}
-            <div className={styles.registroFooter}>
+            {/* Additional links */}
+            <div className={styles.registerFooter}>
               <div className={styles.loginPrompt}>
-                <span>¿Ya tienes cuenta?</span>
+                <span>Already have an account?</span>
                 <Link to="/login" className={styles.loginLink}>
-                  Iniciar sesión
+                  Sign in
                 </Link>
               </div>
             </div>
           </div>
 
-          {/* Información adicional */}
-          <div className={styles.registroInfo}>
+          {/* Additional information */}
+          <div className={styles.registerInfo}>
             <h2 className={styles.infoTitle}>
-              Comienza a optimizar tu restaurante hoy
+              Start optimizing your restaurant today
             </h2>
             <ul className={styles.infoList}>
-              <li>Predicciones precisas de ventas</li>
-              <li>Optimización automática de inventario</li>
-              <li>Reducción de desperdicios hasta 40%</li>
-              <li>Análisis detallados y reportes</li>
-              <li>Soporte especializado para restaurantes</li>
+              <li>Accurate sales predictions</li>
+              <li>Automatic inventory optimization</li>
+              <li>Reduce waste by up to 40%</li>
+              <li>Detailed analytics and reports</li>
+              <li>Specialized support for restaurants</li>
             </ul>
             
             <div className={styles.trustIndicators}>
               <p className={styles.trustText}>
-                <strong>+500 restaurantes</strong> ya confían en SmartStocker
+                <strong>+500 restaurants</strong> already trust SmartStocker
               </p>
             </div>
           </div>
@@ -274,4 +274,4 @@ const Registro = () => {
   );
 };
 
-export default Registro;
+export default Register;

@@ -71,13 +71,13 @@ const HeaderInterno = () => {
       icon: <Package size={18} />
     },
     { 
-      path: '/prediccion', 
-      label: 'Predicción', 
+      path: '/sales-prediction', 
+      label: 'Sales Prediction', 
       icon: <TrendingUp size={18} />
     },
     { 
-      path: '/reportes', 
-      label: 'Reportes', 
+      path: '/reports', 
+      label: 'Reports', 
       icon: <BarChart3 size={18} />
     }
   ];
@@ -165,13 +165,13 @@ const HeaderInterno = () => {
             </ul>
             
             <div className={styles.mobileUserSection}>
-              <Link to="/configuracion" className={styles.mobileNavLink}>
+              <Link to="/configuration" className={styles.mobileNavLink}>
                 <Settings size={18} />
-                <span>Configuración</span>
+                <span>Configuration</span>
               </Link>
               <button onClick={handleLogout} className={styles.mobileNavLink}>
                 <LogOut size={18} />
-                <span>Cerrar sesión</span>
+                <span>Logout</span>
               </button>
             </div>
           </nav>

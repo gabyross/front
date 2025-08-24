@@ -1,1 +1,0 @@
-// Página de configuración del restaurante

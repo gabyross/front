@@ -150,13 +150,13 @@ const Login = () => {
 
             {/* Enlaces adicionales */}
             <div className={styles.loginFooter}>
-              <Link to="/recuperar-password" className={styles.forgotLink}>
+              <Link to="/recover-password" className={styles.forgotLink}>
                 ¿Olvidaste tu contraseña?
               </Link>
               
               <div className={styles.signupPrompt}>
                 <span>¿No tienes cuenta?</span>
-                <Link to="/registro" className={styles.signupLink}>
+                <Link to="/register" className={styles.signupLink}>
                   Crear cuenta
                 </Link>
               </div>
