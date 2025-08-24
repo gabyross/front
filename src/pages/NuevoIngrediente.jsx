@@ -347,14 +347,6 @@ const NuevoIngrediente = () => {
                     step="0.01"
                     autoComplete="off"
                   />
-              </div>
-            </div>
-          </div>
-        </div>
-      </main>
-    </Layout>
-  );
-};
 
                   <div className={styles.formActions}>
                     <Button
@@ -377,4 +369,13 @@ const NuevoIngrediente = () => {
                     </Button>
                   </div>
                 </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </Layout>
+  );
+};
+
 export default NuevoIngrediente;
