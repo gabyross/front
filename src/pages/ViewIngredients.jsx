@@ -6,6 +6,10 @@ import Input from '../components/common/Input';
 import { Plus, Search, Edit, Trash2, RefreshCw } from 'lucide-react';
 import styles from './ViewIngredients.module.css';
 
+// Base de API con fallback; userId hardcodeado hasta tener auth
+const API_BASE = import.meta.env.VITE_API_URL ?? 'https://nwlvr7r0v4.execute-api.us-east-1.amazonaws.com/Prod';
+const USER_ID = 'ulises'; // TODO: reemplazar cuando exista autenticación
+
 /**
  * Helper para formatear cantidades según unidad
  */
@@ -17,177 +21,6 @@ const formatQuantity = (value, unit) => {
     maximumFractionDigits: needsDecimals ? 2 : 0,
   }).format(value);
 };
-
-/**
- * Datos mock que replican exactamente el modelo del backend
- */
-const MOCK_INGREDIENTS = [
-  {
-    _id: '507f1f77bcf86cd799439011',
-    nombre: 'Tomate',
-    userId: '507f1f77bcf86cd799439001',
-    cantidadEnStock: 5.5,
-    cantidadMinima: 10,
-    unidadMedida: 'kilogramos',
-    createdAt: '2024-01-15T10:30:00.000Z',
-    updatedAt: '2024-01-20T14:22:00.000Z',
-    __v: 0
-  },
-  {
-    _id: '507f1f77bcf86cd799439012',
-    nombre: 'Cebolla',
-    userId: '507f1f77bcf86cd799439001',
-    cantidadEnStock: 0,
-    cantidadMinima: 5,
-    unidadMedida: 'kilogramos',
-    createdAt: '2024-01-10T08:15:00.000Z',
-    updatedAt: '2024-01-18T16:45:00.000Z',
-    __v: 0
-  },
-  {
-    _id: '507f1f77bcf86cd799439013',
-    nombre: 'Aceite de oliva',
-    userId: '507f1f77bcf86cd799439001',
-    cantidadEnStock: 2500,
-    cantidadMinima: 1000,
-    unidadMedida: 'mililitros',
-    createdAt: '2024-01-12T12:00:00.000Z',
-    updatedAt: '2024-01-19T09:30:00.000Z',
-    __v: 0
-  },
-  {
-    _id: '507f1f77bcf86cd799439014',
-    nombre: 'Sal',
-    userId: '507f1f77bcf86cd799439001',
-    cantidadEnStock: 800,
-    cantidadMinima: 500,
-    unidadMedida: 'gramos',
-    createdAt: '2024-01-08T14:20:00.000Z',
-    updatedAt: '2024-01-17T11:15:00.000Z',
-    __v: 0
-  },
-  {
-    _id: '507f1f77bcf86cd799439015',
-    nombre: 'Pimienta negra',
-    userId: '507f1f77bcf86cd799439001',
-    cantidadEnStock: 150,
-    cantidadMinima: 200,
-    unidadMedida: 'gramos',
-    createdAt: '2024-01-05T16:45:00.000Z',
-    updatedAt: '2024-01-16T13:20:00.000Z',
-    __v: 0
-  },
-  {
-    _id: '507f1f77bcf86cd799439016',
-    nombre: 'Queso mozzarella',
-    userId: '507f1f77bcf86cd799439001',
-    cantidadEnStock: 3.2,
-    cantidadMinima: 2,
-    unidadMedida: 'kilogramos',
-    createdAt: '2024-01-14T09:10:00.000Z',
-    updatedAt: '2024-01-21T15:30:00.000Z',
-    __v: 0
-  },
-  {
-    _id: '507f1f77bcf86cd799439017',
-    nombre: 'Harina 0000',
-    userId: '507f1f77bcf86cd799439001',
-    cantidadEnStock: 25,
-    cantidadMinima: 20,
-    unidadMedida: 'kilogramos',
-    createdAt: '2024-01-11T11:25:00.000Z',
-    updatedAt: '2024-01-20T10:40:00.000Z',
-    __v: 0
-  },
-  {
-    _id: '507f1f77bcf86cd799439018',
-    nombre: 'Leche entera',
-    userId: '507f1f77bcf86cd799439001',
-    cantidadEnStock: 4000,
-    cantidadMinima: 3000,
-    unidadMedida: 'mililitros',
-    createdAt: '2024-01-13T07:50:00.000Z',
-    updatedAt: '2024-01-19T12:15:00.000Z',
-    __v: 0
-  },
-  {
-    _id: '507f1f77bcf86cd799439019',
-    nombre: 'Huevos',
-    userId: '507f1f77bcf86cd799439001',
-    cantidadEnStock: 24,
-    cantidadMinima: 36,
-    unidadMedida: 'unidades',
-    createdAt: '2024-01-09T13:35:00.000Z',
-    updatedAt: '2024-01-18T08:20:00.000Z',
-    __v: 0
-  },
-  {
-    _id: '507f1f77bcf86cd799439020',
-    nombre: 'Manteca',
-    userId: '507f1f77bcf86cd799439001',
-    cantidadEnStock: 500,
-    cantidadMinima: 250,
-    unidadMedida: 'gramos',
-    createdAt: '2024-01-07T15:40:00.000Z',
-    updatedAt: '2024-01-17T14:55:00.000Z',
-    __v: 0
-  },
-  {
-    _id: '507f1f77bcf86cd799439021',
-    nombre: 'Azúcar',
-    userId: '507f1f77bcf86cd799439001',
-    cantidadEnStock: 1.8,
-    cantidadMinima: 2,
-    unidadMedida: 'kilogramos',
-    createdAt: '2024-01-06T10:15:00.000Z',
-    updatedAt: '2024-01-16T16:30:00.000Z',
-    __v: 0
-  },
-  {
-    _id: '507f1f77bcf86cd799439022',
-    nombre: 'Vino tinto',
-    userId: '507f1f77bcf86cd799439001',
-    cantidadEnStock: 750,
-    cantidadMinima: 500,
-    unidadMedida: 'mililitros',
-    createdAt: '2024-01-04T12:30:00.000Z',
-    updatedAt: '2024-01-15T09:45:00.000Z',
-    __v: 0
-  },
-  {
-    _id: '507f1f77bcf86cd799439023',
-    nombre: 'Ajo',
-    userId: '507f1f77bcf86cd799439001',
-    cantidadEnStock: 300,
-    cantidadMinima: 200,
-    unidadMedida: 'gramos',
-    createdAt: '2024-01-03T14:20:00.000Z',
-    updatedAt: '2024-01-14T11:10:00.000Z',
-    __v: 0
-  },
-  {
-    _id: '507f1f77bcf86cd799439024',
-    nombre: 'Perejil',
-    userId: '507f1f77bcf86cd799439001',
-    cantidadEnStock: 0,
-    cantidadMinima: 100,
-    unidadMedida: 'gramos',
-    createdAt: '2024-01-02T16:45:00.000Z',
-    updatedAt: '2024-01-13T13:25:00.000Z',
-    __v: 0
-  },
-  {
-    _id: '507f1f77bcf86cd799439025',
-    nombre: 'Limones',
-    userId: '507f1f77bcf86cd799439001',
-    cantidadEnStock: 12,
-    cantidadMinima: 10,
-    unidadMedida: 'unidades',
-    createdAt: '2024-01-01T18:00:00.000Z',
-    updatedAt: '2024-01-12T15:40:00.000Z',
-    __v: 0
-  }
-];
 
 /**
  * Helper para determinar el estado del stock
@@ -216,6 +49,9 @@ const formatShortDate = (isoString) => {
 const ViewIngredients = () => {
   const navigate = useNavigate();
 
+  // Estado para datos de ingredientes
+  const [ingredients, setIngredients] = useState([]);
+
   // Estados para filtros y búsqueda
   const [searchTerm, setSearchTerm] = useState('');
   const [unitFilter, setUnitFilter] = useState('Todas');
@@ -228,18 +64,37 @@ const ViewIngredients = () => {
 
   const itemsPerPage = 10;
 
-  // Simular carga inicial
+  // Carga inicial desde API real
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 1500);
-
-    return () => clearTimeout(timer);
+    const controller = new AbortController();
+    (async () => {
+      setIsLoading(true);
+      setHasError(false);
+      try {
+        const res = await fetch(`${API_BASE}/ingredientes?userId=${encodeURIComponent(USER_ID)}`, { 
+          signal: controller.signal 
+        });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const json = await res.json(); // array
+        const normalized = Array.isArray(json) ? json.map(it => ({
+          ...it,
+          cantidadEnStock: typeof it.cantidadEnStock === 'string' ? parseFloat(it.cantidadEnStock) : it.cantidadEnStock,
+          cantidadMinima: typeof it.cantidadMinima === 'string' ? parseFloat(it.cantidadMinima) : it.cantidadMinima,
+        })) : [];
+        setIngredients(normalized);
+      } catch (e) { 
+        if (e.name !== 'AbortError') setHasError(true); 
+      }
+      finally { 
+        setIsLoading(false); 
+      }
+    })();
+    return () => controller.abort();
   }, []);
 
   // Datos filtrados, ordenados y paginados
   const processedData = useMemo(() => {
-    let filtered = MOCK_INGREDIENTS;
+    let filtered = ingredients;
 
     // Filtro por búsqueda
     if (searchTerm.trim()) {
@@ -336,12 +191,31 @@ const ViewIngredients = () => {
     console.log('Eliminar ingrediente:', id);
   };
 
+  // Reintentar fetch
   const handleRetry = () => {
-    setHasError(false);
-    setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 1000);
+    const controller = new AbortController();
+    (async () => {
+      setIsLoading(true);
+      setHasError(false);
+      try {
+        const res = await fetch(`${API_BASE}/ingredientes?userId=${encodeURIComponent(USER_ID)}`, { 
+          signal: controller.signal 
+        });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const json = await res.json();
+        const normalized = Array.isArray(json) ? json.map(it => ({
+          ...it,
+          cantidadEnStock: typeof it.cantidadEnStock === 'string' ? parseFloat(it.cantidadEnStock) : it.cantidadEnStock,
+          cantidadMinima: typeof it.cantidadMinima === 'string' ? parseFloat(it.cantidadMinima) : it.cantidadMinima,
+        })) : [];
+        setIngredients(normalized);
+      } catch (e) { 
+        if (e.name !== 'AbortError') setHasError(true); 
+      }
+      finally { 
+        setIsLoading(false); 
+      }
+    })();
   };
 
   // Obtener clase CSS para el estado del stock
