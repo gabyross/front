@@ -75,7 +75,7 @@ const Login = () => {
       console.log('Datos de login:', formData);
       
       // Redirigir al home (que se creará en el futuro)
-      navigate('/');
+      navigate('/NuevoIngrediente');
       
     } catch (error) {
       console.error('Error en login:', error);
