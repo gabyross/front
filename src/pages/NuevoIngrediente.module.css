@@ -1,0 +1,204 @@
+/* Estilos para la página de Nuevo Ingrediente */
+
+.nuevoIngredientePage {
+  min-height: calc(100vh - 4rem);
+  background-color: var(--color-background-light);
+  padding: var(--spacing-2xl) 0;
+}
+
+.container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 0 var(--spacing-md);
+}
+
+@media (min-width: 768px) {
+  .container {
+    padding: 0 var(--spacing-lg);
+  }
+}
+
+/* Header */
+.header {
+  text-align: center;
+  margin-bottom: var(--spacing-3xl);
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin-bottom: var(--spacing-sm);
+}
+
+@media (min-width: 768px) {
+  .title {
+    font-size: 2.5rem;
+  }
+}
+
+.subtitle {
+  color: var(--color-text-secondary);
+  font-size: 1.125rem;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Formulario */
+.formContainer {
+  background-color: var(--color-background);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
+  padding: var(--spacing-2xl);
+}
+
+@media (min-width: 768px) {
+  .formContainer {
+    padding: var(--spacing-3xl);
+  }
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+}
+
+/* Mensajes */
+.generalError {
+  background-color: rgba(239, 68, 68, 0.1);
+  color: var(--color-error);
+  padding: var(--spacing-md);
+  border-radius: var(--radius-md);
+  font-size: 0.875rem;
+  font-weight: 500;
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.successMessage {
+  background-color: rgba(16, 185, 129, 0.1);
+  color: var(--color-success);
+  padding: var(--spacing-md);
+  border-radius: var(--radius-md);
+  font-size: 0.875rem;
+  font-weight: 500;
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+/* Input group personalizado para datalist */
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-lg);
+}
+
+.label {
+  font-family: var(--font-heading);
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-text-primary);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+
+.required {
+  color: var(--color-error);
+  font-weight: 600;
+}
+
+.input {
+  width: 100%;
+  padding: var(--spacing-md);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  color: var(--color-text-primary);
+  background-color: var(--color-background);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  transition: all var(--transition-normal);
+  outline: none;
+}
+
+.input::placeholder {
+  color: var(--color-text-light);
+}
+
+.input:hover:not(:disabled) {
+  border-color: var(--color-primary-light);
+}
+
+.input:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.1);
+}
+
+.input:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Estados de error */
+.input.error {
+  border-color: var(--color-error);
+}
+
+.input.error:focus {
+  border-color: var(--color-error);
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+.errorMessage {
+  font-size: 0.75rem;
+  color: var(--color-error);
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+
+/* Acciones del formulario */
+.formActions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  margin-top: var(--spacing-xl);
+}
+
+@media (min-width: 640px) {
+  .formActions {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+
+/* Estados de focus y accesibilidad */
+.formContainer *:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .nuevoIngredientePage {
+    padding: var(--spacing-lg) 0;
+  }
+  
+  .formContainer {
+    padding: var(--spacing-xl);
+  }
+  
+  .title {
+    font-size: 1.5rem;
+  }
+  
+  .input {
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: 0.875rem;
+  }
+}
