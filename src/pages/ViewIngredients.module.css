@@ -245,6 +245,11 @@
   font-variant-numeric: tabular-nums;
 }
 
+.stockCell {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
 .dateCell {
   font-variant-numeric: tabular-nums;
   color: var(--color-text-light);

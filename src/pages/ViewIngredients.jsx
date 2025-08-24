@@ -3,8 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Layout from '../components/layout/Layout';
 import Button from '../components/common/Button';
 import Input from '../components/common/Input';
-import { Plus, Search, Eye, Edit, TrendingUp, Trash2, RefreshCw } from 'lucide-react';
-import styles from './ViewIngredients.module.css';
+import { Plus, Search, Edit, Trash2, RefreshCw } from 'lucide-react';
 
 /**
  * Datos mock que replican exactamente el modelo del backend
@@ -592,7 +591,7 @@ const ViewIngredients = () => {
                             {ingredient.nombre}
                           </td>
                           <td>{ingredient.unidadMedida}</td>
-                          <td className={styles.numberCell}>
+                          <td className={styles.stockCell}>
                             {ingredient.cantidadEnStock}
                           </td>
                           <td className={styles.numberCell}>
@@ -610,27 +609,11 @@ const ViewIngredients = () => {
                             <div className={styles.actions}>
                               <button
                                 className={styles.actionButton}
-                                onClick={() => handleView(ingredient._id)}
-                                aria-label={`Ver ${ingredient.nombre}`}
-                                title="Ver"
-                              >
-                                <Eye size={16} />
-                              </button>
-                              <button
-                                className={styles.actionButton}
                                 onClick={() => handleEdit(ingredient._id)}
                                 aria-label={`Editar ${ingredient.nombre}`}
                                 title="Editar"
                               >
                                 <Edit size={16} />
-                              </button>
-                              <button
-                                className={styles.actionButton}
-                                onClick={() => handleAdjustStock(ingredient._id)}
-                                aria-label={`Ajustar stock de ${ingredient.nombre}`}
-                                title="Ajustar stock"
-                              >
-                                <TrendingUp size={16} />
                               </button>
                               <button
                                 className={`${styles.actionButton} ${styles.deleteButton}`}
