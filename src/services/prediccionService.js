@@ -1,1 +1,0 @@
-// Servicio de predicción de ventas
