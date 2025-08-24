@@ -85,18 +85,21 @@ const Registro = () => {
 
   // Verificar si el formulario es válido para habilitar el botón
   const isFormValid = () => {
-    return (
-      formData.fullName.trim() &&
-      isValidFullName(formData.fullName.trim()) &&
-      formData.email.trim() &&
-      isValidEmail(formData.email) &&
-      formData.password &&
-      isValidPassword(formData.password, 8) &&
-      formData.confirmPassword &&
-      passwordsMatch(formData.password, formData.confirmPassword) &&
-      formData.acceptTerms
-    );
-  };
+  const fullName = formData.fullName.trim();
+  const email = formData.email.trim();
+
+  return (
+    !!fullName &&
+    isValidFullName(fullName) &&
+    !!email &&
+    isValidEmail(email) &&
+    !!formData.password &&
+    isValidPassword(formData.password, 8) &&
+    !!formData.confirmPassword &&
+    passwordsMatch(formData.password, formData.confirmPassword) &&
+    !!formData.acceptTerms
+  );
+};
 
   // Debug: mostrar estado del formulario (remover en producción)
   console.log('Form state:', {
