@@ -71,12 +71,12 @@ const HeaderInterno = () => {
       icon: <Package size={18} />
     },
     { 
-      path: '/prediction', 
+      path: '/prediccion', 
       label: 'Predicción', 
       icon: <TrendingUp size={18} />
     },
     { 
-      path: '/reports', 
+      path: '/reportes', 
       label: 'Reportes', 
       icon: <BarChart3 size={18} />
     }

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Layout from '../components/layout/Layout';
 import Button from '../components/common/Button';
 import Input from '../components/common/Input';
@@ -201,6 +202,8 @@ const formatShortDate = (isoString) => {
  * Página para visualizar la lista de ingredientes
  */
 const ViewIngredients = () => {
+  const navigate = useNavigate();
+
   // Estados para filtros y búsqueda
   const [searchTerm, setSearchTerm] = useState('');
   const [unitFilter, setUnitFilter] = useState('Todas');
@@ -302,6 +305,7 @@ const ViewIngredients = () => {
   // Handlers stub para acciones
   const handleCreate = () => {
     console.log('Navegando a crear ingrediente...');
+    navigate('/nuevo-ingrediente');
   };
 
   const handleView = (id) => {
