@@ -7,6 +7,18 @@ import { Plus, Search, Edit, Trash2, RefreshCw } from 'lucide-react';
 import styles from './ViewIngredients.module.css';
 
 /**
+ * Helper para formatear cantidades según unidad
+ */
+const formatQuantity = (value, unit) => {
+  const needsDecimals = unit === 'kilogramos' || unit === 'litros';
+  return new Intl.NumberFormat('es-AR', {
+    useGrouping: true,
+    minimumFractionDigits: needsDecimals ? 2 : 0,
+    maximumFractionDigits: needsDecimals ? 2 : 0,
+  }).format(value);
+};
+
+/**
  * Datos mock que replican exactamente el modelo del backend
  */
 const MOCK_INGREDIENTS = [
@@ -543,7 +555,7 @@ const ViewIngredients = () => {
                             )}
                           </button>
                         </th>
-                        <th scope="col">
+                        <th scope="col" data-align="right">
                           <button
                             className={styles.sortButton}
                             onClick={() => handleSort('cantidadMinima')}
@@ -597,11 +609,11 @@ const ViewIngredients = () => {
                           <td className={styles.unitCell}>
                             {ingredient.unidadMedida}
                           </td>
-                          <td className={styles.stockCell}>
-                            {ingredient.cantidadEnStock}
+                          <td className={styles.numCell}>
+                            {formatQuantity(ingredient.cantidadEnStock, ingredient.unidadMedida)}
                           </td>
-                          <td className={styles.numberCell}>
-                            {ingredient.cantidadMinima}
+                          <td className={styles.numCell}>
+                            {formatQuantity(ingredient.cantidadMinima, ingredient.unidadMedida)}
                           </td>
                           <td>
                             <span className={`${styles.statusBadge} ${getStatusClass(ingredient)}`}>

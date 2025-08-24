@@ -204,6 +204,12 @@
   background-color: var(--color-background-light);
 }
 
+/* Asegurar fuente consistente en tabla */
+.table th,
+.table td {
+  font-family: var(--font-body);
+}
+
 /* Botones de ordenamiento */
 .sortButton {
   background: none;
@@ -234,6 +240,15 @@
   color: var(--color-primary);
 }
 
+/* Alinear headers numéricos */
+th[data-align="right"] {
+  text-align: right;
+}
+
+th[data-align="right"] .sortButton {
+  justify-content: flex-end;
+}
+
 /* Celdas específicas */
 .nameCell {
   font-weight: 500;
@@ -244,14 +259,15 @@
   color: var(--color-text-secondary);
 }
 
+/* Celdas numéricas: misma clase para evitar zigzag visual */
+.numCell,
+.stockCell,
 .numberCell {
   text-align: right;
-  font-variant-numeric: tabular-nums;
-}
-
-.stockCell {
-  text-align: right;
-  font-variant-numeric: tabular-nums;
+  font-variant-numeric: tabular-nums lining-nums; /* dígitos de ancho fijo */
+  font-feature-settings: "tnum" 1, "lnum" 1;
+  font-variant-ligatures: none;
+  min-width: 8ch; /* estabiliza el ancho; ajusta si es necesario */
 }
 
 .dateCell {
