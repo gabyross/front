@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Layout from '../components/layout/Layout';
 import Button from '../components/common/Button';
 import Input from '../components/common/Input';
+import { Leaf, Carrot, Apple, Coffee } from 'lucide-react';
 import styles from './NuevoIngrediente.module.css';
 
 /**
@@ -183,128 +184,171 @@ const NuevoIngrediente = () => {
   return (
     <Layout isInternal={true}>
       <main className={styles.nuevoIngredientePage}>
-        <div className={styles.container}>
-          <div className={styles.header}>
-            <h1 className={styles.title}>Nuevo Ingrediente</h1>
-            <p className={styles.subtitle}>
-              Agrega un nuevo ingrediente a tu inventario
-            </p>
+        {/* Elementos decorativos flotantes */}
+        <div className={styles.floatingElements}>
+          <div className={`${styles.floatingIcon} ${styles.icon1}`}>
+            <Leaf size={32} />
           </div>
+          <div className={`${styles.floatingIcon} ${styles.icon2}`}>
+            <Carrot size={28} />
+          </div>
+          <div className={`${styles.floatingIcon} ${styles.icon3}`}>
+            <Apple size={30} />
+          </div>
+          <div className={`${styles.floatingIcon} ${styles.icon4}`}>
+            <Coffee size={26} />
+          </div>
+          <div className={`${styles.floatingIcon} ${styles.icon5}`}>
+            <Leaf size={24} />
+          </div>
+          <div className={`${styles.floatingIcon} ${styles.icon6}`}>
+            <Carrot size={22} />
+          </div>
+        </div>
 
-          <div className={styles.formContainer}>
-            <form onSubmit={handleSubmit} className={styles.form} noValidate>
-              {errors.general && (
-                <div className={styles.generalError} role="alert">
-                  {errors.general}
+        <div className={styles.container}>
+          <div className={styles.contentWrapper}>
+            {/* Columna izquierda - Información visual */}
+            <div className={styles.visualColumn}>
+              <div className={styles.visualContent}>
+                <div className={styles.mainIcon}>
+                  <div className={styles.iconCircle}>
+                    <Leaf size={48} />
+                  </div>
                 </div>
-              )}
-
-              {showSuccess && (
-                <div className={styles.successMessage} role="alert">
-                  ✓ Ingrediente guardado exitosamente
+                <h2 className={styles.visualTitle}>
+                  Gestiona tu inventario
+                </h2>
+                <p className={styles.visualDescription}>
+                  Agrega ingredientes frescos a tu inventario y mantén un control preciso de tu stock para optimizar las compras de tu restaurante.
+                </p>
+                
+                <div className={styles.benefitsList}>
+                  <div className={styles.benefitItem}>
+                    <div className={styles.benefitIcon}>
+                      <Leaf size={16} />
+                    </div>
+                    <span>Control de stock en tiempo real</span>
+                  </div>
+                  <div className={styles.benefitItem}>
+                    <div className={styles.benefitIcon}>
+                      <Carrot size={16} />
+                    </div>
+                    <span>Alertas de stock bajo</span>
+                  </div>
+                  <div className={styles.benefitItem}>
+                    <div className={styles.benefitIcon}>
+                      <Apple size={16} />
+                    </div>
+                    <span>Optimización de compras</span>
+                  </div>
                 </div>
-              )}
+              </div>
+            </div>
 
-              <Input
-                type="text"
-                name="nombre"
-                label="Nombre del ingrediente"
-                placeholder="Ej: Tomate, Cebolla, Aceite de oliva"
-                value={formData.nombre}
-                onChange={handleInputChange}
-                error={errors.nombre}
-                required
-                autoComplete="off"
-                autoFocus
-              />
-
-              <div className={styles.inputGroup}>
-                <label htmlFor="unidadMedida" className={styles.label}>
-                  Unidad de medida
-                  <span className={styles.required} aria-label="obligatorio">*</span>
-                </label>
-                
-                <input
-                  list="unidades-datalist"
-                  id="unidadMedida"
-                  name="unidadMedida"
-                  value={formData.unidadMedida}
-                  onChange={handleInputChange}
-                  placeholder="Selecciona una unidad"
-                  required
-                  className={`${styles.input} ${errors.unidadMedida ? styles.error : ''}`}
-                  aria-invalid={errors.unidadMedida ? 'true' : 'false'}
-                  aria-describedby={errors.unidadMedida ? 'unidadMedida-error' : undefined}
-                />
-                
-                <datalist id="unidades-datalist">
-                  {unidadesMedida.map((unidad) => (
-                    <option key={unidad.value} value={unidad.value}>
-                      {unidad.label}
-                    </option>
-                  ))}
-                </datalist>
-                
-                {errors.unidadMedida && (
-                  <span 
-                    id="unidadMedida-error"
-                    className={styles.errorMessage}
-                    role="alert"
-                  >
-                    {errors.unidadMedida}
-                  </span>
-                )}
+            {/* Columna derecha - Formulario */}
+            <div className={styles.formColumn}>
+              <div className={styles.header}>
+                <h1 className={styles.title}>Nuevo Ingrediente</h1>
+                <p className={styles.subtitle}>
+                  Agrega un nuevo ingrediente a tu inventario
+                </p>
               </div>
 
-              <Input
-                type="number"
-                name="cantidadEnStock"
-                label="Cantidad en stock"
-                placeholder="0"
-                value={formData.cantidadEnStock}
-                onChange={handleInputChange}
-                error={errors.cantidadEnStock}
-                required
-                min="0"
-                step="0.01"
-                autoComplete="off"
-              />
+              <div className={styles.formContainer}>
+                <form onSubmit={handleSubmit} className={styles.form} noValidate>
+                  {errors.general && (
+                    <div className={styles.generalError} role="alert">
+                      {errors.general}
+                    </div>
+                  )}
 
-              <Input
-                type="number"
-                name="cantidadMinima"
-                label="Cantidad mínima (alerta de stock bajo)"
-                placeholder="0"
-                value={formData.cantidadMinima}
-                onChange={handleInputChange}
-                error={errors.cantidadMinima}
-                required
-                min="0"
-                step="0.01"
-                autoComplete="off"
-              />
+                  {showSuccess && (
+                    <div className={styles.successMessage} role="alert">
+                      ✓ Ingrediente guardado exitosamente
+                    </div>
+                  )}
 
-              <div className={styles.formActions}>
-                <Button
-                  type="submit"
-                  variant="primary"
-                  size="large"
-                  disabled={!isFormValid() || isLoading}
-                >
-                  {isLoading ? 'Guardando ingrediente...' : 'Guardar ingrediente'}
-                </Button>
-                
-                <Button
-                  type="button"
-                  variant="tertiary"
-                  size="large"
-                  onClick={limpiarFormulario}
-                  disabled={isLoading}
-                >
-                  Limpiar formulario
-                </Button>
+                  <Input
+                    type="text"
+                    name="nombre"
+                    label="Nombre del ingrediente"
+                    placeholder="Ej: Tomate, Cebolla, Aceite de oliva"
+                    value={formData.nombre}
+                    onChange={handleInputChange}
+                    error={errors.nombre}
+                    required
+                    autoComplete="off"
+                    autoFocus
+                  />
+
+                  <div className={styles.inputGroup}>
+                    <label htmlFor="unidadMedida" className={styles.label}>
+                      Unidad de medida
+                      <span className={styles.required} aria-label="obligatorio">*</span>
+                    </label>
+                    
+                    <input
+                      list="unidades-datalist"
+                      id="unidadMedida"
+                      name="unidadMedida"
+                      value={formData.unidadMedida}
+                      onChange={handleInputChange}
+                      placeholder="Selecciona una unidad"
+                      required
+                      className={`${styles.input} ${errors.unidadMedida ? styles.error : ''}`}
+                      aria-invalid={errors.unidadMedida ? 'true' : 'false'}
+                      aria-describedby={errors.unidadMedida ? 'unidadMedida-error' : undefined}
+                    />
+                    
+                    <datalist id="unidades-datalist">
+                      {unidadesMedida.map((unidad) => (
+                        <option key={unidad.value} value={unidad.value}>
+                          {unidad.label}
+                        </option>
+                      ))}
+                    </datalist>
+                    
+                    {errors.unidadMedida && (
+                      <span 
+                        id="unidadMedida-error"
+                        className={styles.errorMessage}
+                        role="alert"
+                      >
+                        {errors.unidadMedida}
+                      </span>
+                    )}
+                  </div>
+
+                  <Input
+                    type="number"
+                    name="cantidadEnStock"
+                    label="Cantidad en stock"
+                    placeholder="0"
+                    value={formData.cantidadEnStock}
+                    onChange={handleInputChange}
+                    error={errors.cantidadEnStock}
+                    required
+                    min="0"
+                    step="0.01"
+                    autoComplete="off"
+                  />
+
+                  <Input
+                    type="number"
+                    name="cantidadMinima"
+                    label="Cantidad mínima (alerta de stock bajo)"
+                    placeholder="0"
+                    value={formData.cantidadMinima}
+                    onChange={handleInputChange}
+                    error={errors.cantidadMinima}
+                    required
+                    min="0"
+                    step="0.01"
+                    autoComplete="off"
+                  />
               </div>
-            </form>
+            </div>
           </div>
         </div>
       </main>
@@ -312,4 +356,25 @@ const NuevoIngrediente = () => {
   );
 };
 
+                  <div className={styles.formActions}>
+                    <Button
+                      type="submit"
+                      variant="primary"
+                      size="large"
+                      disabled={!isFormValid() || isLoading}
+                    >
+                      {isLoading ? 'Guardando ingrediente...' : 'Guardar ingrediente'}
+                    </Button>
+                    
+                    <Button
+                      type="button"
+                      variant="tertiary"
+                      size="large"
+                      onClick={limpiarFormulario}
+                      disabled={isLoading}
+                    >
+                      Limpiar formulario
+                    </Button>
+                  </div>
+                </form>
 export default NuevoIngrediente;
