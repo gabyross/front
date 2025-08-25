@@ -636,3 +636,35 @@
   outline: 2px solid var(--color-primary);
   outline-offset: 2px;
 }
+
+/* Subtabla dentro de la fila expandida */
+.subTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 8px;
+}
+
+.subTable th,
+.subTable td {
+  padding: 6px 8px;     /* compacto */
+  border-bottom: 1px solid #e5e7eb;
+  text-align: left;
+  vertical-align: middle;
+}
+
+.subQtyCol {
+  width: 160px;         /* fija cantidad para que quede alineado */
+  white-space: nowrap;
+}
+
+.subIngName {
+  /* por si el nombre es largo */
+  max-width: 420px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.subIngQty {
+  text-align: right;
+}

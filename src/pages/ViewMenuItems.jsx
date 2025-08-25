@@ -5,9 +5,12 @@ import Button from "../components/common/Button";
 import { Plus } from "lucide-react";
 
 import { useMenuItems } from "../hooks/useMenuItems.js";
+import { useIngredients } from "../hooks/useIngredients.js"; // ← cargamos ingredientes reales
+import { makeIngredientsIndex, getIngredientRefStatus } from "../utils/ingredientsIndex.js";
+
 import MenuItemsToolbar from "../components/menu/MenuItemsToolbar.jsx";
 import MenuItemsTable from "../components/menu/MenuItemsTable.jsx";
-import Pagination from "../components/ingredients/Pagination.jsx"; // Reusamos el que ya tenés
+import Pagination from "../components/ingredients/Pagination.jsx";
 import { LoadingSkeleton, ErrorState, EmptyState } from "../components/ingredients/States.jsx";
 
 import styles from "./ViewMenuItems.module.css";
@@ -16,17 +19,26 @@ const ITEMS_PER_PAGE = 10;
 
 const ViewMenuItems = () => {
   const navigate = useNavigate();
-  const { items, isLoading, hasError, refresh } = useMenuItems({ minDelayMs: 1500 });
 
-  // UI state
+  // Carga datos
+  const { items, isLoading: loadingItems, hasError: errorItems, refresh: refreshItems } = useMenuItems({ minDelayMs: 1000 });
+  const { ingredients, isLoading: loadingIngs, hasError: errorIngs, refresh: refreshIngs } = useIngredients({ minDelayMs: 0 });
+
+  // Índice de ingredientes para lookups
+  const ingIndex = useMemo(() => makeIngredientsIndex(ingredients), [ingredients]);
+
+  // Estado UI
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("Todos");
   const [sortColumn, setSortColumn] = useState("nombre");
   const [sortDirection, setSortDirection] = useState("asc");
   const [currentPage, setCurrentPage] = useState(1);
 
-  const handleFilterChange = () => setCurrentPage(1);
+  const isLoading = loadingItems || loadingIngs;
+  const hasError = errorItems || errorIngs;
+  const refresh = () => { refreshItems(); refreshIngs(); };
 
+  const handleFilterChange = () => setCurrentPage(1);
   const handleSort = (column) => {
     if (sortColumn === column) setSortDirection((d) => (d === "asc" ? "desc" : "asc"));
     else { setSortColumn(column); setSortDirection("asc"); }
@@ -143,6 +155,7 @@ const ViewMenuItems = () => {
                   onSort={handleSort}
                   onEdit={handleEdit}
                   onDelete={handleDelete}
+                  ingredientsIndex={ingIndex} // ← aquí pasamos el índice
                 />
                 <Pagination
                   styles={styles}
