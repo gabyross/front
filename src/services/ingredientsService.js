@@ -1,7 +1,7 @@
 // Servicio focalizado en Ingredientes.
 // Por ahora sólo lectura. Más adelante podés sumar create/update/delete.
 
-import { apiGet } from '../api/client.js';
+import { apiGet, apiPost } from '../api/client.js';
 
 /**
  * Obtiene la lista de ingredientes del usuario.
@@ -14,18 +14,12 @@ export async function getIngredients({ userId, signal }) {
   return apiGet('/ingredientes', { params: { userId }, signal });
 }
 
-/** Ejemplos para futuro (cuando querramos agregar CRUD):
-import { apiPost, apiPut, apiDelete } from '../api/client.js';
-
-export function createIngredient({ userId, data, signal }) {
-  return apiPost('/ingredientes', { body: { userId, ...data }, signal });
+/**
+ * Crea un ingrediente
+ * data debe venir con shape de API: { nombre, unidadMedida, cantidadEnStock, cantidadMinima }
+ * Por ahora se envía userId desde .env; luego lo tomaremos del token.
+ */
+export async function createIngredient({ userId, data, signal }) {
+  const body = { ...data, userId }; // backend espera userId en el body
+  return apiPost('/ingredientes', { body, signal });
 }
-
-export function updateIngredient({ id, data, signal }) {
-  return apiPut(`/ingredientes/${id}`, { body: data, signal });
-}
-
-export function deleteIngredient({ id, signal }) {
-  return apiDelete(`/ingredientes/${id}`, { signal });
-}
-*/

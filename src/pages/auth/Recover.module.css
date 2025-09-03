@@ -1,0 +1,161 @@
+/* Estilos para la página de Recover */
+
+.recoverPage {
+  min-height: calc(100vh - 4rem);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--color-background-accent) 0%, var(--color-background) 100%);
+  padding: var(--spacing-xl) var(--spacing-md);
+}
+
+.container {
+  width: 100%;
+  max-width: 400px;
+}
+
+.recoverCard {
+  background-color: var(--color-background);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-xl);
+  padding: var(--spacing-2xl);
+  border: 1px solid var(--color-border-light);
+}
+
+/* Header */
+.header {
+  text-align: center;
+  margin-bottom: var(--spacing-2xl);
+}
+
+.title {
+  font-family: var(--font-heading);
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin-bottom: var(--spacing-sm);
+}
+
+.subtitle {
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Formulario */
+.form {
+  margin-bottom: var(--spacing-xl);
+}
+
+.errorMessage,
+.successMessage {
+  margin-bottom: var(--spacing-lg);
+}
+
+.submitButton {
+  margin-top: var(--spacing-md);
+}
+
+/* Footer */
+.footer {
+  text-align: center;
+}
+
+.backLink {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  font-size: 0.875rem;
+  color: var(--color-primary);
+  text-decoration: none;
+  font-weight: 500;
+  padding: var(--spacing-sm);
+  border-radius: var(--radius-sm);
+  transition: all var(--transition-normal);
+}
+
+.backLink:hover {
+  color: var(--color-primary-light);
+  background-color: var(--color-background-accent);
+}
+
+.backLink:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.divider {
+  margin: var(--spacing-lg) 0;
+  position: relative;
+  text-align: center;
+}
+
+.divider::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background-color: var(--color-border);
+  z-index: 1;
+}
+
+.divider span {
+  background-color: var(--color-background);
+  color: var(--color-text-secondary);
+  font-size: 0.875rem;
+  padding: 0 var(--spacing-md);
+  position: relative;
+  z-index: 2;
+}
+
+.retryButton {
+  background: none;
+  border: none;
+  font-size: 0.875rem;
+  color: var(--color-primary);
+  font-weight: 600;
+  padding: var(--spacing-sm);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-normal);
+}
+
+.retryButton:hover {
+  color: var(--color-primary-light);
+  background-color: var(--color-background-accent);
+}
+
+.retryButton:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .recoverPage {
+    padding: var(--spacing-md);
+    align-items: flex-start;
+    padding-top: var(--spacing-2xl);
+  }
+  
+  .recoverCard {
+    padding: var(--spacing-xl);
+  }
+  
+  .title {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .recoverCard {
+    padding: var(--spacing-lg);
+  }
+  
+  .header {
+    margin-bottom: var(--spacing-xl);
+  }
+}

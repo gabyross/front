@@ -1,0 +1,1 @@
+// Hook personalizado para gestión de inventario

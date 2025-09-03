@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation  } from 'react-router-dom';
 import Layout from '../components/layout/Layout';
 import Button from '../components/common/Button';
 import Input from '../components/common/Input';
 import PasswordInput from '../components/common/PasswordInput';
+import { setDevAuthed } from '../auth/devAuth.js';
 import styles from './Login.module.css';
 
 /**
@@ -11,6 +12,7 @@ import styles from './Login.module.css';
  */
 const Login = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [formData, setFormData] = useState({
     email: '',
     password: ''
@@ -70,18 +72,18 @@ const Login = () => {
     try {
       // Simular llamada a API (por ahora solo redirige al home)
       await new Promise(resolve => setTimeout(resolve, 1000));
+
+      // Flag de “logueado” (temporal, sin auth real)
+      setDevAuthed(true);
       
       // TODO: Implementar lógica de autenticación real
-      console.log('Datos de login:', formData);
-      
-      // Redirigir al home (que se creará en el futuro)
-      navigate('/nuevo-ingrediente');
-      
+      // Redirección a donde el usuario quería ir, o default
+      const params = new URLSearchParams(location.search);
+      const redirect = params.get('redirect') || '/nuevo-ingrediente';
+      navigate(redirect, { replace: true });
     } catch (error) {
       console.error('Error en login:', error);
-      setErrors({
-        general: 'Error al iniciar sesión. Inténtalo de nuevo.'
-      });
+      setErrors({ general: 'Error al iniciar sesión. Inténtalo de nuevo.' });
     } finally {
       setIsLoading(false);
     }
