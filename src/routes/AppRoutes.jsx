@@ -9,6 +9,7 @@ import NewIngredient from '../pages/NewIngredient';
 import NewMenuItem from '../pages/NewMenuItem';
 import ViewIngredients from '../pages/ViewIngredients';
 import ViewMenuItems from '../pages/ViewMenuItems';
+import Prediccion from '../pages/Prediccion';
 
 import ProtectedRoute from '../auth/ProtectedRoute.jsx';
 
@@ -28,6 +29,7 @@ const AppRoutes = () => {
           <Route path="/nuevo-item-menu" element={<NewMenuItem />} />
           <Route path="/ingredients" element={<ViewIngredients />} />
           <Route path="/menu-items" element={<ViewMenuItems />} />
+          <Route path="/prediccion" element={<Prediccion />} />
         </Route>
 
       </Routes>

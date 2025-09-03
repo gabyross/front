@@ -81,6 +81,11 @@ const HeaderInterno = () => {
       icon: <TrendingUp size={18} />
     },
     { 
+      path: '/prediccion', 
+      label: 'Predicción', 
+      icon: <TrendingUp size={18} />
+    },
+    { 
       path: '/reports', 
       label: 'Reports', 
       icon: <BarChart3 size={18} />
