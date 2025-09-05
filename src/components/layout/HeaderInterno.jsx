@@ -51,21 +51,6 @@ const HeaderInterno = () => {
 
   const navItems = [
     { 
-      path: '/dashboard', 
-      label: 'Dashboard', 
-      icon: <BarChart3 size={18} />
-    },
-    { 
-      path: '/nuevo-ingrediente', 
-      label: 'Nuevo Ingrediente', 
-      icon: <Plus size={18} />
-    },
-    { 
-      path: '/nuevo-item-menu', 
-      label: 'Nuevo Item', 
-      icon: <Plus size={18} />
-    },
-    { 
       path: '/ingredients', 
       label: 'Ingredientes', 
       icon: <Package size={18} />
@@ -76,19 +61,9 @@ const HeaderInterno = () => {
       icon: <Plus size={18} />
     },
     { 
-      path: '/sales-prediction', 
-      label: 'Sales Prediction', 
-      icon: <TrendingUp size={18} />
-    },
-    { 
       path: '/prediccion', 
       label: 'Predicción', 
       icon: <TrendingUp size={18} />
-    },
-    { 
-      path: '/reports', 
-      label: 'Reports', 
-      icon: <BarChart3 size={18} />
     }
   ];
 
@@ -192,3 +167,4 @@ const HeaderInterno = () => {
 };
 
 export default HeaderInterno;
+
