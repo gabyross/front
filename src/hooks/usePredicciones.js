@@ -11,6 +11,7 @@ export function usePredicciones() {
     fechaHasta: '',
     turnos: ['M', 'T', 'N'], // Por defecto todos los turnos
     predicciones: [],
+    ingredientesNecesarios: {},
     isLoading: false,
     error: null,
     success: false
@@ -93,16 +94,21 @@ export function usePredicciones() {
     }));
 
     try {
-      const predicciones = await postRealtimeInference({
+      const res = await postRealtimeInference({
         itemMenuIds,
         fechas,
         turnos
       });
 
+      // Manejar tanto la nueva estructura como arrays simples (fallback)
+      const predicciones = Array.isArray(res?.predicciones) ? res.predicciones : Array.isArray(res) ? res : [];
+      const ingredientesNecesarios = res?.ingredientesNecesarios ?? {};
+
       setState(prev => ({
         ...prev,
         isLoading: false,
         predicciones,
+        ingredientesNecesarios,
         success: true,
         error: null
       }));

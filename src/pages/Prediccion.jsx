@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { Leaf, Carrot, Apple, Coffee, TrendingUp } from 'lucide-react';
+import { Leaf, Carrot, Apple, Coffee, TrendingUp, ChevronDown, ChevronRight } from 'lucide-react';
 import Layout from '../components/layout/Layout';
 import Button from '../components/common/Button';
 import Input from '../components/common/Input';
@@ -10,8 +10,8 @@ import { DEFAULT_USER_ID } from '../config/env.js';
 
 // Reutilizar estilos de NewIngredient para la carcasa
 import styles from './NewIngredient.module.css';
-// Reutilizar estilos de ViewIngredients para la tabla
-import tableStyles from './ViewIngredients.module.css';
+// Reutilizar estilos de ViewMenuItems para las tablas expandibles
+import tableStyles from './ViewMenuItems.module.css';
 
 const ITEMS_PER_PAGE = 10;
 
@@ -29,6 +29,7 @@ const Prediccion = () => {
     fechaHasta,
     turnos,
     predicciones,
+    ingredientesNecesarios,
     isLoading,
     error,
     success,
@@ -39,10 +40,24 @@ const Prediccion = () => {
     fetchPredicciones
   } = usePredicciones();
 
-  // Estado para la tabla
+  // Estado para las tablas expandibles
   const [sortColumn, setSortColumn] = useState('fecha');
   const [sortDirection, setSortDirection] = useState('asc');
   const [currentPage, setCurrentPage] = useState(1);
+  const [expandedRows, setExpandedRows] = useState(new Set());     // para productos
+  const [expandedIngr, setExpandedIngr] = useState(new Set());     // para ingredientes
+
+  const toggleRow = (k) => { 
+    const n = new Set(expandedRows); 
+    n.has(k) ? n.delete(k) : n.add(k); 
+    setExpandedRows(n); 
+  };
+  
+  const toggleIngr = (k) => { 
+    const n = new Set(expandedIngr); 
+    n.has(k) ? n.delete(k) : n.add(k); 
+    setExpandedIngr(n); 
+  };
 
   // Manejar selección múltiple de items del menú
   const handleItemMenuChange = (itemId, checked) => {
@@ -74,11 +89,58 @@ const Prediccion = () => {
   };
 
   // Procesar y paginar resultados
-  const processedResults = useMemo(() => {
+  const processedPredicciones = useMemo(() => {
     if (!predicciones.length) return { data: [], totalPages: 0, totalItems: 0 };
 
-    // Ordenar
-    const sorted = [...predicciones].sort((a, b) => {
+    // Agrupar por itemMenu.id
+    const grupos = {};
+    predicciones.forEach(pred => {
+      const key = pred.itemMenu?.id || 'unknown';
+      if (!grupos[key]) {
+        grupos[key] = {
+          key,
+          itemMenu: pred.itemMenu,
+          predicciones: []
+        };
+      }
+      grupos[key].predicciones.push(pred);
+    });
+
+    // Procesar cada grupo
+    const gruposArray = Object.values(grupos).map(grupo => {
+      // Ordenar predicciones internas por fecha asc y turno M<T<N
+      const turnoOrder = { 'M': 1, 'T': 2, 'N': 3 };
+      grupo.predicciones.sort((a, b) => {
+        const dateA = new Date(a.fecha.split('/').reverse().join('-')).getTime();
+        const dateB = new Date(b.fecha.split('/').reverse().join('-')).getTime();
+        if (dateA !== dateB) return dateA - dateB;
+        return (turnoOrder[a.turno] || 4) - (turnoOrder[b.turno] || 4);
+      });
+
+      // Calcular métricas del grupo
+      const count = grupo.predicciones.length;
+      const totalDemanda = grupo.predicciones.reduce((sum, p) => sum + (p.demandaPredicha || 0), 0);
+      const fechas = grupo.predicciones.map(p => new Date(p.fecha.split('/').reverse().join('-')));
+      const minDate = new Date(Math.min(...fechas));
+      const maxDate = new Date(Math.max(...fechas));
+      
+      const formatDate = (date) => {
+        const day = date.getDate().toString().padStart(2, '0');
+        const month = (date.getMonth() + 1).toString().padStart(2, '0');
+        const year = date.getFullYear().toString().slice(-2);
+        return `${day}/${month}/${year}`;
+      };
+
+      return {
+        ...grupo,
+        count,
+        totalDemanda,
+        rangoFechas: count === 1 ? formatDate(minDate) : `${formatDate(minDate)} - ${formatDate(maxDate)}`
+      };
+    });
+
+    // Ordenar grupos
+    const sorted = [...gruposArray].sort((a, b) => {
       let aValue, bValue;
       
       switch (sortColumn) {
@@ -90,17 +152,13 @@ const Prediccion = () => {
           aValue = a.itemMenu?.nombre || '';
           bValue = b.itemMenu?.nombre || '';
           break;
-        case 'fecha':
-          aValue = new Date(a.fecha.split('/').reverse().join('-')).getTime();
-          bValue = new Date(b.fecha.split('/').reverse().join('-')).getTime();
+        case 'count':
+          aValue = a.count;
+          bValue = b.count;
           break;
-        case 'turno':
-          aValue = a.turno;
-          bValue = b.turno;
-          break;
-        case 'demanda':
-          aValue = a.demandaPredicha;
-          bValue = b.demandaPredicha;
+        case 'total':
+          aValue = a.totalDemanda;
+          bValue = b.totalDemanda;
           break;
         default:
           aValue = 0;
@@ -127,19 +185,20 @@ const Prediccion = () => {
     return { data: pageData, totalPages, totalItems, page: safePage };
   }, [predicciones, sortColumn, sortDirection, currentPage]);
 
-  // Validar si el formulario está completo
-  const isFormValid = () => {
-    return itemMenuIds.length > 0 && fechaDesde && fechaHasta && turnos.length > 0;
-  };
+  // Procesar ingredientes necesarios
+  const processedIngredientes = useMemo(() => {
+    if (!ingredientesNecesarios || typeof ingredientesNecesarios !== 'object') {
+      return [];
+    }
 
-  // Limpiar formulario
-  const clearForm = () => {
-    setItemMenuIds([]);
-    setFechaDesde('');
-    setFechaHasta('');
-    setTurnos(['M', 'T', 'N']);
-    setCurrentPage(1);
-  };
+    return Object.entries(ingredientesNecesarios).map(([nombre, data]) => ({
+      key: data.id || nombre,
+      nombre,
+      id: data.id,
+      cantidadTotal: data.cantidadTotal || 0,
+      detallesPorItem: Array.isArray(data.detallesPorItem) ? data.detallesPorItem : []
+    })).sort((a, b) => b.cantidadTotal - a.cantidadTotal); // Orden por cantidad total descendente
+  }, [ingredientesNecesarios]);
 
   // Renderizar badge de turno
   const renderTurnoBadge = (turno) => {
@@ -166,6 +225,20 @@ const Prediccion = () => {
         {turno}
       </span>
     );
+  };
+
+  // Validar si el formulario está completo
+  const isFormValid = () => {
+    return itemMenuIds.length > 0 && fechaDesde && fechaHasta && turnos.length > 0;
+  };
+
+  // Limpiar formulario
+  const clearForm = () => {
+    setItemMenuIds([]);
+    setFechaDesde('');
+    setFechaHasta('');
+    setTurnos(['M', 'T', 'N']);
+    setCurrentPage(1);
   };
 
   return (
@@ -334,7 +407,7 @@ const Prediccion = () => {
                 </form>
 
                 {/* Resultados */}
-                {predicciones.length > 0 && (
+                {processedPredicciones.totalItems > 0 && (
                   <div style={{ marginTop: 'var(--spacing-2xl)' }}>
                     <h3 style={{ marginBottom: 'var(--spacing-lg)', color: 'var(--color-text-primary)' }}>
                       Resultados de Predicción
@@ -342,15 +415,16 @@ const Prediccion = () => {
                     
                     {/* Información de resultados */}
                     <div className={tableStyles.resultsInfo} aria-live="polite">
-                      <span>{processedResults.totalItems} resultado{processedResults.totalItems !== 1 ? 's' : ''}</span>
+                      <span>{processedPredicciones.totalItems} grupo{processedPredicciones.totalItems !== 1 ? 's' : ''}</span>
                     </div>
 
-                    {/* Tabla de resultados */}
+                    {/* Tabla 1 - Resultados de Predicción (agrupada + expandible) */}
                     <div className={tableStyles.content}>
                       <div className={tableStyles.tableContainer}>
                         <table className={tableStyles.table} role="table">
                           <thead>
                             <tr>
+                              <th scope="col" className={tableStyles.expandColumn}></th>
                               <th scope="col">
                                 <button
                                   className={tableStyles.sortButton}
@@ -382,11 +456,11 @@ const Prediccion = () => {
                               <th scope="col">
                                 <button
                                   className={tableStyles.sortButton}
-                                  onClick={() => handleSort('fecha')}
-                                  aria-label="Ordenar por fecha"
+                                  onClick={() => handleSort('count')}
+                                  aria-label="Ordenar por cantidad de predicciones"
                                 >
-                                  Fecha
-                                  {sortColumn === 'fecha' && (
+                                  Predicciones
+                                  {sortColumn === 'count' && (
                                     <span className={tableStyles.sortIndicator}>
                                       {sortDirection === 'asc' ? '↑' : '↓'}
                                     </span>
@@ -396,85 +470,115 @@ const Prediccion = () => {
                               <th scope="col">
                                 <button
                                   className={tableStyles.sortButton}
-                                  onClick={() => handleSort('turno')}
-                                  aria-label="Ordenar por turno"
+                                  onClick={() => handleSort('total')}
+                                  aria-label="Ordenar por demanda total"
                                 >
-                                  Turno
-                                  {sortColumn === 'turno' && (
+                                  Demanda total
+                                  {sortColumn === 'total' && (
                                     <span className={tableStyles.sortIndicator}>
                                       {sortDirection === 'asc' ? '↑' : '↓'}
                                     </span>
                                   )}
                                 </button>
                               </th>
-                              <th scope="col" data-align="right">
-                                <button
-                                  className={tableStyles.sortButton}
-                                  onClick={() => handleSort('demanda')}
-                                  aria-label="Ordenar por demanda"
-                                >
-                                  Demanda
-                                  {sortColumn === 'demanda' && (
-                                    <span className={tableStyles.sortIndicator}>
-                                      {sortDirection === 'asc' ? '↑' : '↓'}
-                                    </span>
-                                  )}
-                                </button>
-                              </th>
-                              <th scope="col">Feriado</th>
+                              <th scope="col">Rango fechas</th>
                             </tr>
                           </thead>
                           <tbody>
-                            {processedResults.data.map((prediccion, index) => (
-                              <tr key={`${prediccion.itemMenu?.id}-${prediccion.fecha}-${prediccion.turno}-${index}`}>
-                                <td className={tableStyles.nameCell}>
-                                  {prediccion.itemMenu?.codigo || 'N/A'}
-                                </td>
-                                <td className={tableStyles.nameCell}>
-                                  {prediccion.itemMenu?.nombre || 'N/A'}
-                                </td>
-                                <td className={tableStyles.dateCell}>
-                                  {prediccion.fecha}
-                                </td>
-                                <td>
-                                  {renderTurnoBadge(prediccion.turno)}
-                                </td>
-                                <td className={tableStyles.numCell}>
-                                  {prediccion.demandaPredicha.toFixed(2)}
-                                </td>
-                                <td>
-                                  <span className={`${tableStyles.statusBadge} ${prediccion.contexto?.esFeriado ? tableStyles.statusLow : tableStyles.statusOk}`}>
-                                    {prediccion.contexto?.esFeriado ? 'Sí' : 'No'}
-                                  </span>
-                                </td>
-                              </tr>
+                            {processedPredicciones.data.map((grupo) => (
+                              <React.Fragment key={grupo.key}>
+                                <tr>
+                                  <td className={tableStyles.expandCell}>
+                                    <button
+                                      className={tableStyles.expandButton}
+                                      onClick={() => toggleRow(grupo.key)}
+                                      aria-label={`${expandedRows.has(grupo.key) ? 'Contraer' : 'Expandir'} detalles de ${grupo.itemMenu?.nombre}`}
+                                      title={expandedRows.has(grupo.key) ? 'Contraer detalles' : 'Ver detalles'}
+                                    >
+                                      {expandedRows.has(grupo.key) ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
+                                    </button>
+                                  </td>
+                                  <td className={tableStyles.codeCell}>
+                                    {grupo.itemMenu?.codigo || 'N/A'}
+                                  </td>
+                                  <td className={tableStyles.nameCell}>
+                                    {grupo.itemMenu?.nombre || 'N/A'}
+                                  </td>
+                                  <td className={tableStyles.ingredientsCell}>
+                                    <strong>{grupo.count}</strong>
+                                  </td>
+                                  <td className={tableStyles.numCell}>
+                                    {grupo.totalDemanda.toFixed(2)}
+                                  </td>
+                                  <td className={tableStyles.dateCell}>
+                                    {grupo.rangoFechas}
+                                  </td>
+                                </tr>
+                                
+                                {/* Fila expandida con subtabla */}
+                                {expandedRows.has(grupo.key) && (
+                                  <tr className={tableStyles.expandedRow}>
+                                    <td colSpan={6} className={tableStyles.expandedContent}>
+                                      <div className={tableStyles.ingredientDetails}>
+                                        <h4 className={tableStyles.detailsTitle}>Detalles de predicciones</h4>
+                                        <table className={tableStyles.subTable} role="table">
+                                          <thead>
+                                            <tr>
+                                              <th>Fecha</th>
+                                              <th>Turno</th>
+                                              <th>Demanda</th>
+                                              <th>Feriado</th>
+                                            </tr>
+                                          </thead>
+                                          <tbody>
+                                            {grupo.predicciones.map((pred, idx) => (
+                                              <tr key={idx}>
+                                                <td>{pred.fecha}</td>
+                                                <td>{renderTurnoBadge(pred.turno)}</td>
+                                                <td className={tableStyles.subIngQty}>
+                                                  {pred.demandaPredicha.toFixed(2)}
+                                                </td>
+                                                <td>
+                                                  <span className={`${tableStyles.statusBadge} ${pred.contexto?.esFeriado ? tableStyles.statusLow : tableStyles.statusOk}`}>
+                                                    {pred.contexto?.esFeriado ? 'Sí' : 'No'}
+                                                  </span>
+                                                </td>
+                                              </tr>
+                                            ))}
+                                          </tbody>
+                                        </table>
+                                      </div>
+                                    </td>
+                                  </tr>
+                                )}
+                              </React.Fragment>
                             ))}
                           </tbody>
                         </table>
                       </div>
 
                       {/* Paginación */}
-                      {processedResults.totalPages > 1 && (
-                        <div className={tableStyles.pagination} role="navigation" aria-label="Paginación de predicciones">
+                      {processedPredicciones.totalPages > 1 && (
+                        <div className={tableStyles.pagination} role="navigation" aria-label="Paginación de grupos de predicciones">
                           <button
                             type="button"
                             className={tableStyles.paginationButton}
                             onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
-                            disabled={processedResults.page === 1}
+                            disabled={processedPredicciones.page === 1}
                             aria-label="Página anterior"
                           >
                             Anterior
                           </button>
 
                           <div className={tableStyles.paginationInfo} aria-live="polite">
-                            Página {processedResults.page} de {processedResults.totalPages}
+                            Página {processedPredicciones.page} de {processedPredicciones.totalPages}
                           </div>
 
                           <button
                             type="button"
                             className={tableStyles.paginationButton}
-                            onClick={() => setCurrentPage(prev => Math.min(processedResults.totalPages, prev + 1))}
-                            disabled={processedResults.page === processedResults.totalPages}
+                            onClick={() => setCurrentPage(prev => Math.min(processedPredicciones.totalPages, prev + 1))}
+                            disabled={processedPredicciones.page === processedPredicciones.totalPages}
                             aria-label="Página siguiente"
                           >
                             Siguiente
@@ -485,8 +589,105 @@ const Prediccion = () => {
                   </div>
                 )}
 
+                {/* Tabla 2 - Ingredientes necesarios */}
+                {processedIngredientes.length > 0 && (
+                  <div style={{ marginTop: 'var(--spacing-2xl)' }}>
+                    <h3 style={{ marginBottom: 'var(--spacing-lg)', color: 'var(--color-text-primary)' }}>
+                      Ingredientes necesarios
+                    </h3>
+                    
+                    <div className={tableStyles.content}>
+                      <div className={tableStyles.tableContainer}>
+                        <table className={tableStyles.table} role="table">
+                          <thead>
+                            <tr>
+                              <th scope="col" className={tableStyles.expandColumn}></th>
+                              <th scope="col">Ingrediente</th>
+                              <th scope="col">Cantidad total</th>
+                              <th scope="col">Detalles</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {processedIngredientes.map((ingrediente) => (
+                              <React.Fragment key={ingrediente.key}>
+                                <tr>
+                                  <td className={tableStyles.expandCell}>
+                                    <button
+                                      className={tableStyles.expandButton}
+                                      onClick={() => toggleIngr(ingrediente.key)}
+                                      aria-label={`${expandedIngr.has(ingrediente.key) ? 'Contraer' : 'Expandir'} detalles de ${ingrediente.nombre}`}
+                                      title={expandedIngr.has(ingrediente.key) ? 'Contraer detalles' : 'Ver detalles'}
+                                    >
+                                      {expandedIngr.has(ingrediente.key) ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
+                                    </button>
+                                  </td>
+                                  <td className={tableStyles.nameCell}>
+                                    {ingrediente.nombre}
+                                  </td>
+                                  <td className={tableStyles.numCell}>
+                                    <strong>{ingrediente.cantidadTotal}</strong>
+                                  </td>
+                                  <td className={tableStyles.ingredientsCell}>
+                                    {ingrediente.detallesPorItem.length} detalle{ingrediente.detallesPorItem.length !== 1 ? 's' : ''}
+                                  </td>
+                                </tr>
+                                
+                                {/* Fila expandida con subtabla */}
+                                {expandedIngr.has(ingrediente.key) && (
+                                  <tr className={tableStyles.expandedRow}>
+                                    <td colSpan={4} className={tableStyles.expandedContent}>
+                                      <div className={tableStyles.ingredientDetails}>
+                                        <h4 className={tableStyles.detailsTitle}>Detalles por ítem</h4>
+                                        {ingrediente.detallesPorItem.length === 0 ? (
+                                          <p className={tableStyles.noIngredients}>No hay detalles disponibles.</p>
+                                        ) : (
+                                          <table className={tableStyles.subTable} role="table">
+                                            <thead>
+                                              <tr>
+                                                <th>Fecha</th>
+                                                <th>Turno</th>
+                                                <th>Item</th>
+                                                <th>Demanda</th>
+                                                <th>Cant. x unidad</th>
+                                                <th>Cant. necesaria</th>
+                                              </tr>
+                                            </thead>
+                                            <tbody>
+                                              {ingrediente.detallesPorItem.map((detalle, idx) => (
+                                                <tr key={idx}>
+                                                  <td>{detalle.fecha}</td>
+                                                  <td>{renderTurnoBadge(detalle.turno)}</td>
+                                                  <td className={tableStyles.subIngName}>
+                                                    {detalle.itemMenu?.nombre || 'N/A'}
+                                                  </td>
+                                                  <td className={tableStyles.subIngQty}>
+                                                    {detalle.demandaPredicha?.toFixed(2) || '0.00'}
+                                                  </td>
+                                                  <td className={tableStyles.subIngQty}>
+                                                    {detalle.cantidadPorUnidad || 0}
+                                                  </td>
+                                                  <td className={tableStyles.subIngQty}>
+                                                    <strong>{detalle.cantidadNecesaria || 0}</strong>
+                                                  </td>
+                                                </tr>
+                                              ))}
+                                            </tbody>
+                                          </table>
+                                        )}
+                                      </div>
+                                    </td>
+                                  </tr>
+                                )}
+                              </React.Fragment>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                )}
                 {/* Estado vacío */}
-                {success && predicciones.length === 0 && (
+                {success && processedPredicciones.totalItems === 0 && (
                   <div style={{ textAlign: 'center', padding: 'var(--spacing-2xl)', color: 'var(--color-text-secondary)' }}>
                     <p>No se encontraron predicciones para los parámetros seleccionados.</p>
                   </div>
