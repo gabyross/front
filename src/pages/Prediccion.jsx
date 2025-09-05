@@ -407,295 +407,330 @@ const Prediccion = () => {
                 </form>
 
                 {/* Resultados */}
-                {processedPredicciones.totalItems > 0 && (
-                  <div style={{ marginTop: 'var(--spacing-2xl)' }}>
-                    <h3 style={{ marginBottom: 'var(--spacing-lg)', color: 'var(--color-text-primary)' }}>
-                      Resultados de Predicción
-                    </h3>
-                    
-                    {/* Información de resultados */}
-                    <div className={tableStyles.resultsInfo} aria-live="polite">
-                      <span>{processedPredicciones.totalItems} grupo{processedPredicciones.totalItems !== 1 ? 's' : ''}</span>
-                    </div>
-
-                    {/* Tabla 1 - Resultados de Predicción (agrupada + expandible) */}
-                    <div className={tableStyles.content}>
-                      <div className={tableStyles.tableContainer}>
-                        <table className={tableStyles.table} role="table">
-                          <thead>
-                            <tr>
-                              <th scope="col" className={tableStyles.expandColumn}></th>
-                              <th scope="col">
-                                <button
-                                  className={tableStyles.sortButton}
-                                  onClick={() => handleSort('codigo')}
-                                  aria-label="Ordenar por código"
-                                >
-                                  Código
-                                  {sortColumn === 'codigo' && (
-                                    <span className={tableStyles.sortIndicator}>
-                                      {sortDirection === 'asc' ? '↑' : '↓'}
-                                    </span>
-                                  )}
-                                </button>
-                              </th>
-                              <th scope="col">
-                                <button
-                                  className={tableStyles.sortButton}
-                                  onClick={() => handleSort('nombre')}
-                                  aria-label="Ordenar por nombre"
-                                >
-                                  Nombre
-                                  {sortColumn === 'nombre' && (
-                                    <span className={tableStyles.sortIndicator}>
-                                      {sortDirection === 'asc' ? '↑' : '↓'}
-                                    </span>
-                                  )}
-                                </button>
-                              </th>
-                              <th scope="col">
-                                <button
-                                  className={tableStyles.sortButton}
-                                  onClick={() => handleSort('count')}
-                                  aria-label="Ordenar por cantidad de predicciones"
-                                >
-                                  Predicciones
-                                  {sortColumn === 'count' && (
-                                    <span className={tableStyles.sortIndicator}>
-                                      {sortDirection === 'asc' ? '↑' : '↓'}
-                                    </span>
-                                  )}
-                                </button>
-                              </th>
-                              <th scope="col">
-                                <button
-                                  className={tableStyles.sortButton}
-                                  onClick={() => handleSort('total')}
-                                  aria-label="Ordenar por demanda total"
-                                >
-                                  Demanda total
-                                  {sortColumn === 'total' && (
-                                    <span className={tableStyles.sortIndicator}>
-                                      {sortDirection === 'asc' ? '↑' : '↓'}
-                                    </span>
-                                  )}
-                                </button>
-                              </th>
-                              <th scope="col">Rango fechas</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {processedPredicciones.data.map((grupo) => (
-                              <React.Fragment key={grupo.key}>
-                                <tr>
-                                  <td className={tableStyles.expandCell}>
-                                    <button
-                                      className={tableStyles.expandButton}
-                                      onClick={() => toggleRow(grupo.key)}
-                                      aria-label={`${expandedRows.has(grupo.key) ? 'Contraer' : 'Expandir'} detalles de ${grupo.itemMenu?.nombre}`}
-                                      title={expandedRows.has(grupo.key) ? 'Contraer detalles' : 'Ver detalles'}
-                                    >
-                                      {expandedRows.has(grupo.key) ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
-                                    </button>
-                                  </td>
-                                  <td className={tableStyles.codeCell}>
-                                    {grupo.itemMenu?.codigo || 'N/A'}
-                                  </td>
-                                  <td className={tableStyles.nameCell}>
-                                    {grupo.itemMenu?.nombre || 'N/A'}
-                                  </td>
-                                  <td className={tableStyles.ingredientsCell}>
-                                    <strong>{grupo.count}</strong>
-                                  </td>
-                                  <td className={tableStyles.numCell}>
-                                    {grupo.totalDemanda.toFixed(2)}
-                                  </td>
-                                  <td className={tableStyles.dateCell}>
-                                    {grupo.rangoFechas}
-                                  </td>
-                                </tr>
-                                
-                                {/* Fila expandida con subtabla */}
-                                {expandedRows.has(grupo.key) && (
-                                  <tr className={tableStyles.expandedRow}>
-                                    <td colSpan={6} className={tableStyles.expandedContent}>
-                                      <div className={tableStyles.ingredientDetails}>
-                                        <h4 className={tableStyles.detailsTitle}>Detalles de predicciones</h4>
-                                        <table className={tableStyles.subTable} role="table">
-                                          <thead>
-                                            <tr>
-                                              <th>Fecha</th>
-                                              <th>Turno</th>
-                                              <th>Demanda</th>
-                                              <th>Feriado</th>
-                                            </tr>
-                                          </thead>
-                                          <tbody>
-                                            {grupo.predicciones.map((pred, idx) => (
-                                              <tr key={idx}>
-                                                <td>{pred.fecha}</td>
-                                                <td>{renderTurnoBadge(pred.turno)}</td>
-                                                <td className={tableStyles.subIngQty}>
-                                                  {pred.demandaPredicha.toFixed(2)}
-                                                </td>
-                                                <td>
-                                                  <span className={`${tableStyles.statusBadge} ${pred.contexto?.esFeriado ? tableStyles.statusLow : tableStyles.statusOk}`}>
-                                                    {pred.contexto?.esFeriado ? 'Sí' : 'No'}
-                                                  </span>
-                                                </td>
-                                              </tr>
-                                            ))}
-                                          </tbody>
-                                        </table>
-                                      </div>
-                                    </td>
-                                  </tr>
-                                )}
-                              </React.Fragment>
-                            ))}
-                          </tbody>
-                        </table>
-                      </div>
-
-                      {/* Paginación */}
-                      {processedPredicciones.totalPages > 1 && (
-                        <div className={tableStyles.pagination} role="navigation" aria-label="Paginación de grupos de predicciones">
-                          <button
-                            type="button"
-                            className={tableStyles.paginationButton}
-                            onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
-                            disabled={processedPredicciones.page === 1}
-                            aria-label="Página anterior"
-                          >
-                            Anterior
-                          </button>
-
-                          <div className={tableStyles.paginationInfo} aria-live="polite">
-                            Página {processedPredicciones.page} de {processedPredicciones.totalPages}
-                          </div>
-
-                          <button
-                            type="button"
-                            className={tableStyles.paginationButton}
-                            onClick={() => setCurrentPage(prev => Math.min(processedPredicciones.totalPages, prev + 1))}
-                            disabled={processedPredicciones.page === processedPredicciones.totalPages}
-                            aria-label="Página siguiente"
-                          >
-                            Siguiente
-                          </button>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                )}
-
-                {/* Tabla 2 - Ingredientes necesarios */}
-                {processedIngredientes.length > 0 && (
-                  <div style={{ marginTop: 'var(--spacing-2xl)' }}>
-                    <h3 style={{ marginBottom: 'var(--spacing-lg)', color: 'var(--color-text-primary)' }}>
-                      Ingredientes necesarios
-                    </h3>
-                    
-                    <div className={tableStyles.content}>
-                      <div className={tableStyles.tableContainer}>
-                        <table className={tableStyles.table} role="table">
-                          <thead>
-                            <tr>
-                              <th scope="col" className={tableStyles.expandColumn}></th>
-                              <th scope="col">Ingrediente</th>
-                              <th scope="col">Cantidad total</th>
-                              <th scope="col">Detalles</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {processedIngredientes.map((ingrediente) => (
-                              <React.Fragment key={ingrediente.key}>
-                                <tr>
-                                  <td className={tableStyles.expandCell}>
-                                    <button
-                                      className={tableStyles.expandButton}
-                                      onClick={() => toggleIngr(ingrediente.key)}
-                                      aria-label={`${expandedIngr.has(ingrediente.key) ? 'Contraer' : 'Expandir'} detalles de ${ingrediente.nombre}`}
-                                      title={expandedIngr.has(ingrediente.key) ? 'Contraer detalles' : 'Ver detalles'}
-                                    >
-                                      {expandedIngr.has(ingrediente.key) ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
-                                    </button>
-                                  </td>
-                                  <td className={tableStyles.nameCell}>
-                                    {ingrediente.nombre}
-                                  </td>
-                                  <td className={tableStyles.numCell}>
-                                    <strong>{ingrediente.cantidadTotal}</strong>
-                                  </td>
-                                  <td className={tableStyles.ingredientsCell}>
-                                    {ingrediente.detallesPorItem.length} detalle{ingrediente.detallesPorItem.length !== 1 ? 's' : ''}
-                                  </td>
-                                </tr>
-                                
-                                {/* Fila expandida con subtabla */}
-                                {expandedIngr.has(ingrediente.key) && (
-                                  <tr className={tableStyles.expandedRow}>
-                                    <td colSpan={4} className={tableStyles.expandedContent}>
-                                      <div className={tableStyles.ingredientDetails}>
-                                        <h4 className={tableStyles.detailsTitle}>Detalles por ítem</h4>
-                                        {ingrediente.detallesPorItem.length === 0 ? (
-                                          <p className={tableStyles.noIngredients}>No hay detalles disponibles.</p>
-                                        ) : (
-                                          <table className={tableStyles.subTable} role="table">
-                                            <thead>
-                                              <tr>
-                                                <th>Fecha</th>
-                                                <th>Turno</th>
-                                                <th>Item</th>
-                                                <th>Demanda</th>
-                                                <th>Cant. x unidad</th>
-                                                <th>Cant. necesaria</th>
-                                              </tr>
-                                            </thead>
-                                            <tbody>
-                                              {ingrediente.detallesPorItem.map((detalle, idx) => (
-                                                <tr key={idx}>
-                                                  <td>{detalle.fecha}</td>
-                                                  <td>{renderTurnoBadge(detalle.turno)}</td>
-                                                  <td className={tableStyles.subIngName}>
-                                                    {detalle.itemMenu?.nombre || 'N/A'}
-                                                  </td>
-                                                  <td className={tableStyles.subIngQty}>
-                                                    {detalle.demandaPredicha?.toFixed(2) || '0.00'}
-                                                  </td>
-                                                  <td className={tableStyles.subIngQty}>
-                                                    {detalle.cantidadPorUnidad || 0}
-                                                  </td>
-                                                  <td className={tableStyles.subIngQty}>
-                                                    <strong>{detalle.cantidadNecesaria || 0}</strong>
-                                                  </td>
-                                                </tr>
-                                              ))}
-                                            </tbody>
-                                          </table>
-                                        )}
-                                      </div>
-                                    </td>
-                                  </tr>
-                                )}
-                              </React.Fragment>
-                            ))}
-                          </tbody>
-                        </table>
-                      </div>
-                    </div>
-                  </div>
-                )}
-                {/* Estado vacío */}
-                {success && processedPredicciones.totalItems === 0 && (
-                  <div style={{ textAlign: 'center', padding: 'var(--spacing-2xl)', color: 'var(--color-text-secondary)' }}>
-                    <p>No se encontraron predicciones para los parámetros seleccionados.</p>
-                  </div>
-                )}
               </div>
             </div>
           </div>
         </div>
+
+        {/* Resultados - Sección separada debajo del formulario */}
+        {processedPredicciones.totalItems > 0 && (
+          <div className={styles.container} style={{ marginTop: 'var(--spacing-2xl)' }}>
+            <div style={{ marginBottom: 'var(--spacing-xl)' }}>
+              <h2 style={{ 
+                fontSize: '1.875rem', 
+                fontWeight: '700', 
+                color: 'var(--color-text-primary)', 
+                marginBottom: 'var(--spacing-sm)',
+                textAlign: 'center'
+              }}>
+                Resultados de Predicción
+              </h2>
+              <p style={{ 
+                color: 'var(--color-text-secondary)', 
+                textAlign: 'center',
+                margin: '0'
+              }}>
+                Predicciones generadas para el período seleccionado
+              </p>
+            </div>
+            
+            {/* Información de resultados */}
+            <div className={tableStyles.resultsInfo} aria-live="polite">
+              <span>{processedPredicciones.totalItems} grupo{processedPredicciones.totalItems !== 1 ? 's' : ''}</span>
+            </div>
+
+            {/* Tabla 1 - Resultados de Predicción (agrupada + expandible) */}
+            <div className={tableStyles.content}>
+              <div className={tableStyles.tableContainer}>
+                <table className={tableStyles.table} role="table">
+                  <thead>
+                    <tr>
+                      <th scope="col" className={tableStyles.expandColumn}></th>
+                      <th scope="col">
+                        <button
+                          className={tableStyles.sortButton}
+                          onClick={() => handleSort('codigo')}
+                          aria-label="Ordenar por código"
+                        >
+                          Código
+                          {sortColumn === 'codigo' && (
+                            <span className={tableStyles.sortIndicator}>
+                              {sortDirection === 'asc' ? '↑' : '↓'}
+                            </span>
+                          )}
+                        </button>
+                      </th>
+                      <th scope="col">
+                        <button
+                          className={tableStyles.sortButton}
+                          onClick={() => handleSort('nombre')}
+                          aria-label="Ordenar por nombre"
+                        >
+                          Nombre
+                          {sortColumn === 'nombre' && (
+                            <span className={tableStyles.sortIndicator}>
+                              {sortDirection === 'asc' ? '↑' : '↓'}
+                            </span>
+                          )}
+                        </button>
+                      </th>
+                      <th scope="col">
+                        <button
+                          className={tableStyles.sortButton}
+                          onClick={() => handleSort('count')}
+                          aria-label="Ordenar por cantidad de predicciones"
+                        >
+                          Predicciones
+                          {sortColumn === 'count' && (
+                            <span className={tableStyles.sortIndicator}>
+                              {sortDirection === 'asc' ? '↑' : '↓'}
+                            </span>
+                          )}
+                        </button>
+                      </th>
+                      <th scope="col">
+                        <button
+                          className={tableStyles.sortButton}
+                          onClick={() => handleSort('total')}
+                          aria-label="Ordenar por demanda total"
+                        >
+                          Demanda total
+                          {sortColumn === 'total' && (
+                            <span className={tableStyles.sortIndicator}>
+                              {sortDirection === 'asc' ? '↑' : '↓'}
+                            </span>
+                          )}
+                        </button>
+                      </th>
+                      <th scope="col">Rango fechas</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {processedPredicciones.data.map((grupo) => (
+                      <React.Fragment key={grupo.key}>
+                        <tr>
+                          <td className={tableStyles.expandCell}>
+                            <button
+                              className={tableStyles.expandButton}
+                              onClick={() => toggleRow(grupo.key)}
+                              aria-label={`${expandedRows.has(grupo.key) ? 'Contraer' : 'Expandir'} detalles de ${grupo.itemMenu?.nombre}`}
+                              title={expandedRows.has(grupo.key) ? 'Contraer detalles' : 'Ver detalles'}
+                            >
+                              {expandedRows.has(grupo.key) ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
+                            </button>
+                          </td>
+                          <td className={tableStyles.codeCell}>
+                            {grupo.itemMenu?.codigo || 'N/A'}
+                          </td>
+                          <td className={tableStyles.nameCell}>
+                            {grupo.itemMenu?.nombre || 'N/A'}
+                          </td>
+                          <td className={tableStyles.ingredientsCell}>
+                            <strong>{grupo.count}</strong>
+                          </td>
+                          <td className={tableStyles.numCell}>
+                            {grupo.totalDemanda.toFixed(2)}
+                          </td>
+                          <td className={tableStyles.dateCell}>
+                            {grupo.rangoFechas}
+                          </td>
+                        </tr>
+                        
+                        {/* Fila expandida con subtabla */}
+                        {expandedRows.has(grupo.key) && (
+                          <tr className={tableStyles.expandedRow}>
+                            <td colSpan={6} className={tableStyles.expandedContent}>
+                              <div className={tableStyles.ingredientDetails}>
+                                <h4 className={tableStyles.detailsTitle}>Detalles de predicciones</h4>
+                                <table className={tableStyles.subTable} role="table">
+                                  <thead>
+                                    <tr>
+                                      <th>Fecha</th>
+                                      <th>Turno</th>
+                                      <th>Demanda</th>
+                                      <th>Feriado</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    {grupo.predicciones.map((pred, idx) => (
+                                      <tr key={idx}>
+                                        <td>{pred.fecha}</td>
+                                        <td>{renderTurnoBadge(pred.turno)}</td>
+                                        <td className={tableStyles.subIngQty}>
+                                          {pred.demandaPredicha.toFixed(2)}
+                                        </td>
+                                        <td>
+                                          <span className={`${tableStyles.statusBadge} ${pred.contexto?.esFeriado ? tableStyles.statusLow : tableStyles.statusOk}`}>
+                                            {pred.contexto?.esFeriado ? 'Sí' : 'No'}
+                                          </span>
+                                        </td>
+                                      </tr>
+                                    ))}
+                                  </tbody>
+                                </table>
+                              </div>
+                            </td>
+                          </tr>
+                        )}
+                      </React.Fragment>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              {/* Paginación */}
+              {processedPredicciones.totalPages > 1 && (
+                <div className={tableStyles.pagination} role="navigation" aria-label="Paginación de grupos de predicciones">
+                  <button
+                    type="button"
+                    className={tableStyles.paginationButton}
+                    onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                    disabled={processedPredicciones.page === 1}
+                    aria-label="Página anterior"
+                  >
+                    Anterior
+                  </button>
+
+                  <div className={tableStyles.paginationInfo} aria-live="polite">
+                    Página {processedPredicciones.page} de {processedPredicciones.totalPages}
+                  </div>
+
+                  <button
+                    type="button"
+                    className={tableStyles.paginationButton}
+                    onClick={() => setCurrentPage(prev => Math.min(processedPredicciones.totalPages, prev + 1))}
+                    disabled={processedPredicciones.page === processedPredicciones.totalPages}
+                    aria-label="Página siguiente"
+                  >
+                    Siguiente
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Tabla 2 - Ingredientes necesarios */}
+        {processedIngredientes.length > 0 && (
+          <div className={styles.container} style={{ marginTop: 'var(--spacing-2xl)' }}>
+            <div style={{ marginBottom: 'var(--spacing-xl)' }}>
+              <h2 style={{ 
+                fontSize: '1.875rem', 
+                fontWeight: '700', 
+                color: 'var(--color-text-primary)', 
+                marginBottom: 'var(--spacing-sm)',
+                textAlign: 'center'
+              }}>
+                Ingredientes necesarios
+              </h2>
+              <p style={{ 
+                color: 'var(--color-text-secondary)', 
+                textAlign: 'center',
+                margin: '0'
+              }}>
+                Resumen de ingredientes requeridos para las predicciones
+              </p>
+            </div>
+            
+            <div className={tableStyles.content}>
+              <div className={tableStyles.tableContainer}>
+                <table className={tableStyles.table} role="table">
+                  <thead>
+                    <tr>
+                      <th scope="col" className={tableStyles.expandColumn}></th>
+                      <th scope="col">Ingrediente</th>
+                      <th scope="col">Cantidad total</th>
+                      <th scope="col">Detalles</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {processedIngredientes.map((ingrediente) => (
+                      <React.Fragment key={ingrediente.key}>
+                        <tr>
+                          <td className={tableStyles.expandCell}>
+                            <button
+                              className={tableStyles.expandButton}
+                              onClick={() => toggleIngr(ingrediente.key)}
+                              aria-label={`${expandedIngr.has(ingrediente.key) ? 'Contraer' : 'Expandir'} detalles de ${ingrediente.nombre}`}
+                              title={expandedIngr.has(ingrediente.key) ? 'Contraer detalles' : 'Ver detalles'}
+                            >
+                              {expandedIngr.has(ingrediente.key) ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
+                            </button>
+                          </td>
+                          <td className={tableStyles.nameCell}>
+                            {ingrediente.nombre}
+                          </td>
+                          <td className={tableStyles.numCell}>
+                            <strong>{ingrediente.cantidadTotal}</strong>
+                          </td>
+                          <td className={tableStyles.ingredientsCell}>
+                            {ingrediente.detallesPorItem.length} detalle{ingrediente.detallesPorItem.length !== 1 ? 's' : ''}
+                          </td>
+                        </tr>
+                        
+                        {/* Fila expandida con subtabla */}
+                        {expandedIngr.has(ingrediente.key) && (
+                          <tr className={tableStyles.expandedRow}>
+                            <td colSpan={4} className={tableStyles.expandedContent}>
+                              <div className={tableStyles.ingredientDetails}>
+                                <h4 className={tableStyles.detailsTitle}>Detalles por ítem</h4>
+                                {ingrediente.detallesPorItem.length === 0 ? (
+                                  <p className={tableStyles.noIngredients}>No hay detalles disponibles.</p>
+                                ) : (
+                                  <table className={tableStyles.subTable} role="table">
+                                    <thead>
+                                      <tr>
+                                        <th>Fecha</th>
+                                        <th>Turno</th>
+                                        <th>Item</th>
+                                        <th>Demanda</th>
+                                        <th>Cant. x unidad</th>
+                                        <th>Cant. necesaria</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      {ingrediente.detallesPorItem.map((detalle, idx) => (
+                                        <tr key={idx}>
+                                          <td>{detalle.fecha}</td>
+                                          <td>{renderTurnoBadge(detalle.turno)}</td>
+                                          <td className={tableStyles.subIngName}>
+                                            {detalle.itemMenu?.nombre || 'N/A'}
+                                          </td>
+                                          <td className={tableStyles.subIngQty}>
+                                            {detalle.demandaPredicha?.toFixed(2) || '0.00'}
+                                          </td>
+                                          <td className={tableStyles.subIngQty}>
+                                            {detalle.cantidadPorUnidad || 0}
+                                          </td>
+                                          <td className={tableStyles.subIngQty}>
+                                            <strong>{detalle.cantidadNecesaria || 0}</strong>
+                                          </td>
+                                        </tr>
+                                      ))}
+                                    </tbody>
+                                  </table>
+                                )}
+                              </div>
+                            </td>
+                          </tr>
+                        )}
+                      </React.Fragment>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Estado vacío */}
+        {success && processedPredicciones.totalItems === 0 && (
+          <div className={styles.container} style={{ marginTop: 'var(--spacing-2xl)' }}>
+            <div style={{ textAlign: 'center', padding: 'var(--spacing-2xl)', color: 'var(--color-text-secondary)' }}>
+              <p>No se encontraron predicciones para los parámetros seleccionados.</p>
+            </div>
+          </div>
+        )}
       </main>
     </Layout>
   );
